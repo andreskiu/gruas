@@ -1,0 +1,50 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "DEMO - Flutter",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=ENV=demo",
+        "--dart-define=APP_SUFFIX=demo"
+      ]
+    },
+    {
+      "name": "DEV - Flutter",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=ENV=dev",
+        "--dart-define=APP_SUFFIX=dev"
+      ]
+    },
+    {
+      "name": "QA - Flutter",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=ENV=qa",
+        "--dart-define=APP_SUFFIX=qa"
+      ]
+    },
+    {
+      "name": "PROD - Flutter",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=ENV=prod",
+        "--dart-define=APP_SUFFIX=prod"
+      ]
+    },
+    {
+      "name": "Flutter Profile",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    }
+  ]
+}

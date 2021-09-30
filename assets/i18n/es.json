@@ -1,0 +1,67 @@
+{
+    "core": {
+        "fields": {
+            "email": {
+                "label": "Correo electrónico",
+                "errors": {
+                    "empty": "El correo es requerido",
+                    "invalid": "No parece ser un correo válido"
+                }
+            },
+            "phone": {
+                "label": "Teléfono",
+                "errors": {
+                    "empty": "El teléfono es requerido",
+                    "invalid": "No parece ser un teléfono válido"
+                }
+            }
+        },
+        "infrastructure": {
+            "general": "Se ha producido un error. Por favor, inténtelo más tarde.",
+            "format": "No hemos podido entender la respuesta del servidor. Por favor, actualice la App.",
+            "unauthorized": "No tienes permiso para realizar esta acción",
+            "connection": "El servidor no ha respondido a tiempo. Por favor, compruebe su conexión a Internet",
+            "bad_request": "La información enviada es errónea. Por favor actualice la App.",
+            "not_found": "El servidor está fuera de línea o su aplicación está desactualizada. Por favor, actualice la App.",
+            "cache": "Hay un problema con su teléfono. Por favor, comprueba que tienes suficiente espacio de almacenamiento e intentelo nuevamente."
+        }
+    },
+    "auth": {
+        "login": {
+            "labels": {
+                "remember_me": "Recuérdame",
+                "welcome": "Bienvenido"
+            },
+            "errors": {
+                "invalid_credentials": "Credenciales no válidas"
+            }
+        },
+        "logout": {
+            "errors": {
+                "not_found": "Ningún usuario esta logueado"
+            }
+        },
+        "get_user_logged_in": {
+            "errors": {
+                "not_found": "Ningún usuario esta logueado"
+            }
+        },
+        "fields": {
+            "username": {
+                "label": "Usuario"
+            },
+            "password": {
+                "label": "Contraseña",
+                "errors": {
+                    "uppercaseCharacter": "La contraseña debe contener una letra mayúscula",
+                    "lowercaseCharacter": "La contraseña debe contener una letra minúscula",
+                    "minimumNumbers": "La contraseña debe contener al menos {length} números",
+                    "minimumCharacters": "La contraseña debe contener al menos {length} caracteres",
+                    "containSymbol": "La contraseña debe contener un simbolo",
+                    "invalid": "Contraseña inválida",
+                    "empty": "Contraseña requerida"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "core": {
+        "fields": {
+            "email": {
+                "label": "Email",
+                "errors": {
+                    "empty": "Email is required",
+                    "invalid": "This does not appear to be a valid email"
+                }
+            },
+            "phone": {
+                "label": "Phone",
+                "errors": {
+                    "empty": "Phone is required",
+                    "invalid": "This does not appear to be a valid phone number"
+                }
+            }
+        },
+        "infrastructure": {
+            "general": "An error has occurred. Please try again later.",
+            "format": "We could not understand the server response. Please update the App.",
+            "unauthorized": "You don't have permission to perform this action",
+            "connection": "The server did not respond in time. Please check your internet connection",
+            "bad_request": "The data sent is wrong. Please update the App.",
+            "not_found": "The server is offline or your app is out of date. Please update the App.",
+            "cache": "There is a problem with your Phone. Please check you have enough storage space and try it again."
+        }
+    },
+    "auth": {
+        "login": {
+            "labels":{
+                "remember_me": "Remember Me",
+                "welcome": "Welcome"
+            },
+            "errors": {
+                "invalid_credentials": "Invalid credentials"
+            }
+        },
+        "logout": {
+            "errors": {
+                "not_found": "No user is logged in"
+            }
+        },
+        "get_user_logged_in": {
+            "errors": {
+                "not_found": "No user is logged in"
+            }
+        },
+        "fields": {
+            "username": {
+                "label": "User"
+            },
+            "password": {
+                "label": "Password",
+                "errors": {
+                    "uppercaseCharacter": "The password must contain an uppercase letter",
+                    "lowercaseCharacter": "The password must contain a lowercase letter",
+                    "minimumNumbers": "The password must contain at least {length} numbers",
+                    "minimumCharacters": "The password must contain at least {length} character",
+                    "containSymbol": "The password must contain a symbol",
+                    "invalid": "Invalid Password",
+                    "empty": "Password required"
+                }
+            }
+        }
+    }
+}
