@@ -19,6 +19,7 @@ class DemoRepository extends IAuthDataRepository {
         expireSession: DateTime.fromMillisecondsSinceEpoch(0),
       ),
       username: 'andreskiu@hotmail.com',
+      serviceOffered: ServiceType.grua,
     ),
     User(
       id: "2",
@@ -28,6 +29,7 @@ class DemoRepository extends IAuthDataRepository {
         expireSession: DateTime.fromMillisecondsSinceEpoch(0),
       ),
       username: 'andres_raya1990@hotmail.com',
+      serviceOffered: ServiceType.grua,
     ),
     User(
       id: "3",
@@ -37,6 +39,7 @@ class DemoRepository extends IAuthDataRepository {
         expireSession: DateTime.fromMillisecondsSinceEpoch(0),
       ),
       username: 'a@a.com',
+      serviceOffered: ServiceType.grua,
     ),
     User(
       id: "4",
@@ -46,6 +49,7 @@ class DemoRepository extends IAuthDataRepository {
         expireSession: DateTime.fromMillisecondsSinceEpoch(0),
       ),
       username: 'aaaaaa@aaaaaa.com',
+      serviceOffered: ServiceType.motoCarro,
     ),
     User(
       id: "5",
@@ -55,16 +59,17 @@ class DemoRepository extends IAuthDataRepository {
         expireSession: DateTime.fromMillisecondsSinceEpoch(0),
       ),
       username: 'andreskiu',
+      serviceOffered: ServiceType.grua,
     ),
     User(
-      id: "6",
-      name: "Matías",
-      session: SessionInformation(
-        sessionId: "hgh46u6u65u66yu6u6u",
-        expireSession: DateTime.fromMillisecondsSinceEpoch(0),
-      ),
-      username: 'aaaaaa',
-    ),
+        id: "6",
+        name: "Matías",
+        session: SessionInformation(
+          sessionId: "hgh46u6u65u66yu6u6u",
+          expireSession: DateTime.fromMillisecondsSinceEpoch(0),
+        ),
+        username: 'aaaaaa',
+        serviceOffered: ServiceType.motoCarro),
     User(
       id: "7",
       name: "Benjamín",
@@ -73,6 +78,7 @@ class DemoRepository extends IAuthDataRepository {
         expireSession: DateTime.fromMillisecondsSinceEpoch(0),
       ),
       username: 'kiu',
+      serviceOffered: ServiceType.motoCarro,
     ),
   ];
 
@@ -114,9 +120,7 @@ class DemoRepository extends IAuthDataRepository {
       );
       return Right(_user);
     } catch (e) {
-      return Left(
-        ErrorContent.server("User Not Found")
-      );
+      return Left(ErrorContent.server("User Not Found"));
     }
   }
 

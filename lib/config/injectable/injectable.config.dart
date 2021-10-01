@@ -25,16 +25,16 @@ import '../../infrastructure/auth/services/i_auth_repository.dart' as _i9;
 import '../../infrastructure/auth/services/i_auth_storage_repository.dart'
     as _i12;
 import '../environments/environment_config.dart' as _i4;
-import '../environments/environment_demo.dart' as _i5;
-import '../environments/environment_dev.dart' as _i6;
-import '../environments/environment_prod.dart' as _i7;
-import '../environments/environment_qa.dart' as _i8;
+import '../environments/environment_demo.dart' as _i6;
+import '../environments/environment_dev.dart' as _i7;
+import '../environments/environment_prod.dart' as _i8;
+import '../environments/environment_qa.dart' as _i5;
 import 'injectable.dart' as _i22;
 
+const String _qa = 'qa';
 const String _demo = 'demo';
 const String _dev = 'dev';
 const String _prod = 'prod';
-const String _qa = 'qa';
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]
@@ -43,14 +43,14 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
   final gh = _i2.GetItHelper(get, environment, environmentFilter);
   final registerModule = _$RegisterModule();
   gh.lazySingleton<_i3.Dio>(() => registerModule.dio());
-  gh.factory<_i4.EnvironmentConfig>(() => _i5.EnvironmentDemo(),
-      registerFor: {_demo});
-  gh.factory<_i4.EnvironmentConfig>(() => _i6.EnvironmentDev(),
-      registerFor: {_dev});
-  gh.factory<_i4.EnvironmentConfig>(() => _i7.EnvironmentProd(),
-      registerFor: {_prod});
-  gh.factory<_i4.EnvironmentConfig>(() => _i8.EnvironmentTest(),
+  gh.factory<_i4.EnvironmentConfig>(() => _i5.EnvironmentTest(),
       registerFor: {_qa});
+  gh.factory<_i4.EnvironmentConfig>(() => _i6.EnvironmentDemo(),
+      registerFor: {_demo});
+  gh.factory<_i4.EnvironmentConfig>(() => _i7.EnvironmentDev(),
+      registerFor: {_dev});
+  gh.factory<_i4.EnvironmentConfig>(() => _i8.EnvironmentProd(),
+      registerFor: {_prod});
   gh.lazySingleton<_i9.IAuthDataRepository>(() => _i10.DemoRepository(),
       registerFor: {_demo});
   await gh.factoryAsync<_i11.SharedPreferences>(() => registerModule.prefs,

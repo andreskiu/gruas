@@ -52,18 +52,7 @@ class _LoginPageState extends State<LoginPage> {
       value: _state,
       builder: (context, child) {
         return Scaffold(
-          // appBar: LoginAppBar(
-          //   child: Hero(
-          //     tag: "iconLogo",
-          //     child: Image.asset("assets/images/logo.png"),
-          //   ),
-          //   size: Size(
-          //     Info.screenWidth,
-          //     Info.verticalUnit * 30,
-          //   ),
-          // ),
           body: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
             child: Form(
               key: _formKey,
               child: Column(
@@ -126,8 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                                   return ResponsiveCircularIndicator();
                                 }
                                 return ResponsiveCheckbox(
-                                  initialValue:
-                                      snapshot.data ?? _state.username.isNotEmpty,
+                                  initialValue: snapshot.data ??
+                                      _state.username.isNotEmpty,
                                   onChange: (isChecked) {
                                     rememberMe = isChecked;
                                   },
@@ -177,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
         // Navigate
         // pop method does not remove the last page in navigator
         AutoRouter.of(context).removeLast();
-        context.router.popAndPush(HomePageRoute());
+        context.router.popAndPush(ServiceDetailsRoute());
       } else {
         final _error =
             Provider.of<LoginPageState>(context, listen: false).error;

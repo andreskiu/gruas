@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (!_authState.isLoggedIn()) {
       context.router.popAndPush(LoginPageRoute());
     } else {
-      AutoRouter.of(context).push(HomePageRoute());
+      AutoRouter.of(context).push(ServiceDetailsRoute());
     }
   }
 

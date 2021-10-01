@@ -54,7 +54,7 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
         if (_error == null) {
           return null;
         }
-        return _error.message;
+        return tr(_error.message);
       },
       onChanged: widget.onChange,
       onSaved: widget.onSaved,
