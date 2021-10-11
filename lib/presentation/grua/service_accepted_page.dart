@@ -2,6 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
+import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
+import 'package:flutter_base/presentation/grua/save_photo_modal.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ServiceAcceptedPage extends StatelessWidget {
   const ServiceAcceptedPage({Key? key}) : super(key: key);
@@ -46,7 +49,12 @@ class ServiceAcceptedPage extends StatelessWidget {
 }
 
 class ButtonBar extends StatelessWidget {
-  const ButtonBar({Key? key}) : super(key: key);
+  ButtonBar({Key? key}) : super(key: key);
+
+  final ImagePicker _picker = ImagePicker();
+  Future<XFile?> _takePhoto() {
+    return _picker.pickImage(source: ImageSource.camera);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +64,49 @@ class ButtonBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ElevatedButton(
-              onPressed: () => null,
+              onPressed: () async {
+                final String? code = await AutoRouter.of(context)
+                    .push<String?>(ScanQRPageRoute());
+                if (code != null && code.isNotEmpty) {
+                  print("code read = " + code);
+                }
+              },
               child: ResponsiveText(
                 "Escanear QR",
                 textType: TextType.Headline5,
               ),
             ),
             ElevatedButton(
-              onPressed: () => null,
+              onPressed: () async {
+                const _borderRadius = 8;
+                final _photo = await _takePhoto();
+                if (_photo == null) {
+                  return;
+                }
+                showBottomSheet(
+                    context: context,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(
+                            Info.horizontalUnit * _borderRadius),
+                        topLeft: Radius.circular(
+                            Info.horizontalUnit * _borderRadius),
+                      ),
+                      side: BorderSide(
+                        color: Colors.black54,
+                      ),
+                    ),
+                    builder: (context) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: Info.horizontalUnit * _borderRadius),
+                        child: SaveFotoModal(
+                          photo: _photo,
+                        ),
+                      );
+                    });
+              },
               child: ResponsiveText(
                 "Sacar Foto",
                 textType: TextType.Headline5,
@@ -71,9 +114,6 @@ class ButtonBar extends StatelessWidget {
             ),
           ],
         ),
-        // SizedBox(
-        //   height: Info.verticalUnit * 8,
-        // ),
       ],
     );
   }

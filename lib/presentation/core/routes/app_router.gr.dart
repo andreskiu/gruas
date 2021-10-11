@@ -7,9 +7,10 @@
 import 'package:auto_route/auto_route.dart' as _i1;
 import 'package:flutter/material.dart' as _i2;
 
-import '../../auth/login_page.dart' as _i7;
-import '../../feature/service_accepted.dart' as _i5;
-import '../../feature/service_details.dart' as _i6;
+import '../../auth/login_page.dart' as _i8;
+import '../../grua/service_accepted_page.dart' as _i5;
+import '../../grua/service_details_page.dart' as _i6;
+import '../../peripherals/scan_qr_page.dart' as _i7;
 import '../../splash_page.dart' as _i4;
 import 'guards/auth_guards.dart' as _i3;
 
@@ -38,10 +39,15 @@ class AppRouter extends _i1.RootStackRouter {
         builder: (_) {
           return const _i6.ServiceDetails();
         }),
+    ScanQRPageRoute.name: (routeData) => _i1.AdaptivePage<String?>(
+        routeData: routeData,
+        builder: (_) {
+          return _i7.ScanQRPage();
+        }),
     LoginPageRoute.name: (routeData) => _i1.CustomPage<dynamic>(
         routeData: routeData,
         builder: (_) {
-          return _i7.LoginPage();
+          return _i8.LoginPage();
         },
         transitionsBuilder: _i1.TransitionsBuilders.fadeIn,
         durationInMilliseconds: 1800,
@@ -56,6 +62,7 @@ class AppRouter extends _i1.RootStackRouter {
             path: '/service-accepted-page', guards: [authGuard]),
         _i1.RouteConfig(ServiceDetailsRoute.name,
             path: '/service-details', guards: [authGuard]),
+        _i1.RouteConfig(ScanQRPageRoute.name, path: '/scan-qr-page'),
         _i1.RouteConfig(LoginPageRoute.name, path: '/login-page')
       ];
 }
@@ -77,6 +84,12 @@ class ServiceDetailsRoute extends _i1.PageRouteInfo {
   const ServiceDetailsRoute() : super(name, path: '/service-details');
 
   static const String name = 'ServiceDetailsRoute';
+}
+
+class ScanQRPageRoute extends _i1.PageRouteInfo {
+  const ScanQRPageRoute() : super(name, path: '/scan-qr-page');
+
+  static const String name = 'ScanQRPageRoute';
 }
 
 class LoginPageRoute extends _i1.PageRouteInfo {

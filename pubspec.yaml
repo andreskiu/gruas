@@ -55,8 +55,14 @@ dependencies:
   # Local data storage
   shared_preferences: ^2.0.5
 
-  #Internationalization
+  # Internationalization
   easy_localization: ^3.0.0
+
+  # Scan QR Codes
+  qr_code_scanner: ^0.5.2
+
+  # Take Photos
+  image_picker: ^0.8.4+1 
 
 dev_dependencies:
   flutter_test:
