@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'map.dart';
 
 class ServiceDetails extends StatelessWidget {
   const ServiceDetails({Key? key}) : super(key: key);
@@ -30,7 +33,9 @@ class ServiceDetails extends StatelessWidget {
               child: Container(
                 height: Info.verticalUnit * 45,
                 child: Center(
-                  child: ResponsiveText('Mapa'),
+                  child: ServiceMap(
+                    serviceLocation: LatLng(10.3917, -75.4819),
+                  ),
                 ),
               ),
             ),

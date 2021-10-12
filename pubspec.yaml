@@ -49,7 +49,7 @@ dependencies:
   # Dependency injection
   injectable: ^1.4.0
 
-  #State management
+  # State management
   provider: ^5.0.0
 
   # Local data storage
@@ -62,7 +62,13 @@ dependencies:
   qr_code_scanner: ^0.5.2
 
   # Take Photos
-  image_picker: ^0.8.4+1 
+  image_picker: ^0.8.4+2 
+  
+  # Google Maps
+  google_maps_flutter: ^2.0.11
+
+  # Location
+  location: ^4.2.0
 
 dev_dependencies:
   flutter_test:

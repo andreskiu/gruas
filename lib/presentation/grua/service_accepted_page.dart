@@ -4,7 +4,10 @@ import 'package:flutter_base/presentation/core/responsivity/responsive_calculati
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
 import 'package:flutter_base/presentation/grua/save_photo_modal.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'map.dart';
 
 class ServiceAcceptedPage extends StatelessWidget {
   const ServiceAcceptedPage({Key? key}) : super(key: key);
@@ -14,11 +17,11 @@ class ServiceAcceptedPage extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(children: [
-          Card(
-            child: Container(
-              height: Info.verticalUnit * 100,
-              child: Center(
-                child: ResponsiveText('Mapa'),
+          Container(
+            height: Info.verticalUnit * 100,
+            child: Center(
+              child: ServiceMap(
+                serviceLocation: LatLng(10.3917,-75.4819),
               ),
             ),
           ),
@@ -95,6 +98,7 @@ class ButtonBar extends StatelessWidget {
                       ),
                       side: BorderSide(
                         color: Colors.black54,
+                        width: 0.5,
                       ),
                     ),
                     builder: (context) {
