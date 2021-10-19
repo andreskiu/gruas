@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class ServiceMap extends StatefulWidget {
   ServiceMap({
     Key? key,
-    required this.serviceLocation,
+    required this.service,
   }) : super(key: key);
-  final LatLng serviceLocation;
+  final Service service;
 
   @override
   _ServiceMapState createState() => _ServiceMapState();
@@ -24,12 +25,11 @@ class _ServiceMapState extends State<ServiceMap> {
   late BitmapDescriptor _greenIcon;
   late BitmapDescriptor _redIcon;
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
-@override
-void dispose() {
-  
-  super.dispose();
-}
   Future<void> _startLocation() async {
     Location location = new Location();
 
@@ -201,17 +201,28 @@ void dispose() {
                   markers: {
                     Marker(
                       markerId: MarkerId(
-                        "example",
+                        widget.service.clientName,
                       ),
-                      // icon: _selectMarket(bus),
-                      position: widget.serviceLocation,
-                      onTap: () {
-                        // _onBusTap(context, bus);
-                      },
-                      // infoWindow: InfoWindow(
-                      //   title: bus.driver,
-                      //   snippet: FormatHelper.speedString(bus.speed),
-                      // ),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueRed,
+                      ),
+                      position: widget.service.clientLocation,
+                      infoWindow: InfoWindow(
+                        title: widget.service.clientName,
+                        snippet: widget.service.carModel,
+                      ),
+                    ),
+                    Marker(
+                      markerId: MarkerId(
+                        "destination",
+                      ),
+                      icon: BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueGreen,
+                      ),
+                      position: widget.service.detinationLocation,
+                      infoWindow: InfoWindow(
+                        title: "Destino",
+                      ),
                     ),
                   },
                 );

@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/auth/use_cases/get_user_logged_in.dart';
 
-@singleton
+@lazySingleton
 class AuthState extends ChangeNotifier {
   AuthState._({
     required this.loggedUser,

@@ -50,4 +50,4 @@ class User extends Equatable {
       ];
 }
 
-enum ServiceType { grua, motoCarro }
+enum ServiceType { grua, motoTaller, carroTaller }

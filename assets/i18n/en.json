@@ -28,7 +28,7 @@
     },
     "auth": {
         "login": {
-            "labels":{
+            "labels": {
                 "remember_me": "Remember Me",
                 "welcome": "Welcome"
             },
@@ -61,6 +61,15 @@
                     "invalid": "Invalid Password",
                     "empty": "Password required"
                 }
+            }
+        }
+    },
+    "grua": {
+        "enums": {
+            "ServiceType": {
+                "grua": "Grua",
+                "motoTaller": "Moto taller",
+                "carroTaller": "Carro taller"
             }
         }
     }

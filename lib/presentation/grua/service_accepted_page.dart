@@ -1,17 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
 import 'package:flutter_base/presentation/grua/save_photo_modal.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'map.dart';
 
 class ServiceAcceptedPage extends StatelessWidget {
-  const ServiceAcceptedPage({Key? key}) : super(key: key);
-
+  const ServiceAcceptedPage({
+    Key? key,
+    required this.service,
+  }) : super(key: key);
+  final Service service;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +24,8 @@ class ServiceAcceptedPage extends StatelessWidget {
             height: Info.verticalUnit * 100,
             child: Center(
               child: ServiceMap(
-                serviceLocation: LatLng(10.3917,-75.4819),
+                service: service,
+                // serviceLocation: LatLng(10.3917,-75.4819),
               ),
             ),
           ),

@@ -49,7 +49,7 @@ class DemoRepository extends IAuthDataRepository {
         expireSession: DateTime.fromMillisecondsSinceEpoch(0),
       ),
       username: 'aaaaaa@aaaaaa.com',
-      serviceOffered: ServiceType.motoCarro,
+      serviceOffered: ServiceType.motoTaller,
     ),
     User(
       id: "5",
@@ -69,7 +69,7 @@ class DemoRepository extends IAuthDataRepository {
           expireSession: DateTime.fromMillisecondsSinceEpoch(0),
         ),
         username: 'aaaaaa',
-        serviceOffered: ServiceType.motoCarro),
+        serviceOffered: ServiceType.motoTaller),
     User(
       id: "7",
       name: "Benjamín",
@@ -78,7 +78,7 @@ class DemoRepository extends IAuthDataRepository {
         expireSession: DateTime.fromMillisecondsSinceEpoch(0),
       ),
       username: 'kiu',
-      serviceOffered: ServiceType.motoCarro,
+      serviceOffered: ServiceType.motoTaller,
     ),
   ];
 

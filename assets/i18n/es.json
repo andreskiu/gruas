@@ -63,5 +63,14 @@
                 }
             }
         }
+    },
+    "grua": {
+        "enums": {
+            "ServiceType": {
+                "grua": "Grua",
+                "motoTaller": "Moto taller",
+                "carroTaller": "Carro taller"
+            }
+        }
     }
 }
