@@ -7,4 +7,8 @@ abstract class IGruaDataRepository {
   Future<Either<ErrorContent, Stream<List<Service>>>> getServices({
     required User user,
   });
+
+  Future<Either<ErrorContent, Service>> saveService({
+    required Service service,
+  });
 }

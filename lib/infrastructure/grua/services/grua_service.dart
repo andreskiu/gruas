@@ -25,4 +25,11 @@ class GruaServiceImpl implements IGruaService {
   }) {
     return repository.getServices(user: user);
   }
+
+  @override
+  Future<Either<ErrorContent, Service>> saveService({
+    required Service service,
+  }) {
+    return repository.saveService(service: service);
+  }
 }

@@ -18,40 +18,44 @@ import 'package:flutter_base/domain/core/error_content.dart';
 class GruaDemoRepositoryImpl implements IGruaDataRepository, Disposable {
   final _services = [
     Service(
+      id: "1234",
       type: ServiceType.grua,
       clientName: "Pablo Gutierrez",
       clientLocation: LatLng(10.391389, -75.488570),
       detinationLocation: LatLng(10.398359, -75.489476),
       carModel: "Nissan Versa",
       requestTime: DateTime.now().subtract(Duration(minutes: 30)),
-      userId: "3",
+      username: "3",
     ),
     Service(
+      id: "5678",
       type: ServiceType.carroTaller,
       clientName: "Gabriel Figueroa",
       clientLocation: LatLng(10.395399, -75.486776),
       detinationLocation: LatLng(10.392399, -75.488976),
       carModel: "Fiat Cronnos",
       requestTime: DateTime.now().subtract(Duration(minutes: 20)),
-      userId: "3",
+      username: "3",
     ),
     Service(
+      id: "9012",
       type: ServiceType.grua,
       clientName: "Gabriel Figueroa",
       clientLocation: LatLng(10.396029, -75.490076),
       detinationLocation: LatLng(10.391399, -75.480276),
       carModel: "Chevrolet Onix",
       requestTime: DateTime.now().subtract(Duration(minutes: 15)),
-      userId: "3",
+      username: "3",
     ),
     Service(
+      id: "3456",
       type: ServiceType.grua,
       clientName: "Raul Lopez",
       clientLocation: LatLng(10.390859, -75.489070),
       detinationLocation: LatLng(10.399659, -75.490136),
       carModel: "Toyota Yaris",
       requestTime: DateTime.now().subtract(Duration(minutes: 30)),
-      userId: "3",
+      username: "3",
     ),
   ];
 
@@ -71,5 +75,24 @@ class GruaDemoRepositoryImpl implements IGruaDataRepository, Disposable {
   FutureOr onDispose() {
     _streamController.sink.close();
     _streamController.close();
+  }
+
+  @override
+  Future<Either<ErrorContent, Service>> saveService({
+    required Service service,
+  }) async {
+    final _serviceIndex = _services.indexWhere(
+      (s) => s.id == service.id,
+    );
+    if (_serviceIndex != -1) {
+      return Left(ErrorContent.server("Service not found"));
+    }
+    final _servicesCopy = _services[_serviceIndex].copyWith(
+      status: service.status,
+      username: service.username,
+    );
+    _services[_serviceIndex] = _servicesCopy;
+    _streamController.sink.add(_services);
+    return Right(_servicesCopy);
   }
 }

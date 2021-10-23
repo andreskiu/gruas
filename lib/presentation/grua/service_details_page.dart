@@ -7,6 +7,7 @@ import 'package:flutter_base/presentation/core/responsivity/responsive_calculati
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import 'map.dart';
 
@@ -48,6 +49,7 @@ class ServiceDetails extends StatelessWidget {
                         );
                       }
                       final _service = snapshot.data!.first;
+                      _state.servicesSelected = _service;
                       return Column(
                         children: [
                           SizedBox(
@@ -120,10 +122,16 @@ class _ServiceDetail extends StatelessWidget {
         height: Info.verticalUnit * 8,
       ),
       ElevatedButton(
-        onPressed: () {
-          AutoRouter.of(context).push(ServiceAcceptedPageRoute(
-            service: service,
-          ));
+        onPressed: () async {
+          final _success =
+              await Provider.of<GruaServiceState>(context).updateServiceStatus(
+            ServiceStatus.accepted,
+          );
+          if (_success) {
+            AutoRouter.of(context).push(ServiceAcceptedPageRoute(
+              service: service,
+            ));
+          }
         },
         child: ResponsiveText(
           "Aceptar Servicio",
