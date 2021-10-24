@@ -38,7 +38,7 @@ dependencies:
   dio: ^4.0.0
 
   # Functional programming and error handling - No more exceptions!
-  dartz: ^0.10.0-nullsafety.2
+  dartz: ^0.10.0
 
   # For object comparison
   equatable: ^2.0.2
