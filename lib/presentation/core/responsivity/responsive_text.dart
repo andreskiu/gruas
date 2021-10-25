@@ -139,7 +139,6 @@ class _ResponsiveInputState extends State<ResponsiveInput> {
 
   @override
   Widget build(BuildContext context) {
-
     final _theme = Theme.of(context);
     return TextFormField(
       initialValue: widget.initialValue,
@@ -169,7 +168,8 @@ class _ResponsiveInputState extends State<ResponsiveInput> {
         filled: true,
         isDense: widget.isDense,
         contentPadding: EdgeInsets.only(
-          left: Info.horizontalUnit / 2,
+          left: Info.horizontalUnit * 2,
+          top: Info.horizontalUnit * 2,
           bottom: Info.verticalUnit,
         ),
         hintText: widget.hintText,
@@ -212,17 +212,17 @@ class _ResponsiveInputState extends State<ResponsiveInput> {
             : null,
         suffixIcon: widget.suffixIconData != null
             ? InkWell(
-              onTap: () {
-                if (widget.onIconPressed != null) {
-                  widget.onIconPressed!();
-                }
-              },
-              child: Icon(
-                widget.suffixIconData,
-                color: widget.iconColor ?? _theme.iconTheme.color,
-                size: Info.verticalUnit * _iconFieldSize,
-              ),
-            )
+                onTap: () {
+                  if (widget.onIconPressed != null) {
+                    widget.onIconPressed!();
+                  }
+                },
+                child: Icon(
+                  widget.suffixIconData,
+                  color: widget.iconColor ?? _theme.iconTheme.color,
+                  size: Info.verticalUnit * _iconFieldSize,
+                ),
+              )
             : null,
       ),
       validator: widget.validator,

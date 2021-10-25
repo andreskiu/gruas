@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:flutter_base/application/auth/auth_state.dart';
@@ -12,12 +13,10 @@ import 'package:flutter_base/domain/core/use_case.dart';
 @injectable
 class LoginPageState extends ChangeNotifier {
   LoginUseCase loginUseCase;
-  AuthState authState;
   GetUserRememberedUseCase getUserRememberedUseCase;
 
   LoginPageState({
     required this.loginUseCase,
-    required this.authState,
     required this.getUserRememberedUseCase,
   });
 
@@ -30,7 +29,7 @@ class LoginPageState extends ChangeNotifier {
     final usernameOrFailure = await getUserRememberedUseCase.call(NoParams());
     if (usernameOrFailure.isRight()) {
       username = usernameOrFailure.getOrElse(() => "");
-      rememberMe = true;
+      rememberMe = username.isNotEmpty;
     }
     notifyListeners();
     return username;
@@ -52,8 +51,9 @@ class LoginPageState extends ChangeNotifier {
 
     _userOrFailure.fold((fail) {
       error = fail;
-    }, (user) {
-      authState.loggedUser = user;
+    }, (user) async {
+      final _authState = await GetIt.I.getAsync<AuthState>();
+      _authState.loggedUser = user;
     });
 
     isLoading = false;

@@ -90,9 +90,8 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       () => _i26.LoginUseCase(get<_i22.AuthService>()));
   gh.lazySingleton<_i27.LogoutUseCase>(
       () => _i27.LogoutUseCase(get<_i22.AuthService>()));
-  gh.factoryAsync<_i28.LoginPageState>(() async => _i28.LoginPageState(
+  gh.factory<_i28.LoginPageState>(() => _i28.LoginPageState(
       loginUseCase: get<_i26.LoginUseCase>(),
-      authState: await get.getAsync<_i3.AuthState>(),
       getUserRememberedUseCase: get<_i25.GetUserRememberedUseCase>()));
   return get;
 }
