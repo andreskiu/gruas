@@ -104,6 +104,17 @@ flutter pub run build_runner watch --delete-conflicting-outputs
 
 [build_runner]: https://pub.dev/packages/build_runner
 
+### Native Splash Screen
+
+This project uses the [flutter_native_splash][splash] plugin to generate the native splash for android and ios. The splash screen is just a color here, and the animated logo y a dart screen. To regenerate the splash, change the options in the pubspec file and run:
+
+```
+flutter clean
+flutter pub run flutter_native_splash:create
+flutter run...
+```
+
+[splash]: https://pub.dev/packages/flutter_native_splash
 
 ## Working with responsive screens and different devices
 
