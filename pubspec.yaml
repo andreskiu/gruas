@@ -57,6 +57,11 @@ dependencies:
 
   # Internationalization
   easy_localization: ^3.0.0
+  # Firebase
+  firebase_core: ^1.8.0
+  
+  # Firestore database
+  cloud_firestore: ^2.5.4
 
   # Scan QR Codes
   qr_code_scanner: ^0.5.2

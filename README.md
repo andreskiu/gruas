@@ -138,6 +138,15 @@ On the other hand, using these widgets, we create the most common responsive wid
 
 In both cases, you need to provide the TextType param to choose the textStyle. TextStyle calculation is made in the same file, you can change it, but be aware all the App is goint to be using it.
 
+## FIREBASE
+
+This project is ready to be used with firebase. To connect with your firebase suite follow the instruccions:
+
+#### ANDROID
+
+- Go to project configuration on the firebase console and add a new android app. You can find the package name in the android manifest. This project is set with 'com.atv.gruas'
+- Go to the firebase console and generate the google-services.json with the app name. 
+- Download and replace the google-services.json file in android/app/
 
 ## Deployment
 

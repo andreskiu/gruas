@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +16,9 @@ Future<void> initConfig() async {
   await $initGetIt(getIt, environment: EnvironmentConfig.env);
 }
 
-Future<void> manualInitializations() async {}
+Future<void> manualInitializations() async {
+  await Firebase.initializeApp();
+}
 
 // third partys libraries
 @module
