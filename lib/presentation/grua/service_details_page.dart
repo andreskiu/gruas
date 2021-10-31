@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 import 'map.dart';
 
@@ -17,47 +17,60 @@ class ServiceDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Info.horizontalUnit * 5,
-          ),
-          child: FutureBuilder<GruaServiceState>(
-              future: GetIt.I.getAsync<GruaServiceState>(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: ResponsiveText("Buscando servicio"),
-                  );
-                }
-                final _state = snapshot.data;
-                if (_state == null || _state.error != null) {
-                  return Center(
-                    child: ResponsiveText(
-                      _state?.error?.message ??
-                          "Ocurrio un error, por favor vuelva a intentarlo",
-                    ),
-                  );
-                }
-                return StreamBuilder<List<Service>>(
-                    stream: _state.servicesStream,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(
-                          child:
-                              ResponsiveText("No se encontró ningun servicio"),
-                        );
-                      }
-                      final _service = snapshot.data!.first;
-                      _state.servicesSelected = _service;
-                      return Column(
+      appBar: AppBar(
+        title: Text("ATV"),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              GetIt.I.get<AuthState>().logout();
+            },
+            icon: Icon(
+              Icons.logout_rounded,
+            ),
+          )
+        ],
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: Info.horizontalUnit * 5,
+        ),
+        child: FutureBuilder<GruaServiceState>(
+            future: GetIt.I.getAsync<GruaServiceState>(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: ResponsiveText("Buscando servicio"),
+                );
+              }
+              final _state = snapshot.data;
+              if (_state == null || _state.error != null) {
+                return Center(
+                  child: ResponsiveText(
+                    _state?.error?.message ??
+                        "Ocurrio un error, por favor vuelva a intentarlo",
+                  ),
+                );
+              }
+              return StreamBuilder<List<Service>>(
+                  stream: _state.servicesStream,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
+                        child: ResponsiveText("No se encontró ningun servicio"),
+                      );
+                    }
+                    final _service = snapshot.data!.first;
+                    _state.servicesSelected = _service;
+                    return SingleChildScrollView(
+                      child: Column(
                         children: [
                           SizedBox(
                             height: Info.safeAreaPadding.top +
                                 Info.horizontalUnit * 2,
                           ),
                           ResponsiveText(
-                            "Servicio recibido",
+                            "Servicio disponible",
                             fontSize: 35,
                           ),
                           SizedBox(
@@ -67,10 +80,10 @@ class ServiceDetails extends StatelessWidget {
                             service: _service,
                           ),
                         ],
-                      );
-                    });
-              }),
-        ),
+                      ),
+                    );
+                  });
+            }),
       ),
     );
   }
@@ -109,7 +122,14 @@ class _ServiceDetail extends StatelessWidget {
       ),
       InfoLine(
         title: "Nombre conductor",
-        value: service.clientName,
+        value: service.clientName.isEmpty ? "Desconocido" : service.clientName,
+      ),
+      SizedBox(
+        height: Info.verticalUnit * 2,
+      ),
+      InfoLine(
+        title: "Fecha Solicitud",
+        value: service.requestTime.toString(),
       ),
       SizedBox(
         height: Info.verticalUnit * 2,
@@ -124,9 +144,9 @@ class _ServiceDetail extends StatelessWidget {
       ElevatedButton(
         onPressed: () async {
           final _success =
-              await Provider.of<GruaServiceState>(context).updateServiceStatus(
-            ServiceStatus.accepted,
-          );
+              await GetIt.I.get<GruaServiceState>().updateServiceStatus(
+                    ServiceStatus.accepted,
+                  );
           if (_success) {
             AutoRouter.of(context).push(ServiceAcceptedPageRoute(
               service: service,

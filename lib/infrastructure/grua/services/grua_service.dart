@@ -6,7 +6,6 @@ import 'package:flutter_base/domain/grua/services/grua_service.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:flutter_base/domain/auth/models/user.dart';
-import 'package:flutter_base/domain/auth/services/auth_service.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 
 import 'interfaces/i_grua_data_repository.dart';

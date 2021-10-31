@@ -57,6 +57,10 @@ dependencies:
 
   # Internationalization
   easy_localization: ^3.0.0
+
+  # Serialization
+  json_annotation: ^4.3.0
+
   # Firebase
   firebase_core: ^1.8.0
   
@@ -83,6 +87,7 @@ dev_dependencies:
   build_runner: ^2.1.4
   injectable_generator: ^1.5.2
   flutter_launcher_icons: "^0.9.0"
+  json_serializable: ^6.0.1
 
 flutter_native_splash: 
   color: "#2196F3"

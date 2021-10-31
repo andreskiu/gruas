@@ -50,7 +50,7 @@ android {
 
     defaultConfig {
          // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.atv.gruas" + dartEnvironmentVariables.APP_SUFFIX
+        applicationId "com.atv.gruas"
         applicationIdSuffix dartEnvironmentVariables.APP_SUFFIX
         minSdkVersion 21
         targetSdkVersion 31
