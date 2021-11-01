@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
+import 'package:flutter_base/presentation/core/helpers/format_helper.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
@@ -66,15 +67,14 @@ class ServiceDetails extends StatelessWidget {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: Info.safeAreaPadding.top +
-                                Info.horizontalUnit * 2,
+                            height: Info.horizontalUnit * 2,
                           ),
                           ResponsiveText(
                             "Servicio disponible",
                             fontSize: 35,
                           ),
                           SizedBox(
-                            height: Info.verticalUnit * 5,
+                            height: Info.verticalUnit * 2,
                           ),
                           _ServiceDetail(
                             service: _service,
@@ -129,7 +129,7 @@ class _ServiceDetail extends StatelessWidget {
       ),
       InfoLine(
         title: "Fecha Solicitud",
-        value: service.requestTime.toString(),
+        value: FormatHelper.userDateFormat().format(service.requestTime),
       ),
       SizedBox(
         height: Info.verticalUnit * 2,
@@ -139,7 +139,7 @@ class _ServiceDetail extends StatelessWidget {
         value: service.carModel,
       ),
       SizedBox(
-        height: Info.verticalUnit * 8,
+        height: Info.verticalUnit * 5,
       ),
       ElevatedButton(
         onPressed: () async {

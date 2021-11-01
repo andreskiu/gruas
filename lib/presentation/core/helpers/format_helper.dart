@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 abstract class FormatHelper {
   static String completeAmountWithZeros(String amount) {
     var _amount = double.tryParse(amount);
@@ -6,5 +8,9 @@ abstract class FormatHelper {
     } else {
       return "";
     }
+  }
+
+  static DateFormat userDateFormat() {
+    return DateFormat.MMMEd().add_Hm();
   }
 }

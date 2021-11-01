@@ -58,6 +58,9 @@ dependencies:
   # Internationalization
   easy_localization: ^3.0.0
 
+  # Date Formatting and others
+  intl: ^0.17.0
+
   # Serialization
   json_annotation: ^4.3.0
 
