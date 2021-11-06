@@ -63,6 +63,18 @@ class ServiceDetails extends StatelessWidget {
                     }
                     final _service = snapshot.data!.first;
                     _state.servicesSelected = _service;
+                    final _loggedUser = GetIt.I.get<AuthState>().loggedUser;
+                    if (_service.username == _loggedUser.username &&
+                        _service.status != ServiceStatus.pending &&
+                        _service.status != ServiceStatus.finished) {
+                      WidgetsBinding.instance!
+                          .addPostFrameCallback((timeStamp) {
+                        AutoRouter.of(context)
+                            .popAndPush(ServiceAcceptedPageRoute(
+                          service: _service,
+                        ));
+                      });
+                    }
                     return SingleChildScrollView(
                       child: Column(
                         children: [
@@ -99,6 +111,7 @@ class _ServiceDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("fecha: " + service.requestTime.toIso8601String());
     return Column(children: [
       Card(
         child: Container(
@@ -112,6 +125,13 @@ class _ServiceDetail extends StatelessWidget {
       ),
       SizedBox(
         height: Info.verticalUnit * 4,
+      ),
+      InfoLine(
+        title: "Estado del Servicio",
+        value: tr(service.status.toString()),
+      ),
+      SizedBox(
+        height: Info.verticalUnit * 2,
       ),
       InfoLine(
         title: "Tipo de Servicio",
@@ -147,11 +167,11 @@ class _ServiceDetail extends StatelessWidget {
               await GetIt.I.get<GruaServiceState>().updateServiceStatus(
                     ServiceStatus.accepted,
                   );
-          if (_success) {
-            AutoRouter.of(context).push(ServiceAcceptedPageRoute(
-              service: service,
-            ));
-          }
+          // if (_success) {
+          //   AutoRouter.of(context).push(ServiceAcceptedPageRoute(
+          //     service: service,
+          //   ));
+          // }
         },
         child: ResponsiveText(
           "Aceptar Servicio",

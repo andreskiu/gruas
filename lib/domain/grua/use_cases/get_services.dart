@@ -25,13 +25,12 @@ class GetServicesUseCase
 
     final _servicesOrFailure = await service.getServices(user: params.user);
 
-    _servicesOrFailure.fold(
+    return _servicesOrFailure.fold(
       (fail) {
-        // final _error = _servicesOrFailure.fold((fail) => fail, (r) => null);
         return Left(fail);
       },
       (stream) {
-        stream.map(
+        final _newStream = stream.map(
           (serviceList) {
             final _myList = serviceList.where((service) {
               return _isMyCurrentService(service, params.user);
@@ -56,19 +55,21 @@ class GetServicesUseCase
             return list;
           },
         );
+        return Right(_newStream);
       },
     );
-
-    return _servicesOrFailure;
   }
 
   bool _isMyCurrentService(Service service, User user) {
-    return service.status != ServiceStatus.pending &&
-        service.username == user.username;
+    return service.username == user.username &&
+        (service.status == ServiceStatus.accepted ||
+            service.status == ServiceStatus.carPicked);
   }
 
   bool _serviceIsAvailable(Service service, User user) {
-    return service.status == ServiceStatus.pending && service.username.isEmpty;
+    return service.status == ServiceStatus.pending &&
+        service.username.isEmpty &&
+        user.serviceOffered == service.type;
   }
 }
 

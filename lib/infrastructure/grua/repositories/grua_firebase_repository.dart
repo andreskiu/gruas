@@ -5,6 +5,7 @@ import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_base/infrastructure/grua/models/novedad_atv.dart';
+import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dart';
 import 'dart:async';
 
 import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data_repository.dart';
@@ -23,7 +24,19 @@ class GruaDemoRepositoryImpl implements IGruaDataRepository {
   Future<Either<ErrorContent, Stream<List<Service>>>> getServices({
     required User user,
   }) async {
-    final _serviceStream = _firestore.collection(_servicesPath).snapshots();
+    final _serviceStream = _firestore
+        .collection(_servicesPath)
+        .where(
+          "idAtvTipoServicio",
+          isEqualTo: TransformationsGrua.serviceTypeToInt(user.serviceOffered),
+        )
+        .where(
+      "username",
+      whereIn: [
+        "",
+        user.username,
+      ],
+    ).snapshots();
     final _serviceMapped = _serviceStream.map((query) => query.docs
         .map(
           (doc) => NovedadAtv.fromJson(

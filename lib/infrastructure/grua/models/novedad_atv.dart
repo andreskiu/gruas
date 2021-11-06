@@ -76,7 +76,7 @@ class NovedadAtv extends Equatable {
 
     return Service(
       id: idAtvNovedad.toString(),
-      type: idAtvTipoServicio,
+      type: idAtvTipoServicio, status: idAtvEstado,
       clientName: "",
       clientLocation: _clientLocation,
       detinationLocation: _destinationPlace,

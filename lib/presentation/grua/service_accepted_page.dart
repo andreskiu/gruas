@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_base/application/grua/grua_service_state.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
 import 'package:flutter_base/presentation/grua/save_photo_modal.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import 'map.dart';
 
@@ -17,40 +20,58 @@ class ServiceAcceptedPage extends StatelessWidget {
   final Service service;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Stack(children: [
-          Container(
-            height: Info.verticalUnit * 100,
-            child: Center(
-              child: ServiceMap(
-                service: service,
-                // serviceLocation: LatLng(10.3917,-75.4819),
+    return ChangeNotifierProvider<GruaServiceState>.value(
+      value: GetIt.I.get<GruaServiceState>(),
+      builder: (context, child) {
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Stack(children: [
+              Container(
+                height: Info.verticalUnit * 100,
+                child: Center(
+                  child: ServiceMap(
+                    service: service,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Positioned(
-            top: Info.safeAreaPadding.top,
-            left: Info.horizontalUnit * 5,
-            right: Info.horizontalUnit * 5,
-            child: ElevatedButton(
-              onPressed: () {
-                AutoRouter.of(context).pop();
-              },
-              child: ResponsiveText(
-                "Finalizar Servicio",
-                textType: TextType.Headline5,
+              Positioned(
+                top: Info.safeAreaPadding.top,
+                left: Info.horizontalUnit * 5,
+                right: Info.horizontalUnit * 5,
+                child: Consumer<GruaServiceState>(
+                    builder: (context, state, child) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      ServiceStatus _newStatus = ServiceStatus.carPicked;
+                      if (service.status == ServiceStatus.carPicked) {
+                        _newStatus = ServiceStatus.finished;
+                      }
+                      final _success = await state.updateServiceStatus(
+                        _newStatus,
+                      );
+                      if (_success && _newStatus == ServiceStatus.finished) {
+                        AutoRouter.of(context).pop();
+                      }
+                    },
+                    child: ResponsiveText(
+                      service.status == ServiceStatus.accepted
+                          ? "Vehiculo recogido"
+                          : "Finalizar Servicio",
+                      textType: TextType.Headline5,
+                    ),
+                  );
+                }),
               ),
-            ),
+              Positioned(
+                bottom: Info.safeAreaPadding.bottom,
+                left: Info.horizontalUnit * 5,
+                right: Info.horizontalUnit * 5,
+                child: ButtonBar(),
+              )
+            ]),
           ),
-          Positioned(
-            bottom: Info.safeAreaPadding.bottom,
-            left: Info.horizontalUnit * 5,
-            right: Info.horizontalUnit * 5,
-            child: ButtonBar(),
-          )
-        ]),
-      ),
+        );
+      },
     );
   }
 }

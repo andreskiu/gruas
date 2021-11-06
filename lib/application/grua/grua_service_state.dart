@@ -71,7 +71,7 @@ class GruaServiceState extends ChangeNotifier {
         // servicesStream = service;
       },
     );
-
+    notifyListeners();
     return _serviceOrFailure.isRight();
   }
 }
