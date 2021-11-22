@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_base/config/environments/environment_config.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
+import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -94,5 +95,14 @@ class GruaDemoRepositoryImpl implements IGruaDataRepository, Disposable {
     _services[_serviceIndex] = _servicesCopy;
     _streamController.sink.add(_services);
     return Right(_servicesCopy);
+  }
+
+  @override
+  Future<Either<ErrorContent, String>> uploadPhoto({
+    required Service service,
+    required Evidence evidence,
+  }) async {
+    await Future.delayed(Duration(seconds: 5));
+    return Right("DEMO URLL");
   }
 }

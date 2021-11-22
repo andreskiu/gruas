@@ -14,7 +14,9 @@ import '../../splash_page.dart';
     AutoRoute(page: SplashScreen, initial: true),
     AutoRoute(page: ServiceAcceptedPage, guards: [AuthGuard]),
     AutoRoute(page: ServiceDetails, guards: [AuthGuard]),
-    AutoRoute<String?>(page: ScanQRPage, ),
+    AutoRoute<String?>(
+      page: ScanQRPage,
+    ),
     CustomRoute(
       page: LoginPage,
       transitionsBuilder: TransitionsBuilders.fadeIn,

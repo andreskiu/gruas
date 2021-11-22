@@ -1,9 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_base/domain/auth/failures/auth_failures.dart';
 import 'package:flutter_base/domain/auth/fields/password_field.dart';
-import 'package:flutter_base/domain/core/utils/constants.dart';
-// import 'package:flutter_base/presentation/core/styles/color_palette.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 
 class PasswordFormField extends StatefulWidget {

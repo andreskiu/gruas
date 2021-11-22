@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
@@ -20,10 +19,6 @@ class ServiceMap extends StatefulWidget {
 class _ServiceMapState extends State<ServiceMap> {
   Completer<GoogleMapController> _controller = Completer();
   LocationData? _locationData;
-  late BitmapDescriptor _blueIcon;
-  late BitmapDescriptor _blackIcon;
-  late BitmapDescriptor _greenIcon;
-  late BitmapDescriptor _redIcon;
 
   @override
   void dispose() {
@@ -53,38 +48,6 @@ class _ServiceMapState extends State<ServiceMap> {
     }
     _locationData = await location.getLocation();
   }
-
-  // Future<BitmapDescriptor> getMarker(String path) async {
-  //   const markerSize = 200;
-  //   try {
-  //     final _redIconBytes = await getBytesFromAsset(
-  //       path,
-  //       markerSize,
-  //     );
-  //     if (_redIconBytes != null) {
-  //       return BitmapDescriptor.fromBytes(_redIconBytes);
-  //     }
-  //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
-  //   } catch (e) {
-  //     return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
-  //   }
-  // }
-
-  // Future<void> loadBusesImages() async {
-  //   _blueIcon = await getMarker(
-  //     "assets/images/maps/bus-marker.png",
-  //   );
-  //   _redIcon = await getMarker(
-  //     "assets/images/maps/bus-marker-rojo.png",
-  //   );
-  //   _blackIcon = await getMarker(
-  //     "assets/images/maps/bus-marker-rojo.png",
-  //   );
-  //   _greenIcon = await getMarker(
-  //     "assets/images/maps/bus-marker-verde.png",
-  //   );
-  //   return;
-  // }
 
   Future<bool> prepareMap() async {
     // await loadBusesImages();

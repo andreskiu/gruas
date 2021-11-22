@@ -36,8 +36,7 @@ class AppRouter extends _i6.RootStackRouter {
     ServiceAcceptedPageRoute.name: (routeData) {
       final args = routeData.argsAs<ServiceAcceptedPageRouteArgs>();
       return _i6.AdaptivePage<dynamic>(
-          routeData: routeData,
-          child: _i2.ServiceAcceptedPage(key: args.key, service: args.service));
+          routeData: routeData, child: _i2.ServiceAcceptedPage());
     },
     ServiceDetailsRoute.name: (routeData) {
       return _i6.AdaptivePage<dynamic>(

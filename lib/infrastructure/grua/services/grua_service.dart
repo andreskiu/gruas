@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/services/grua_service.dart';
+import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:flutter_base/domain/auth/models/user.dart';
@@ -30,5 +31,16 @@ class GruaServiceImpl implements IGruaService {
     required Service service,
   }) {
     return repository.saveService(service: service);
+  }
+
+  @override
+  Future<Either<ErrorContent, String>> uploadPhoto({
+    required Service service,
+    required Evidence evidence,
+  }) {
+    return repository.uploadPhoto(
+      service: service,
+      evidence: evidence,
+    );
   }
 }

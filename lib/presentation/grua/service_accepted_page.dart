@@ -5,23 +5,20 @@ import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
-import 'package:flutter_base/presentation/grua/save_photo_modal.dart';
+import 'package:flutter_base/presentation/grua/dialogs.dart';
 import 'package:get_it/get_it.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import 'map.dart';
+import 'modals.dart';
 
 class ServiceAcceptedPage extends StatelessWidget {
-  const ServiceAcceptedPage({
-    Key? key,
-    required this.service,
-  }) : super(key: key);
-  final Service service;
+  final GruaServiceState state = GetIt.I.get<GruaServiceState>();
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GruaServiceState>.value(
-      value: GetIt.I.get<GruaServiceState>(),
+      value: state,
       builder: (context, child) {
         return Scaffold(
           body: SingleChildScrollView(
@@ -29,9 +26,12 @@ class ServiceAcceptedPage extends StatelessWidget {
               Container(
                 height: Info.verticalUnit * 100,
                 child: Center(
-                  child: ServiceMap(
-                    service: service,
-                  ),
+                  child: Consumer<GruaServiceState>(
+                      builder: (context, state, child) {
+                    return ServiceMap(
+                      service: state.servicesSelected!,
+                    );
+                  }),
                 ),
               ),
               Positioned(
@@ -40,23 +40,49 @@ class ServiceAcceptedPage extends StatelessWidget {
                 right: Info.horizontalUnit * 5,
                 child: Consumer<GruaServiceState>(
                     builder: (context, state, child) {
+                  String _text = "Vehiculo recogido";
+                  if (state.servicesSelected!.status ==
+                          ServiceStatus.carPicked ||
+                      state.servicesSelected!.status ==
+                          ServiceStatus.finished) {
+                    _text = "Finalizar Servicio";
+                  }
                   return ElevatedButton(
                     onPressed: () async {
                       ServiceStatus _newStatus = ServiceStatus.carPicked;
-                      if (service.status == ServiceStatus.carPicked) {
+                      if (state.servicesSelected!.status ==
+                          ServiceStatus.carPicked) {
                         _newStatus = ServiceStatus.finished;
                       }
-                      final _success = await state.updateServiceStatus(
-                        _newStatus,
-                      );
-                      if (_success && _newStatus == ServiceStatus.finished) {
-                        AutoRouter.of(context).pop();
+                      await showDialog<bool>(
+                          context: context,
+                          builder: (context) {
+                            return ServiceStatusChangeDialog(
+                              serviceStatus: _newStatus,
+                              onAceptedButtonPressed: () async {
+                                await state.updateServiceStatus(_newStatus);
+
+                                AutoRouter.of(context).pop();
+                              },
+                            );
+                          });
+
+                      if (state.serviceUpdatedSuccesfully) {
+                        await showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ServiceStatusConfirmationDialog(
+                                serviceStatus: _newStatus,
+                              );
+                            });
+                        if (_newStatus == ServiceStatus.finished) {
+                          // go back to home if service is finished
+                          AutoRouter.of(context).pop();
+                        }
                       }
                     },
                     child: ResponsiveText(
-                      service.status == ServiceStatus.accepted
-                          ? "Vehiculo recogido"
-                          : "Finalizar Servicio",
+                      _text,
                       textType: TextType.Headline5,
                     ),
                   );
@@ -76,13 +102,15 @@ class ServiceAcceptedPage extends StatelessWidget {
   }
 }
 
-class ButtonBar extends StatelessWidget {
+class ButtonBar extends StatefulWidget {
   ButtonBar({Key? key}) : super(key: key);
 
-  final ImagePicker _picker = ImagePicker();
-  Future<XFile?> _takePhoto() {
-    return _picker.pickImage(source: ImageSource.camera);
-  }
+  @override
+  State<ButtonBar> createState() => _ButtonBarState();
+}
+
+class _ButtonBarState extends State<ButtonBar> {
+  bool _takePhotActive = true;
 
   @override
   Widget build(BuildContext context) {
@@ -105,39 +133,26 @@ class ButtonBar extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () async {
-                const _borderRadius = 8;
-                final _photo = await _takePhoto();
-                if (_photo == null) {
-                  return;
-                }
-                showBottomSheet(
-                    context: context,
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(
-                            Info.horizontalUnit * _borderRadius),
-                        topLeft: Radius.circular(
-                            Info.horizontalUnit * _borderRadius),
-                      ),
-                      side: BorderSide(
-                        color: Colors.black54,
-                        width: 0.5,
-                      ),
-                    ),
-                    builder: (context) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            top: Info.horizontalUnit * _borderRadius),
-                        child: SaveFotoModal(
-                          photo: _photo,
-                        ),
-                      );
-                    });
-              },
+              onPressed: _takePhotActive
+                  ? () async {
+                      setState(() {
+                        _takePhotActive = false;
+                      });
+
+                      final _photo = await Modals.takeFoto(context);
+
+                      setState(() {
+                        _takePhotActive = true;
+                      });
+                      if (_photo == null) {
+                        return;
+                      }
+                      final _saved =
+                          await Modals.showSaveFotoModal(context, _photo);
+                    }
+                  : null,
               child: ResponsiveText(
-                "Sacar Foto",
+                "Tomar Foto",
                 textType: TextType.Headline5,
               ),
             ),

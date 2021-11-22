@@ -109,6 +109,7 @@ ThemeData getThemeData(ColorPalette palette) {
     accentColor: palette.accentColor,
     backgroundColor: palette.backgroundColor,
     scaffoldBackgroundColor: palette.backgroundColor,
+    errorColor: palette.errorColor,
     buttonTheme: ButtonThemeData(),
     checkboxTheme: CheckboxThemeData(
       checkColor: MaterialStateProperty.all(

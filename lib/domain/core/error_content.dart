@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:dartz/dartz.dart';
 
 // abstract class Failure<T, R> {
 //   ErrorContent getError();

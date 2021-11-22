@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/core/use_case.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
@@ -21,9 +20,39 @@ class SaveServicesUseCase extends UseCase<Service, SaveServicesUseCaseParams> {
     if (_error != null) {
       return Left(_error);
     }
+    final _service = params.service;
+    final _mustUpdateAcceptedTime = _service.status == ServiceStatus.accepted &&
+        _service.serviceAcceptedTime == null;
+
+    final _mustUpdateCarPickedTime =
+        _service.status == ServiceStatus.carPicked &&
+            _service.carPickedTime == null;
+
+    final _mustUpdateFinishedTime = _service.status == ServiceStatus.finished &&
+        _service.serviceFinishedTime == null;
+
+    Service _serviceToSave = params.service.copyWith();
+
+    if (_mustUpdateAcceptedTime) {
+      _serviceToSave = _serviceToSave.copyWith(
+        serviceAcceptedTime: DateTime.now(),
+      );
+    }
+
+    if (_mustUpdateCarPickedTime) {
+      _serviceToSave = _serviceToSave.copyWith(
+        carPickedTime: DateTime.now(),
+      );
+    }
+
+    if (_mustUpdateFinishedTime) {
+      _serviceToSave = _serviceToSave.copyWith(
+        serviceFinishedTime: DateTime.now(),
+      );
+    }
 
     final _servicesOrFailure = await service.saveService(
-      service: params.service,
+      service: _serviceToSave,
     );
 
     return _servicesOrFailure;

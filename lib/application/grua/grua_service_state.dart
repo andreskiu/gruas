@@ -3,7 +3,9 @@ import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_services.dart';
+import 'package:flutter_base/domain/grua/use_cases/save_evidence.dart';
 import 'package:flutter_base/domain/grua/use_cases/save_service.dart';
+import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -13,6 +15,7 @@ class GruaServiceState extends ChangeNotifier {
     required this.getServicesUseCase,
     required this.saveServicesUseCase,
     required this.authState,
+    required this.saveEvidenceUseCase,
   });
 
   @factoryMethod
@@ -20,11 +23,13 @@ class GruaServiceState extends ChangeNotifier {
     final _authState = GetIt.I.get<AuthState>();
     final _getServicesUseCase = GetIt.I.get<GetServicesUseCase>();
     final _saveServicesUseCase = GetIt.I.get<SaveServicesUseCase>();
+    final _saveEvidenceUseCase = GetIt.I.get<SaveEvidenceUseCase>();
 
     final _state = GruaServiceState._(
       getServicesUseCase: _getServicesUseCase,
       saveServicesUseCase: _saveServicesUseCase,
       authState: _authState,
+      saveEvidenceUseCase: _saveEvidenceUseCase,
     );
     await _state.getServices();
     return _state;
@@ -32,10 +37,14 @@ class GruaServiceState extends ChangeNotifier {
 
   final GetServicesUseCase getServicesUseCase;
   final SaveServicesUseCase saveServicesUseCase;
+  final SaveEvidenceUseCase saveEvidenceUseCase;
   final AuthState authState;
+
   ErrorContent? error;
   Stream<List<Service>>? servicesStream;
   Service? servicesSelected;
+  bool serviceUpdatedSuccesfully = false;
+  bool evidenceUploaded = false;
 
   Future<void> getServices() async {
     final _params = GetServicesUseCaseParams(user: authState.loggedUser);
@@ -66,9 +75,30 @@ class GruaServiceState extends ChangeNotifier {
     _serviceOrFailure.fold(
       (fail) {
         error = fail;
+        serviceUpdatedSuccesfully = false;
       },
       (service) {
-        // servicesStream = service;
+        serviceUpdatedSuccesfully = true;
+        error = null;
+      },
+    );
+    notifyListeners();
+    return _serviceOrFailure.isRight();
+  }
+
+  Future<bool> uploadEvidence(Evidence evidence) async {
+    final _params = SaveEvidenceUseCaseParams(
+        service: servicesSelected!, evidence: evidence);
+    final _serviceOrFailure = await saveEvidenceUseCase.call(_params);
+
+    _serviceOrFailure.fold(
+      (fail) {
+        error = fail;
+        evidenceUploaded = false;
+      },
+      (photoUrl) {
+        evidenceUploaded = true;
+        error = null;
       },
     );
     notifyListeners();

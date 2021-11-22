@@ -18,6 +18,15 @@ NovedadAtv _$NovedadAtvFromJson(Map<String, dynamic> json) => NovedadAtv(
       lngFin: json['lngFin'] as String,
       username: json['username'] as String,
       vehiculo: json['vehiculo'] as String,
+      fechaServicioAceptado: json['fechaServicioAceptado'] == null
+          ? null
+          : DateTime.parse(json['fechaServicioAceptado'] as String),
+      fechaVehiculoRecogido: json['fechaVehiculoRecogido'] == null
+          ? null
+          : DateTime.parse(json['fechaVehiculoRecogido'] as String),
+      fechaServicioFinalizado: json['fechaServicioFinalizado'] == null
+          ? null
+          : DateTime.parse(json['fechaServicioFinalizado'] as String),
     );
 
 Map<String, dynamic> _$NovedadAtvToJson(NovedadAtv instance) =>
@@ -33,4 +42,10 @@ Map<String, dynamic> _$NovedadAtvToJson(NovedadAtv instance) =>
       'lngFin': instance.lngFin,
       'username': instance.username,
       'vehiculo': instance.vehiculo,
+      'fechaServicioAceptado':
+          instance.fechaServicioAceptado?.toIso8601String(),
+      'fechaVehiculoRecogido':
+          instance.fechaVehiculoRecogido?.toIso8601String(),
+      'fechaServicioFinalizado':
+          instance.fechaServicioFinalizado?.toIso8601String(),
     };

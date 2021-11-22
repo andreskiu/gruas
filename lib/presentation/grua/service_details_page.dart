@@ -12,8 +12,39 @@ import 'package:get_it/get_it.dart';
 
 import 'map.dart';
 
-class ServiceDetails extends StatelessWidget {
+class ServiceDetails extends StatefulWidget {
   const ServiceDetails({Key? key}) : super(key: key);
+
+  @override
+  State<ServiceDetails> createState() => _ServiceDetailsState();
+}
+
+class _ServiceDetailsState extends State<ServiceDetails> {
+  // final _state = GetIt.I.get<GruaServiceState>();
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
+
+// MEJORAR LA NAVEGACION! SE ACTUALIZA EL MAPA CUANDO SE ACTUALIZA EL ESTADO
+  // _navigateToService() {
+  //   final _loggedUser = GetIt.I.get<AuthState>().loggedUser;
+  //   final _service = _state.servicesSelected;
+  //   if (_service == null) {
+  //   } else {
+  //     if (_service.username == _loggedUser.username &&
+  //         _service.status != ServiceStatus.pending &&
+  //         _service.status != ServiceStatus.finished) {
+  //       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+  //         print("Navegando a la pagina con el mapa grande");
+  //         AutoRouter.of(context).current.name
+  //         AutoRouter.of(context).popAndPush(ServiceAcceptedPageRoute(
+  //           service: _service,
+  //         ));
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +100,16 @@ class ServiceDetails extends StatelessWidget {
                         _service.status != ServiceStatus.finished) {
                       WidgetsBinding.instance!
                           .addPostFrameCallback((timeStamp) {
-                        AutoRouter.of(context)
-                            .popAndPush(ServiceAcceptedPageRoute(
-                          service: _service,
-                        ));
+                        print("evaluando navegacion");
+                        if (AutoRouter.of(context).current.name !=
+                            ServiceAcceptedPageRoute.name) {
+                          print("NAVEGANDO A LA PAGINA DE SERVICIO ACEPTADO");
+                          AutoRouter.of(context).popAndPush(
+                            ServiceAcceptedPageRoute(
+                              service: _service,
+                            ),
+                          );
+                        }
                       });
                     }
                     return SingleChildScrollView(
@@ -108,6 +145,18 @@ class _ServiceDetail extends StatelessWidget {
   }) : super(key: key);
 
   final Service service;
+
+  Future<void> _acceptService() async {
+    final _success = await GetIt.I.get<GruaServiceState>().updateServiceStatus(
+          ServiceStatus.accepted,
+        );
+  }
+
+  Future<void> _viewCurrentService(BuildContext context) async {
+    AutoRouter.of(context).push(ServiceAcceptedPageRoute(
+      service: service,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,19 +211,13 @@ class _ServiceDetail extends StatelessWidget {
         height: Info.verticalUnit * 5,
       ),
       ElevatedButton(
-        onPressed: () async {
-          final _success =
-              await GetIt.I.get<GruaServiceState>().updateServiceStatus(
-                    ServiceStatus.accepted,
-                  );
-          // if (_success) {
-          //   AutoRouter.of(context).push(ServiceAcceptedPageRoute(
-          //     service: service,
-          //   ));
-          // }
-        },
+        onPressed: service.status != ServiceStatus.pending
+            ? () => _viewCurrentService(context)
+            : _acceptService,
         child: ResponsiveText(
-          "Aceptar Servicio",
+          service.status != ServiceStatus.pending
+              ? "Retomar Servicio"
+              : "Aceptar Servicio",
           textType: TextType.Headline5,
         ),
       ),

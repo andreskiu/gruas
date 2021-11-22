@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_base/domain/auth/failures/auth_failures.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/core/utils/constants.dart';
 import 'package:flutter_base/domain/core/utils/regular_expressions.dart';

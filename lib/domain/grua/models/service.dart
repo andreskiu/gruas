@@ -11,6 +11,9 @@ class Service extends Equatable {
   final LatLng clientLocation;
   final LatLng detinationLocation;
   final DateTime requestTime;
+  final DateTime? carPickedTime;
+  final DateTime? serviceAcceptedTime;
+  final DateTime? serviceFinishedTime;
   final String username;
   final String carModel;
 
@@ -24,6 +27,9 @@ class Service extends Equatable {
     required this.requestTime,
     required this.username,
     required this.id,
+    this.carPickedTime,
+    this.serviceAcceptedTime,
+    this.serviceFinishedTime,
   });
 
   factory Service.empty() {
@@ -48,7 +54,10 @@ class Service extends Equatable {
         detinationLocation,
         carModel,
         username,
-        requestTime.millisecondsSinceEpoch
+        requestTime.millisecondsSinceEpoch,
+        carPickedTime?.millisecondsSinceEpoch,
+        serviceAcceptedTime?.millisecondsSinceEpoch,
+        serviceFinishedTime?.millisecondsSinceEpoch,
       ];
 
   Service copyWith({
@@ -59,6 +68,9 @@ class Service extends Equatable {
     LatLng? clientLocation,
     LatLng? detinationLocation,
     DateTime? requestTime,
+    DateTime? carPickedTime,
+    DateTime? serviceAcceptedTime,
+    DateTime? serviceFinishedTime,
     String? username,
     String? carModel,
   }) {
@@ -70,6 +82,9 @@ class Service extends Equatable {
       clientLocation: clientLocation ?? this.clientLocation,
       detinationLocation: detinationLocation ?? this.detinationLocation,
       requestTime: requestTime ?? this.requestTime,
+      carPickedTime: carPickedTime ?? this.carPickedTime,
+      serviceAcceptedTime: serviceAcceptedTime ?? this.serviceAcceptedTime,
+      serviceFinishedTime: serviceFinishedTime ?? this.serviceFinishedTime,
       username: username ?? this.username,
       carModel: carModel ?? this.carModel,
     );

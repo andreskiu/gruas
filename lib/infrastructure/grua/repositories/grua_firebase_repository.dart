@@ -4,6 +4,7 @@ import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/models/novedad_atv.dart';
 import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dart';
 import 'dart:async';
@@ -62,5 +63,15 @@ class GruaDemoRepositoryImpl implements IGruaDataRepository {
       print(e);
       return Left(ErrorContent.server("Fail to save service"));
     }
+  }
+
+// TODO: ESTO DEBERIA ESTAR EN OTRO REPOSITORIO, YA QUE LA IMAGEN NO SE GUARDARA EN FIREBASE
+  @override
+  Future<Either<ErrorContent, String>> uploadPhoto({
+    required Service service,
+    required Evidence evidence,
+  }) async {
+    await Future.delayed(Duration(seconds: 5));
+    return Right("DEMO URLL");
   }
 }

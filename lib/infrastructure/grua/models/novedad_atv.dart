@@ -9,9 +9,6 @@ part 'novedad_atv.g.dart';
 
 @JsonSerializable()
 class NovedadAtv extends Equatable {
-  //TODO: uncomment when changed on firebase
-  // final DateTime fechaSolicitud;
-
   @JsonKey(
     includeIfNull: true,
     fromJson: TransformationsGrua.intToServiceStatus,
@@ -32,6 +29,13 @@ class NovedadAtv extends Equatable {
   final String username;
   final String vehiculo;
 
+  //TODO: uncomment when changed on firebase
+  // final DateTime fechaSolicitud;
+
+  final DateTime? fechaServicioAceptado;
+  final DateTime? fechaVehiculoRecogido;
+  final DateTime? fechaServicioFinalizado;
+
   NovedadAtv({
     // required this.fechaSolicitud,
     required this.idAtvEstado,
@@ -43,6 +47,9 @@ class NovedadAtv extends Equatable {
     required this.lngFin,
     required this.username,
     required this.vehiculo,
+    this.fechaServicioAceptado,
+    this.fechaVehiculoRecogido,
+    this.fechaServicioFinalizado,
   });
 
   @override
@@ -57,6 +64,9 @@ class NovedadAtv extends Equatable {
         lngFin,
         username,
         vehiculo,
+        fechaServicioAceptado,
+        fechaVehiculoRecogido,
+        fechaServicioFinalizado,
       ];
 
   Service toService() {
@@ -83,6 +93,9 @@ class NovedadAtv extends Equatable {
       carModel: vehiculo,
       requestTime: DateTime.now(), // fechaSolicitud,
       username: username,
+      serviceAcceptedTime: fechaServicioAceptado,
+      serviceFinishedTime: fechaServicioFinalizado,
+      carPickedTime: fechaVehiculoRecogido,
     );
   }
 
@@ -98,6 +111,9 @@ class NovedadAtv extends Equatable {
       lngFin: service.detinationLocation.longitude.toString(),
       username: service.username,
       vehiculo: service.carModel,
+      fechaServicioAceptado: service.serviceAcceptedTime,
+      fechaServicioFinalizado: service.serviceFinishedTime,
+      fechaVehiculoRecogido: service.carPickedTime,
     );
   }
 
