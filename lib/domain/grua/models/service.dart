@@ -10,6 +10,7 @@ class Service extends Equatable {
   final ServiceStatus status;
   final LatLng clientLocation;
   final LatLng detinationLocation;
+  final LatLng? serviceAcceptedFromLocation;
   final DateTime requestTime;
   final DateTime? carPickedTime;
   final DateTime? serviceAcceptedTime;
@@ -23,6 +24,7 @@ class Service extends Equatable {
     this.status = ServiceStatus.pending,
     required this.clientLocation,
     required this.detinationLocation,
+    this.serviceAcceptedFromLocation,
     required this.carModel,
     required this.requestTime,
     required this.username,
@@ -52,6 +54,7 @@ class Service extends Equatable {
         status,
         clientLocation,
         detinationLocation,
+        serviceAcceptedFromLocation,
         carModel,
         username,
         requestTime.millisecondsSinceEpoch,
@@ -67,6 +70,7 @@ class Service extends Equatable {
     ServiceStatus? status,
     LatLng? clientLocation,
     LatLng? detinationLocation,
+    LatLng? serviceAcceptedFromLocation,
     DateTime? requestTime,
     DateTime? carPickedTime,
     DateTime? serviceAcceptedTime,
@@ -81,6 +85,8 @@ class Service extends Equatable {
       status: status ?? this.status,
       clientLocation: clientLocation ?? this.clientLocation,
       detinationLocation: detinationLocation ?? this.detinationLocation,
+      serviceAcceptedFromLocation:
+          serviceAcceptedFromLocation ?? this.serviceAcceptedFromLocation,
       requestTime: requestTime ?? this.requestTime,
       carPickedTime: carPickedTime ?? this.carPickedTime,
       serviceAcceptedTime: serviceAcceptedTime ?? this.serviceAcceptedTime,

@@ -5,6 +5,7 @@ import 'package:flutter_base/config/environments/environment_config.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data_repository.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
@@ -104,5 +105,14 @@ class GruaDemoRepositoryImpl implements IGruaDataRepository, Disposable {
   }) async {
     await Future.delayed(Duration(seconds: 5));
     return Right("DEMO URLL");
+  }
+
+  @override
+  Future<Either<ErrorContent, PolylineResult>> getServiceRoute({
+    required LatLng origin,
+    required LatLng destination,
+  }) {
+    // TODO: implement getServiceRoute
+    throw UnimplementedError();
   }
 }

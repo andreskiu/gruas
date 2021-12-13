@@ -30,6 +30,8 @@ class ServiceAcceptedPage extends StatelessWidget {
                       builder: (context, state, child) {
                     return ServiceMap(
                       service: state.servicesSelected!,
+                      shouldUpdateUserPosition: false,
+                      viewMode: ViewMode.drive,
                     );
                   }),
                 ),
@@ -77,6 +79,8 @@ class ServiceAcceptedPage extends StatelessWidget {
                             });
                         if (_newStatus == ServiceStatus.finished) {
                           // go back to home if service is finished
+
+                          // AutoRouter.of(context).replace(ServiceDetailsRoute());
                           AutoRouter.of(context).pop();
                         }
                       }
@@ -91,7 +95,7 @@ class ServiceAcceptedPage extends StatelessWidget {
               Positioned(
                 bottom: Info.safeAreaPadding.bottom,
                 left: Info.horizontalUnit * 5,
-                right: Info.horizontalUnit * 5,
+                // right: Info.horizontalUnit * 5,
                 child: ButtonBar(),
               )
             ]),
@@ -116,48 +120,48 @@ class _ButtonBarState extends State<ButtonBar> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ElevatedButton(
-              onPressed: () async {
-                final String? code = await AutoRouter.of(context)
-                    .push<String?>(ScanQRPageRoute());
-                if (code != null && code.isNotEmpty) {
-                  print("code read = " + code);
-                }
-              },
-              child: ResponsiveText(
-                "Escanear QR",
-                textType: TextType.Headline5,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: _takePhotActive
-                  ? () async {
-                      setState(() {
-                        _takePhotActive = false;
-                      });
-
-                      final _photo = await Modals.takeFoto(context);
-
-                      setState(() {
-                        _takePhotActive = true;
-                      });
-                      if (_photo == null) {
-                        return;
-                      }
-                      final _saved =
-                          await Modals.showSaveFotoModal(context, _photo);
-                    }
-                  : null,
-              child: ResponsiveText(
-                "Tomar Foto",
-                textType: TextType.Headline5,
-              ),
-            ),
-          ],
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        ElevatedButton(
+          onPressed: () async {
+            final String? code =
+                await AutoRouter.of(context).push<String?>(ScanQRPageRoute());
+            if (code != null && code.isNotEmpty) {
+              print("code read = " + code);
+            }
+          },
+          child: ResponsiveText(
+            "Escanear QR",
+            textType: TextType.Headline5,
+          ),
         ),
+        ElevatedButton(
+          onPressed: _takePhotActive
+              ? () async {
+                  setState(() {
+                    _takePhotActive = false;
+                  });
+
+                  final _photo = await Modals.takeFoto(context);
+
+                  setState(() {
+                    _takePhotActive = true;
+                  });
+                  if (_photo == null) {
+                    return;
+                  }
+                  final _saved =
+                      await Modals.showSaveFotoModal(context, _photo);
+                }
+              : null,
+          child: ResponsiveText(
+            "Tomar Foto",
+            textType: TextType.Headline5,
+          ),
+        ),
+        //   ],
+        // ),
       ],
     );
   }

@@ -16,6 +16,8 @@ NovedadAtv _$NovedadAtvFromJson(Map<String, dynamic> json) => NovedadAtv(
       lngInicio: json['lngInicio'] as String,
       latFin: json['latFin'] as String,
       lngFin: json['lngFin'] as String,
+      latServicioAceptado: json['latServicioAceptado'] as String? ?? '',
+      lngServicioAceptado: json['lngServicioAceptado'] as String? ?? '',
       username: json['username'] as String,
       vehiculo: json['vehiculo'] as String,
       fechaServicioAceptado: json['fechaServicioAceptado'] == null
@@ -40,6 +42,8 @@ Map<String, dynamic> _$NovedadAtvToJson(NovedadAtv instance) =>
       'lngInicio': instance.lngInicio,
       'latFin': instance.latFin,
       'lngFin': instance.lngFin,
+      'latServicioAceptado': instance.latServicioAceptado,
+      'lngServicioAceptado': instance.lngServicioAceptado,
       'username': instance.username,
       'vehiculo': instance.vehiculo,
       'fechaServicioAceptado':

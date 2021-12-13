@@ -4,6 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/services/grua_service.dart';
 import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
+import 'package:flutter_polyline_points/src/utils/polyline_result.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:flutter_base/domain/auth/models/user.dart';
@@ -41,6 +43,15 @@ class GruaServiceImpl implements IGruaService {
     return repository.uploadPhoto(
       service: service,
       evidence: evidence,
+    );
+  }
+
+  @override
+  Future<Either<ErrorContent, PolylineResult>> getServiceRoute(
+      {required LatLng origin, required LatLng destination}) {
+    return repository.getServiceRoute(
+      origin: origin,
+      destination: destination,
     );
   }
 }

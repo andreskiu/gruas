@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
@@ -7,7 +9,9 @@ import 'package:flutter_base/domain/grua/use_cases/save_evidence.dart';
 import 'package:flutter_base/domain/grua/use_cases/save_service.dart';
 import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'package:location/location.dart';
 
 @lazySingleton
 class GruaServiceState extends ChangeNotifier {
@@ -31,6 +35,8 @@ class GruaServiceState extends ChangeNotifier {
       authState: _authState,
       saveEvidenceUseCase: _saveEvidenceUseCase,
     );
+    _state.updateRoutesStream = StreamController<bool>.broadcast();
+
     await _state.getServices();
     return _state;
   }
@@ -45,6 +51,9 @@ class GruaServiceState extends ChangeNotifier {
   Service? servicesSelected;
   bool serviceUpdatedSuccesfully = false;
   bool evidenceUploaded = false;
+
+  LocationData? lastLocation;
+  late StreamController<bool> updateRoutesStream;
 
   Future<void> getServices() async {
     final _params = GetServicesUseCaseParams(user: authState.loggedUser);
@@ -61,9 +70,18 @@ class GruaServiceState extends ChangeNotifier {
   }
 
   Future<bool> updateServiceStatus(ServiceStatus serviceStatus) async {
+    LatLng? _currentLocation;
+    if (serviceStatus == ServiceStatus.accepted) {
+      if (lastLocation != null) {
+        _currentLocation =
+            LatLng(lastLocation!.latitude!, lastLocation!.longitude!);
+      }
+    }
+
     final _serviceCopy = servicesSelected?.copyWith(
       status: serviceStatus,
       username: authState.loggedUser.username,
+      serviceAcceptedFromLocation: _currentLocation,
     );
     if (_serviceCopy == null) {
       error = ErrorContent.useCase("No service selected");
@@ -80,6 +98,9 @@ class GruaServiceState extends ChangeNotifier {
       (service) {
         serviceUpdatedSuccesfully = true;
         error = null;
+        if (service.status == ServiceStatus.carPicked) {
+          updateRoutesStream.sink.add(true);
+        }
       },
     );
     notifyListeners();
@@ -88,7 +109,9 @@ class GruaServiceState extends ChangeNotifier {
 
   Future<bool> uploadEvidence(Evidence evidence) async {
     final _params = SaveEvidenceUseCaseParams(
-        service: servicesSelected!, evidence: evidence);
+      service: servicesSelected!,
+      evidence: evidence,
+    );
     final _serviceOrFailure = await saveEvidenceUseCase.call(_params);
 
     _serviceOrFailure.fold(

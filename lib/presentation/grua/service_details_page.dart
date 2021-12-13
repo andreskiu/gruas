@@ -94,24 +94,25 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                     }
                     final _service = snapshot.data!.first;
                     _state.servicesSelected = _service;
-                    final _loggedUser = GetIt.I.get<AuthState>().loggedUser;
-                    if (_service.username == _loggedUser.username &&
-                        _service.status != ServiceStatus.pending &&
-                        _service.status != ServiceStatus.finished) {
-                      WidgetsBinding.instance!
-                          .addPostFrameCallback((timeStamp) {
-                        print("evaluando navegacion");
-                        if (AutoRouter.of(context).current.name !=
-                            ServiceAcceptedPageRoute.name) {
-                          print("NAVEGANDO A LA PAGINA DE SERVICIO ACEPTADO");
-                          AutoRouter.of(context).popAndPush(
-                            ServiceAcceptedPageRoute(
-                              service: _service,
-                            ),
-                          );
-                        }
-                      });
-                    }
+                    // TODO: uncomment to auto-navigate.
+                    // final _loggedUser = GetIt.I.get<AuthState>().loggedUser;
+                    // if (_service.username == _loggedUser.username &&
+                    //     _service.status != ServiceStatus.pending &&
+                    //     _service.status != ServiceStatus.finished) {
+                    //   WidgetsBinding.instance!
+                    //       .addPostFrameCallback((timeStamp) {
+                    //     print("evaluando navegacion");
+                    //     if (AutoRouter.of(context).current.name !=
+                    //         ServiceAcceptedPageRoute.name) {
+                    //       print("NAVEGANDO A LA PAGINA DE SERVICIO ACEPTADO");
+                    //       AutoRouter.of(context).popAndPush(
+                    //         ServiceAcceptedPageRoute(
+                    //           service: _service,
+                    //         ),
+                    //       );
+                    //     }
+                    //   });
+                    // }
                     return SingleChildScrollView(
                       child: Column(
                         children: [
@@ -153,9 +154,14 @@ class _ServiceDetail extends StatelessWidget {
   }
 
   Future<void> _viewCurrentService(BuildContext context) async {
+    // AutoRouter.of(context).replace(ServiceAcceptedPageRoute(
+    // service: service,
+    // )); //popForced();
     AutoRouter.of(context).push(ServiceAcceptedPageRoute(
       service: service,
     ));
+    // print("==================================poniendo en stream =========");
+    // GetIt.I.get<GruaServiceState>().updateRoutesStream.sink.add(true);
   }
 
   @override
@@ -168,6 +174,7 @@ class _ServiceDetail extends StatelessWidget {
           child: Center(
             child: ServiceMap(
               service: service,
+              shouldUpdateUserPosition: true,
             ),
           ),
         ),

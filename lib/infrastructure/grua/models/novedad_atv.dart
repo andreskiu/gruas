@@ -26,6 +26,10 @@ class NovedadAtv extends Equatable {
   final String lngInicio;
   final String latFin;
   final String lngFin;
+  @JsonKey(defaultValue: '')
+  final String latServicioAceptado;
+  @JsonKey(defaultValue: '')
+  final String lngServicioAceptado;
   final String username;
   final String vehiculo;
 
@@ -45,6 +49,8 @@ class NovedadAtv extends Equatable {
     required this.lngInicio,
     required this.latFin,
     required this.lngFin,
+    required this.latServicioAceptado,
+    required this.lngServicioAceptado,
     required this.username,
     required this.vehiculo,
     this.fechaServicioAceptado,
@@ -62,6 +68,8 @@ class NovedadAtv extends Equatable {
         lngInicio,
         latFin,
         lngFin,
+        latServicioAceptado,
+        lngServicioAceptado,
         username,
         vehiculo,
         fechaServicioAceptado,
@@ -78,10 +86,19 @@ class NovedadAtv extends Equatable {
     }
 
     late LatLng _destinationPlace;
-    final _destinationLat = double.tryParse(latInicio);
-    final _destinationLng = double.tryParse(lngInicio);
+    final _destinationLat = double.tryParse(latFin);
+    final _destinationLng = double.tryParse(lngFin);
     if (_destinationLat != null && _destinationLng != null) {
       _destinationPlace = LatLng(_destinationLat, _destinationLng);
+    }
+    LatLng? _serviceAcceptedFrom;
+    final _serviceAcceptedFromLat = double.tryParse(latServicioAceptado);
+    final _serviceAcceptedFromLng = double.tryParse(lngServicioAceptado);
+    if (_serviceAcceptedFromLat != null && _serviceAcceptedFromLng != null) {
+      _serviceAcceptedFrom = LatLng(
+        _serviceAcceptedFromLat,
+        _serviceAcceptedFromLng,
+      );
     }
 
     return Service(
@@ -90,6 +107,7 @@ class NovedadAtv extends Equatable {
       clientName: "",
       clientLocation: _clientLocation,
       detinationLocation: _destinationPlace,
+      serviceAcceptedFromLocation: _serviceAcceptedFrom,
       carModel: vehiculo,
       requestTime: DateTime.now(), // fechaSolicitud,
       username: username,
@@ -109,6 +127,10 @@ class NovedadAtv extends Equatable {
       lngInicio: service.clientLocation.longitude.toString(),
       latFin: service.detinationLocation.latitude.toString(),
       lngFin: service.detinationLocation.longitude.toString(),
+      latServicioAceptado:
+          service.serviceAcceptedFromLocation?.latitude.toString() ?? '',
+      lngServicioAceptado:
+          service.serviceAcceptedFromLocation?.longitude.toString() ?? '',
       username: service.username,
       vehiculo: service.carModel,
       fechaServicioAceptado: service.serviceAcceptedTime,

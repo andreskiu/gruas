@@ -10,6 +10,8 @@ import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dar
 import 'dart:async';
 
 import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data_repository.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 
 @Environment(EnvironmentConfig.dev)
@@ -62,6 +64,35 @@ class GruaDemoRepositoryImpl implements IGruaDataRepository {
     } catch (e) {
       print(e);
       return Left(ErrorContent.server("Fail to save service"));
+    }
+  }
+
+  @override
+  Future<Either<ErrorContent, PolylineResult>> getServiceRoute({
+    required LatLng origin,
+    required LatLng destination,
+  }) async {
+    try {
+      const _androidAPIKEY = "AIzaSyCW4JEtCHKHgITyJ7WJfvvgMKxi4WqJPqc";
+      PolylinePoints polylinePoints = PolylinePoints();
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        _androidAPIKEY,
+        PointLatLng(
+          origin.latitude,
+          origin.longitude,
+        ),
+        PointLatLng(
+          destination.latitude,
+          destination.longitude,
+        ),
+      );
+      if (result.errorMessage != null && result.errorMessage!.isNotEmpty) {
+        return Left(ErrorContent.server(result.errorMessage!));
+      }
+      return Right(result);
+    } on Exception catch (e) {
+      print('Fail to calculate route');
+      return Left(ErrorContent.server('Fail to calculate route'));
     }
   }
 
