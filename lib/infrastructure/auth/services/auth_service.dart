@@ -32,7 +32,10 @@ class AuthServiceImpl extends AuthService {
     _userOrFailure.fold(
       (l) => null,
       (user) {
-        localStorage.storeSessionInformation(sessionInformation: user.session!);
+        if (user.session != null) {
+          localStorage.storeSessionInformation(
+              sessionInformation: user.session!);
+        }
         if (rememberUsername) {
           localStorage.storeUsername(username: username);
         } else {

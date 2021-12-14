@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_base/domain/auth/fields/username_field.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -36,15 +37,15 @@ class LoginPageState extends ChangeNotifier {
   }
 
   Future<bool> login(
-    EmailField email,
+    UsernameField username,
     PasswordField psw,
     bool rememberMe,
   ) async {
     isLoading = true;
     notifyListeners();
     final _params = LoginParams(
-      email: email,
-      password: psw,
+      username: username.getValue() ?? '',
+      password: psw.getValue() ?? '',
       rememberUsername: rememberMe,
     );
     final _userOrFailure = await loginUseCase.call(_params);

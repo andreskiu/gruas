@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_base/domain/core/core_fields/email_field.dart';
+import 'package:flutter_base/domain/auth/fields/username_field.dart';
 import '../responsivity/responsive_text.dart';
 
 class EmailFormField extends StatelessWidget {
@@ -28,7 +28,7 @@ class EmailFormField extends StatelessWidget {
         'core.fields.email.label',
       ),
       validator: (String? input) {
-        final _email = EmailField(input, mandatory: mandatory);
+        final _email = UsernameField(input, mandatory: mandatory);
         final _error = _email.getError();
         if (_error == null) {
           return null;

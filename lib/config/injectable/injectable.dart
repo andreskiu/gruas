@@ -27,6 +27,7 @@ abstract class RegisterModule {
   Dio dio() => Dio(
         BaseOptions(
           baseUrl: GetIt.I.get<EnvironmentConfig>().baseUrl,
+          contentType: Headers.formUrlEncodedContentType,
         ),
       );
 

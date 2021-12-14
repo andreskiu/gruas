@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_base/domain/auth/fields/password_field.dart';
+import 'package:flutter_base/domain/auth/fields/username_field.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/auth/services/auth_service.dart';
 import 'package:flutter_base/domain/core/core_fields/email_field.dart';
@@ -25,8 +26,8 @@ class LoginUseCase extends UseCase<User, LoginParams> {
     }
 
     final result = await service.login(
-      username: params.email.getValue()!,
-      password: params.password.getValue()!,
+      username: params.username,
+      password: params.password,
       rememberUsername: params.rememberUsername,
     );
 
@@ -43,28 +44,34 @@ class LoginUseCase extends UseCase<User, LoginParams> {
 }
 
 class LoginParams extends Equatable {
-  final EmailField email;
-  final PasswordField password;
+  final String username;
+  final String password;
   final bool rememberUsername;
 
   LoginParams({
-    required this.email,
+    required this.username,
     required this.password,
     required this.rememberUsername,
   });
 
   ErrorContent? areValid() {
-    final _psw = PasswordField(password.value.getOrElse(() => ""),
-        validateSecurity: false);
-    if (!email.isValid()) {
-      return email.getError();
+    final _username = UsernameField(username);
+    if (!_username.isValid()) {
+      return _username.getError();
     }
+    final _psw = PasswordField(
+      password,
+      validateSecurity: false,
+    );
     if (!_psw.isValid()) {
-      return email.getError();
+      return _username.getError();
     }
     return null;
   }
 
   @override
-  List<Object> get props => [email];
+  List<Object> get props => [
+        username,
+        password,
+      ];
 }

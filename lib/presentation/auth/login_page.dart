@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/auth/login_page_state.dart';
 import 'package:flutter_base/domain/auth/fields/password_field.dart';
-import 'package:flutter_base/domain/core/core_fields/email_field.dart';
+import 'package:flutter_base/domain/auth/fields/username_field.dart';
 import 'package:flutter_base/presentation/auth/fields/password_form_field.dart';
 import 'package:flutter_base/presentation/core/fields/email_form_field.dart';
 import 'package:flutter_base/presentation/core/helpers/utils.dart';
@@ -22,7 +22,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  late EmailField email;
+  late UsernameField username;
   late PasswordField password;
 
   late Future<String> futureUsername;
@@ -90,8 +90,8 @@ class _LoginPageState extends State<LoginPage> {
                             EmailFormField(
                               textController: emailController,
                               mandatory: true,
-                              onSaved: (mail) {
-                                email = EmailField(mail);
+                              onSaved: (user) {
+                                username = UsernameField(user);
                               },
                             ),
                             SizedBox(
@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
       // final _state = Provider.of<LoginPageState>(context, listen: false);
       _formKey.currentState!.save();
       final _success = await _state.login(
-        email,
+        username,
         password,
         _state.rememberMe,
       );

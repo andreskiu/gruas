@@ -24,7 +24,7 @@ import '../../domain/grua/use_cases/save_evidence.dart' as _i19;
 import '../../domain/grua/use_cases/save_service.dart' as _i20;
 import '../../infrastructure/auth/repositories/demo_auth_repository.dart'
     as _i12;
-import '../../infrastructure/auth/repositories/firebase_auth_repository.dart'
+import '../../infrastructure/auth/repositories/server_auth_repository.dart'
     as _i13;
 import '../../infrastructure/auth/repositories/shared_preferences_auth_repository.dart'
     as _i25;

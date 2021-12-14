@@ -6,7 +6,7 @@ import 'environment_config.dart';
 @Injectable(as: EnvironmentConfig)
 class EnvironmentDev extends EnvironmentConfig {
   @override
-  String get baseUrl => "api_url";
+  String get baseUrl => "http://186.31.18.146:8084/RigelATVWS/";
 
   @override
   String get firebaseUrl => 'url_firebase';

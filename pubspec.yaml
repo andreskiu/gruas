@@ -35,7 +35,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # To make HTTP querys
-  dio: ^4.0.0
+  dio: ^4.0.4
 
   # Functional programming and error handling - No more exceptions!
   dartz: ^0.10.0
