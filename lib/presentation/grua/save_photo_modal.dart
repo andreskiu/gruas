@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
-import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
+import 'package:flutter_base/domain/grua/models/evidence.dart';
+import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
-import 'package:flutter_base/presentation/core/styles/light_theme.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -26,31 +26,33 @@ class SaveFotoModal extends StatefulWidget {
 class _SaveFotoModalState extends State<SaveFotoModal> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _state = GetIt.I.get<GruaServiceState>();
+  late Future<List<EvidenceType>> _evidenceTypeQuery;
   bool _isLoading = false;
 
   late EvidenceType _selectedEvidenceType;
-  final _types = [
-    EvidenceType(
-      id: "1",
-      name: "Atasco en tráfico",
-      description: '',
-    ),
-    EvidenceType(
-      id: "2",
-      name: "Vehículo Subido",
-      description: '',
-    ),
-    EvidenceType(
-      id: "3",
-      name: "Vehículo entregado",
-      description: '',
-    ),
-  ];
+  // final _types = [
+  //   EvidenceType(
+  //     id: 1,
+  //     name: "Atasco en tráfico",
+  //     description: '',
+  //   ),
+  //   EvidenceType(
+  //     id: 2,
+  //     name: "Vehículo Subido",
+  //     description: '',
+  //   ),
+  //   EvidenceType(
+  //     id: 3,
+  //     name: "Vehículo entregado",
+  //     description: '',
+  //   ),
+  // ];
   @override
   void initState() {
     super.initState();
-    _selectedEvidenceType = _types.first;
+
     _state.evidenceUploaded = false;
+    _evidenceTypeQuery = _state.getEvidenceTypes();
   }
 
   @override
@@ -103,22 +105,31 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                           SizedBox(
                             height: Info.verticalUnit * 2,
                           ),
-                          ResponsiveFormFieldButton<EvidenceType>(
-                            value: _selectedEvidenceType,
-                            onSaved: (type) {
-                              if (type != null) {
-                                _selectedEvidenceType = type;
-                              }
-                            },
-                            items: _types
-                                .map(
-                                  (ev) => DropdownMenuItem(
-                                    value: ev,
-                                    child: ResponsiveText(ev.name),
-                                  ),
-                                )
-                                .toList(),
-                          ),
+                          FutureBuilder<List<EvidenceType>>(
+                              future: _evidenceTypeQuery,
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                                _selectedEvidenceType = snapshot.data!.first;
+                                return ResponsiveFormFieldButton<EvidenceType>(
+                                  value: _selectedEvidenceType,
+                                  onSaved: (type) {
+                                    if (type != null) {
+                                      _selectedEvidenceType = type;
+                                    }
+                                  },
+                                  items: snapshot.data!
+                                      .map(
+                                        (ev) => DropdownMenuItem(
+                                          value: ev,
+                                          child: ResponsiveText(ev.name),
+                                        ),
+                                      )
+                                      .toList(),
+                                );
+                              }),
                           SizedBox(
                             height: Info.verticalUnit * 2,
                           ),

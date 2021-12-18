@@ -4,7 +4,7 @@ import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/core/use_case.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/services/grua_service.dart';
-import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
+import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton

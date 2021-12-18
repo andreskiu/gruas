@@ -4,7 +4,7 @@ import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
+import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/models/novedad_atv.dart';
 import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dart';
 import 'dart:async';
@@ -18,9 +18,9 @@ import 'package:injectable/injectable.dart';
 @Environment(EnvironmentConfig.qa)
 @Environment(EnvironmentConfig.prod)
 @LazySingleton(
-  as: IGruaDataRepository,
+  as: IFirebaseService,
 )
-class GruaDemoRepositoryImpl implements IGruaDataRepository {
+class GruaDemoRepositoryImpl implements IFirebaseService {
   final _firestore = FirebaseFirestore.instance;
   final _servicesPath = "novedad_atv";
   @override

@@ -20,4 +20,11 @@ class SessionInformation extends Equatable {
       expireSession: expireSession ?? this.expireSession,
     );
   }
+
+  factory SessionInformation.empty() {
+    return SessionInformation(
+      sessionId: "",
+      expireSession: DateTime.now(),
+    );
+  }
 }

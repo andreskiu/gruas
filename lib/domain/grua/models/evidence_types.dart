@@ -1,26 +1,5 @@
-import 'package:image_picker/image_picker.dart';
-
-class Evidence {
-  final XFile photo;
-  final EvidenceType type;
-  Evidence({
-    required this.photo,
-    required this.type,
-  });
-
-  Evidence copyWith({
-    XFile? photo,
-    EvidenceType? type,
-  }) {
-    return Evidence(
-      photo: photo ?? this.photo,
-      type: type ?? this.type,
-    );
-  }
-}
-
 class EvidenceType {
-  final String id;
+  final int id;
   final String name;
   final String description;
   EvidenceType({
@@ -30,7 +9,7 @@ class EvidenceType {
   });
 
   EvidenceType copyWith({
-    String? id,
+    int? id,
     String? name,
     String? description,
   }) {

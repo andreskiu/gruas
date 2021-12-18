@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_base/config/environments/environment_config.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
-import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
+import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data_repository.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get_it/get_it.dart';
@@ -15,9 +15,9 @@ import 'package:flutter_base/domain/core/error_content.dart';
 
 @Environment(EnvironmentConfig.demo)
 @LazySingleton(
-  as: IGruaDataRepository,
+  as: IFirebaseService,
 )
-class GruaDemoRepositoryImpl implements IGruaDataRepository, Disposable {
+class GruaDemoRepositoryImpl implements IFirebaseService, Disposable {
   final _services = [
     Service(
       id: "1234",

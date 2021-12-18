@@ -33,15 +33,8 @@ class DemoRepository extends IAuthDataRepository {
     required String password,
   }) async {
     try {
-      String _basicAuth =
-          'Basic ' + base64Encode(utf8.encode('rigelWS:rigelWS2021'));
       final _serverResponse = await _dio.post(
         _loginPath,
-        options: Options(
-          headers: {
-            "Authorization": _basicAuth,
-          },
-        ),
         queryParameters: {
           'username': username,
           'password': password,

@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
+import 'package:flutter_base/domain/core/use_case.dart';
+import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
+import 'package:flutter_base/domain/grua/use_cases/get_evidence_types.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_services.dart';
 import 'package:flutter_base/domain/grua/use_cases/save_evidence.dart';
 import 'package:flutter_base/domain/grua/use_cases/save_service.dart';
-import 'package:flutter_base/infrastructure/grua/models/evidence.dart';
+import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
@@ -20,6 +23,7 @@ class GruaServiceState extends ChangeNotifier {
     required this.saveServicesUseCase,
     required this.authState,
     required this.saveEvidenceUseCase,
+    required this.getEvidenceTypesUseCase,
   });
 
   @factoryMethod
@@ -28,12 +32,14 @@ class GruaServiceState extends ChangeNotifier {
     final _getServicesUseCase = GetIt.I.get<GetServicesUseCase>();
     final _saveServicesUseCase = GetIt.I.get<SaveServicesUseCase>();
     final _saveEvidenceUseCase = GetIt.I.get<SaveEvidenceUseCase>();
+    final _getEvidenceTypesUseCase = GetIt.I.get<GetEvidenceTypesUseCase>();
 
     final _state = GruaServiceState._(
       getServicesUseCase: _getServicesUseCase,
       saveServicesUseCase: _saveServicesUseCase,
       authState: _authState,
       saveEvidenceUseCase: _saveEvidenceUseCase,
+      getEvidenceTypesUseCase: _getEvidenceTypesUseCase,
     );
     _state.updateRoutesStream = StreamController<bool>.broadcast();
 
@@ -44,6 +50,7 @@ class GruaServiceState extends ChangeNotifier {
   final GetServicesUseCase getServicesUseCase;
   final SaveServicesUseCase saveServicesUseCase;
   final SaveEvidenceUseCase saveEvidenceUseCase;
+  final GetEvidenceTypesUseCase getEvidenceTypesUseCase;
   final AuthState authState;
 
   ErrorContent? error;
@@ -51,6 +58,7 @@ class GruaServiceState extends ChangeNotifier {
   Service? servicesSelected;
   bool serviceUpdatedSuccesfully = false;
   bool evidenceUploaded = false;
+  List<EvidenceType> evidenceTypes = [];
 
   LocationData? lastLocation;
   late StreamController<bool> updateRoutesStream;
@@ -67,6 +75,20 @@ class GruaServiceState extends ChangeNotifier {
         servicesStream = services;
       },
     );
+  }
+
+  Future<List<EvidenceType>> getEvidenceTypes() async {
+    final evidencesOrFailure = await getEvidenceTypesUseCase.call(NoParams());
+
+    evidencesOrFailure.fold(
+      (fail) => error = fail,
+      (evidences) {
+        evidenceTypes = evidences;
+        error = null;
+      },
+    );
+    notifyListeners();
+    return evidenceTypes;
   }
 
   Future<bool> updateServiceStatus(ServiceStatus serviceStatus) async {
