@@ -95,14 +95,4 @@ class GruaDemoRepositoryImpl implements IFirebaseService {
       return Left(ErrorContent.server('Fail to calculate route'));
     }
   }
-
-// TODO: ESTO DEBERIA ESTAR EN OTRO REPOSITORIO, YA QUE LA IMAGEN NO SE GUARDARA EN FIREBASE
-  @override
-  Future<Either<ErrorContent, String>> uploadPhoto({
-    required Service service,
-    required Evidence evidence,
-  }) async {
-    await Future.delayed(Duration(seconds: 5));
-    return Right("DEMO URLL");
-  }
 }

@@ -18,6 +18,7 @@ class GruaServerRepository extends IServerService {
   final Dio _dio = GetIt.I.get<Dio>();
 
   final _getEvidencesTypesPath = "attentionOnRoad/tipesEvidence";
+  final _saveEvidencePath = "attentionOnRoad/saveEvidence";
 
   @override
   Future<Either<ErrorContent, List<EvidenceType>>> getEvidenceTypes() async {
@@ -36,9 +37,24 @@ class GruaServerRepository extends IServerService {
   }
 
   @override
-  Future<Either<ErrorContent, String>> uploadPhoto(
-      {required Service service, required Evidence evidence}) {
-    // TODO: implement uploadPhoto
-    throw UnimplementedError();
+  Future<Either<ErrorContent, String>> uploadPhoto({
+    required Service service,
+    required Evidence evidence,
+  }) async {
+    try {
+      final _photoData = await evidence.photo.readAsBytes();
+
+      final _serverResponse = await _dio.post(_saveEvidencePath, data: {
+        "file": _photoData,
+        "data": {},
+      });
+
+      // final _typesWrapper = EvidenceTypeSWrapper.fromJson(_serverResponse.data);
+      // final List<EvidenceType> _types =
+      //     _typesWrapper.listObject.map((model) => model.toEntity()).toList();
+      return Right("url");
+    } on Exception catch (e) {
+      return Left(ErrorContent.server("Error uploading evidence"));
+    }
   }
 }
