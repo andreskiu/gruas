@@ -5,6 +5,8 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
 
+import 'core/responsivity/responsive_calculations.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -59,7 +61,11 @@ class _SplashScreenState extends State<SplashScreen>
           child: Center(
             child: FadeTransition(
               opacity: _animation,
-              child: Image.asset("assets/images/logo.png"),
+              child: Image.asset(
+                "assets/images/logo_blanco.png",
+                width: Info.horizontalUnit * 40,
+                height: Info.horizontalUnit * 40,
+              ),
             ),
           ),
         ),

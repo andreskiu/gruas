@@ -123,7 +123,7 @@ flutter:
   assets:
     - assets/i18n/en.json
     - assets/i18n/es.json
-    - assets/images/logo.png
+    - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

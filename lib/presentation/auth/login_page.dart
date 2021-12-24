@@ -61,7 +61,11 @@ class _LoginPageState extends State<LoginPage> {
                     Hero(
                       tag: "iconLogo",
                       child: LoginAppBar(
-                        child: Image.asset("assets/images/logo.png"),
+                        child: Image.asset(
+                          "assets/images/logo_blanco.png",
+                          width: Info.horizontalUnit * 40,
+                          height: Info.horizontalUnit * 40,
+                        ),
                         size: Size(
                           Info.screenWidth,
                           Info.verticalUnit * 35,

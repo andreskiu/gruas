@@ -166,7 +166,6 @@ class _ServiceDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("fecha: " + service.requestTime.toIso8601String());
     return Column(children: [
       Card(
         child: Container(

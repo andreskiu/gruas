@@ -10,16 +10,16 @@ class ColorPaletteLight implements ColorPalette {
   Brightness get brightness => Brightness.light;
 
   @override
-  Color get primaryColor => Colors.blue;
+  Color get primaryColor => Color.fromARGB(255, 53, 87, 73);
 
   @override
-  Color get primaryColorDisabled => Colors.blue;
+  Color get primaryColorDisabled => primaryColor.withOpacity(0.7);
 
   @override
-  Color get primaryColorDark => Colors.blue[700]!;
+  Color get primaryColorDark => primaryColor.withOpacity(0.7);
 
   @override
-  Color get successColor => Colors.green;
+  Color get successColor => Color.fromARGB(255, 147, 210, 15);
 
   @override
   Color? get accentColor => null;
@@ -106,6 +106,12 @@ ThemeData getThemeData(ColorPalette palette) {
   return theme.copyWith(
     primaryColor: palette.primaryColor,
     primaryColorDark: palette.primaryColorDark,
+    appBarTheme: AppBarTheme(
+      color: palette.primaryColor,
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: palette.primaryColor,
+    ),
     accentColor: palette.accentColor,
     backgroundColor: palette.backgroundColor,
     scaffoldBackgroundColor: palette.backgroundColor,
