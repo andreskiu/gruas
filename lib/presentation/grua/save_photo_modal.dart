@@ -1,23 +1,24 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
+import 'package:flutter_base/domain/core/utils/image_helper.dart';
 import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:get_it/get_it.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:image/image.dart' as im;
 
 class SaveFotoModal extends StatefulWidget {
   SaveFotoModal({
     Key? key,
-    required this.photo,
+    this.photo,
   }) : super(key: key);
 
-  final XFile photo;
+  final im.Image? photo;
 
   @override
   State<SaveFotoModal> createState() => _SaveFotoModalState();
@@ -30,23 +31,7 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
   bool _isLoading = false;
 
   late EvidenceType _selectedEvidenceType;
-  // final _types = [
-  //   EvidenceType(
-  //     id: 1,
-  //     name: "Atasco en tráfico",
-  //     description: '',
-  //   ),
-  //   EvidenceType(
-  //     id: 2,
-  //     name: "Vehículo Subido",
-  //     description: '',
-  //   ),
-  //   EvidenceType(
-  //     id: 3,
-  //     name: "Vehículo entregado",
-  //     description: '',
-  //   ),
-  // ];
+
   @override
   void initState() {
     super.initState();
@@ -89,19 +74,29 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                           SizedBox(
                             height: Info.verticalUnit * 2,
                           ),
-                          Container(
-                            height: Info.verticalUnit * 20,
-                            width: Info.verticalUnit * 15,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: FileImage(
-                                  File(
-                                    widget.photo.path,
+                          widget.photo == null
+                              ? Text("No se tomo ninguna foto")
+                              : FutureBuilder<Uint8List>(
+                                  future: ImageHelper.encodeJpg(
+                                    widget.photo!,
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                    return Container(
+                                      height: Info.verticalUnit * 25,
+                                      width: Info.verticalUnit * 15,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: Image.memory(snapshot.data!)
+                                              .image,
+                                        ),
+                                      ),
+                                    );
+                                  }),
                           SizedBox(
                             height: Info.verticalUnit * 2,
                           ),
@@ -148,7 +143,7 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                                               .validate()) {
                                             _formKey.currentState!.save();
                                             final _evidence = Evidence(
-                                              photo: widget.photo,
+                                              photo: widget.photo!,
                                               type: _selectedEvidenceType,
                                             );
                                             final _successOrFailure =

@@ -1,9 +1,9 @@
-import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart';
 
 import 'evidence_types.dart';
 
 class Evidence {
-  final XFile photo;
+  final Image photo;
   final EvidenceType type;
   Evidence({
     required this.photo,
@@ -11,7 +11,7 @@ class Evidence {
   });
 
   Evidence copyWith({
-    XFile? photo,
+    Image? photo,
     EvidenceType? type,
   }) {
     return Evidence(

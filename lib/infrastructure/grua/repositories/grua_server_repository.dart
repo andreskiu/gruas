@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_base/config/environments/environment_config.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter_base/domain/core/utils/image_helper.dart';
 import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/infrastructure/grua/models/evidence_type_server_model.dart';
@@ -42,7 +43,7 @@ class GruaServerRepository extends IServerService {
     required Evidence evidence,
   }) async {
     try {
-      final _photoData = await evidence.photo.readAsBytes();
+      final _photoData = await ImageHelper.encodeJpg(evidence.photo);
 
       final _serverResponse = await _dio.post(_saveEvidencePath, data: {
         "file": _photoData,

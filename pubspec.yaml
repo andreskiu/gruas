@@ -82,6 +82,9 @@ dependencies:
   # To draw google routes
   flutter_polyline_points: ^1.0.0
 
+  # To draw date water mark
+  image: ^3.1.0
+
   # Location
   location: ^4.2.0
 
