@@ -57,7 +57,7 @@ android {
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        resValue "string", "app_name", "Flutter Base Project"
+        resValue "string", "app_name", "Green Móvil"
         resValue "string", "iconName", "@mipmap/ic_launcher"// + dartEnvironmentVariables.APP_SUFFIX
         resValue "string", "iconForeground", "@drawable/ic_launcher_foreground"// + dartEnvironmentVariables.APP_SUFFIX
         resValue "string", "iconCircular", "@mipmap/ic_launcher"// + dartEnvironmentVariables.APP_SUFFIX
