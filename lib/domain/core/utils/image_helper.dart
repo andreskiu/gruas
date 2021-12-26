@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as ExtImage;
+import 'package:location/location.dart';
 
 List<int> _encodeJpgComputation(ExtImage.Image image) {
   return ExtImage.encodeJpg(image);
@@ -12,108 +14,66 @@ ExtImage.Image? _decodeImageComputation(Uint8List bytes) {
 }
 
 class ImageHelper {
-  static bool isRemote({
-    required String path,
-  }) {
-    return path.contains('http://') || path.contains('https://');
-  }
-
-  // static Future<Size> getSize({
-  //   required String path,
-  // }) async {
-  //   final _file = isRemote(path: path)
-  //       ? await DefaultCacheManager().getSingleFile(path)
-  //       : File(path);
-
-  //   final _imageBytes = await _file.readAsBytes();
-  //   ExtImage.Image? _image = await decodeImage(_imageBytes);
-
-  //   if (_image == null) return Size.zero;
-
-  //   return Size(
-  //     _image.width.toDouble(),
-  //     _image.height.toDouble(),
-  //   );
-  // }
-
-  // static Future<ExtImage.Image?> transform({
-  //   required String path,
-  //   required Matrix4 matrix,
-  //   required double viewportScale,
-  //   required Size viewportSize,
-  //   required int maxWidth,
-  //   required int maxHeight,
-  // }) async {
-  //   final double scale = matrix.row0[0] * viewportScale;
-  //   final int xOffset = (matrix.row0[3] / scale).round().abs();
-  //   final int yOffset = (matrix.row1[3] / scale).round().abs();
-  //   final int croppedWidth = (viewportSize.width / scale).round();
-  //   final int croppedHeight = (viewportSize.height / scale).round();
-
-  //   final _file = isRemote(path: path)
-  //       ? await DefaultCacheManager().getSingleFile(path)
-  //       : File(path);
-
-  //   final _imageBytes = await _file.readAsBytes();
-  //   ExtImage.Image? _image = await decodeImage(_imageBytes);
-
-  //   if (_image == null) return null;
-
-  //   // Crops the image if needed
-  //   final _imageSize = await getSize(path: path);
-  //   if (xOffset + croppedWidth < _imageSize.width ||
-  //       yOffset + croppedHeight < _imageSize.height) {
-  //     _image = ExtImage.copyCrop(
-  //       _image,
-  //       xOffset,
-  //       yOffset,
-  //       croppedWidth,
-  //       croppedHeight,
-  //     );
-  //   }
-
-  //   // Resizes the image if needed
-  //   if (croppedWidth > maxWidth) {
-  //     _image = ExtImage.copyResize(
-  //       _image,
-  //       width: maxWidth,
-  //     );
-  //   } else if (croppedHeight > maxHeight) {
-  //     _image = ExtImage.copyResize(
-  //       _image,
-  //       height: maxHeight,
-  //     );
-  //   }
-
-  //   return _image;
-  // }
-
-  // static Future<ExtImage.Image?> getJpg({
-  //   required String path,
-  // }) async {
-  //   final _file = isRemote(path: path)
-  //       ? await DefaultCacheManager().getSingleFile(path)
-  //       : File(path);
-
-  //   final _imageBytes = await _file.readAsBytes();
-  //   return await decodeImage(_imageBytes);
-  // }
-
-  // static Future<Uint8List> getJpgBytes({
-  //   required String path,
-  // }) async {
-  //   ExtImage.Image? _image = await getJpg(path: path);
-  //   if (_image == null) {
-  //     return Uint8List.fromList([]);
-  //   }
-  //   return Uint8List.fromList(await encodeJpg(_image));
-  // }
-
   static Future<Uint8List> encodeJpg(ExtImage.Image image) async {
     return Uint8List.fromList(await compute(_encodeJpgComputation, image));
   }
 
   static Future<ExtImage.Image?> decodeImage(Uint8List bytes) async {
     return await compute(_decodeImageComputation, bytes);
+  }
+
+  static Future<ExtImage.Image?> drawWaterMarks(
+      ExtImage.Image originalPhoto) async {
+    ExtImage.Image waterMark = ExtImage.Image(500, 50);
+    final _today = DateTime.now();
+    final _todayString = DateFormat.yMd().add_Hm().format(_today);
+
+    waterMark = ExtImage.drawString(
+      waterMark,
+      ExtImage.arial_48,
+      0,
+      0,
+      _todayString,
+    );
+    var _photoWithWaterMark = ExtImage.copyInto(originalPhoto, waterMark);
+    _photoWithWaterMark = await putLocationWatermark(_photoWithWaterMark);
+
+    return _photoWithWaterMark;
+  }
+
+  static Future<ExtImage.Image> putLocationWatermark(
+      ExtImage.Image origin) async {
+    try {
+      Location locationService = Location();
+      final _currentLocation = await locationService.getLocation();
+      final latitudeWaterMark = ExtImage.drawString(
+        ExtImage.Image(350, 50),
+        ExtImage.arial_48,
+        0,
+        0,
+        'lat ' + _currentLocation.latitude.toString(),
+      );
+      final longitudeWaterMark = ExtImage.drawString(
+        ExtImage.Image(350, 50),
+        ExtImage.arial_48,
+        0,
+        0,
+        'lng ' + _currentLocation.longitude.toString(),
+      );
+      var _finalPhoto = ExtImage.copyInto(
+        origin,
+        latitudeWaterMark,
+        dstY: origin.height - 100,
+      );
+      _finalPhoto = ExtImage.copyInto(
+        _finalPhoto,
+        longitudeWaterMark,
+        dstY: origin.height - 40,
+      );
+      return _finalPhoto;
+    } on Exception catch (e) {
+      print(e.toString());
+      return origin;
+    }
   }
 }

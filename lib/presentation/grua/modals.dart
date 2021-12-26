@@ -3,8 +3,6 @@ import 'package:flutter_base/presentation/core/responsivity/responsive_calculati
 import 'package:flutter_base/presentation/grua/save_photo_modal.dart';
 import 'package:image/image.dart' as im;
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 
 class Modals {
   static Future<im.Image?> takeFoto(BuildContext context) async {
@@ -24,55 +22,7 @@ class Modals {
       return null;
     }
 
-    im.Image waterMark = im.Image(500, 50);
-    final _today = DateTime.now();
-    final _todayString = DateFormat.yMd().add_Hm().format(_today);
-
-    waterMark = im.drawString(
-      waterMark,
-      im.arial_48,
-      0,
-      0,
-      _todayString,
-    );
-    var _photoWithWaterMark = im.copyInto(_originalPhoto, waterMark);
-    _photoWithWaterMark = await putLocationWatermark(_photoWithWaterMark);
-
-    return _photoWithWaterMark;
-  }
-
-  static Future<im.Image> putLocationWatermark(im.Image origin) async {
-    try {
-      Location locationService = Location();
-      final _currentLocation = await locationService.getLocation();
-      final latitudeWaterMark = im.drawString(
-        im.Image(350, 50),
-        im.arial_48,
-        0,
-        0,
-        'lat ' + _currentLocation.latitude.toString(),
-      );
-      final longitudeWaterMark = im.drawString(
-        im.Image(350, 50),
-        im.arial_48,
-        0,
-        0,
-        'lng ' + _currentLocation.longitude.toString(),
-      );
-      var _finalPhoto = im.copyInto(
-        origin,
-        latitudeWaterMark,
-        dstY: origin.height - 100,
-      );
-      _finalPhoto = im.copyInto(
-        _finalPhoto,
-        longitudeWaterMark,
-        dstY: origin.height - 40,
-      );
-      return _finalPhoto;
-    } on Exception catch (e) {
-      return origin;
-    }
+    return _originalPhoto;
   }
 
   static Future<bool> showSaveFotoModal(

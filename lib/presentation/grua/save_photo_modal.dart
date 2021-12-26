@@ -31,6 +31,8 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
   bool _isLoading = false;
 
   late EvidenceType _selectedEvidenceType;
+  im.Image? _photo;
+  Future<Uint8List?>? _imageEncode;
 
   @override
   void initState() {
@@ -38,6 +40,24 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
 
     _state.evidenceUploaded = false;
     _evidenceTypeQuery = _state.getEvidenceTypes();
+    _prepareImage().then(
+      (photo) => _imageEncode = _encodeImage(photo),
+    );
+  }
+
+  Future<im.Image?> _prepareImage() async {
+    if (widget.photo == null) {
+      return null;
+    }
+    _photo = await ImageHelper.putLocationWatermark(widget.photo!);
+    return _photo;
+  }
+
+  Future<Uint8List?> _encodeImage(im.Image? image) async {
+    if (image == null) {
+      return null;
+    }
+    return ImageHelper.encodeJpg(image);
   }
 
   @override
@@ -76,14 +96,18 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                           ),
                           widget.photo == null
                               ? Text("No se tomo ninguna foto")
-                              : FutureBuilder<Uint8List>(
-                                  future: ImageHelper.encodeJpg(
-                                    widget.photo!,
-                                  ),
+                              : FutureBuilder<Uint8List?>(
+                                  future: _imageEncode,
                                   builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: CircularProgressIndicator(),
+                                    if (!snapshot.hasData ||
+                                        snapshot.data == null) {
+                                      return Column(
+                                        children: [
+                                          Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                          Text("Preparando imagen"),
+                                        ],
                                       );
                                     }
                                     return Container(
@@ -136,14 +160,17 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                                   onPressed: _isLoading
                                       ? null
                                       : () async {
-                                          setState(() {
-                                            _isLoading = true;
-                                          });
                                           if (_formKey.currentState!
                                               .validate()) {
                                             _formKey.currentState!.save();
+                                            if (_photo == null) {
+                                              return;
+                                            }
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
                                             final _evidence = Evidence(
-                                              photo: widget.photo!,
+                                              photo: _photo!,
                                               type: _selectedEvidenceType,
                                             );
                                             final _successOrFailure =
@@ -161,9 +188,6 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                                             //   // TODO: SHOW SOME ERROR
                                             // }
                                           }
-                                          setState(() {
-                                            _isLoading = false;
-                                          });
                                         },
                                   child: ResponsiveText(
                                     "Subir foto",
