@@ -31,3 +31,10 @@ abstract class IServerService extends IGruaDataRepository {
     required Evidence evidence,
   });
 }
+
+abstract class ICacheService extends IGruaDataRepository {
+  Future<Either<ErrorContent, Unit>> saveEvidenceTypes(
+    List<EvidenceType> evidences,
+  );
+  Future<Either<ErrorContent, List<EvidenceType>>> getEvidenceTypes();
+}

@@ -18,10 +18,12 @@ import 'interfaces/i_grua_data_repository.dart';
 class GruaServiceImpl implements IGruaService {
   final IFirebaseService firebase;
   final IServerService server;
+  final ICacheService cache;
 
   GruaServiceImpl({
     required this.firebase,
     required this.server,
+    required this.cache,
   });
 
   @override
@@ -61,7 +63,18 @@ class GruaServiceImpl implements IGruaService {
   }
 
   @override
-  Future<Either<ErrorContent, List<EvidenceType>>> getEvidenceTypes() {
-    return server.getEvidenceTypes();
+  Future<Either<ErrorContent, List<EvidenceType>>> getEvidenceTypes() async {
+    final evidencesFromCacheOrFailure = await cache.getEvidenceTypes();
+    final _evidences = evidencesFromCacheOrFailure.getOrElse(() => []);
+    if (_evidences.isNotEmpty) {
+      return evidencesFromCacheOrFailure;
+    }
+    final evidencesOrFailure = await server.getEvidenceTypes();
+    if (evidencesOrFailure.isRight()) {
+      final _evidencesFromServer =
+          evidencesFromCacheOrFailure.getOrElse(() => []);
+      await cache.saveEvidenceTypes(_evidencesFromServer);
+    }
+    return evidencesOrFailure;
   }
 }

@@ -49,6 +49,14 @@ class EvidenceTypeServerModel {
     );
   }
 
+  factory EvidenceTypeServerModel.fromEntity(EvidenceType evidence) {
+    return EvidenceTypeServerModel(
+      id: evidence.id,
+      nombre: evidence.name,
+      descripcion: evidence.description,
+    );
+  }
+
   factory EvidenceTypeServerModel.fromJson(Map<String, dynamic> json) =>
       _$EvidenceTypeServerModelFromJson(json);
 

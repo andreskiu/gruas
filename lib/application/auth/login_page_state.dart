@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_base/domain/auth/fields/username_field.dart';
+import 'package:flutter_base/domain/grua/models/evidence_types.dart';
+import 'package:flutter_base/domain/grua/use_cases/get_evidence_types.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -13,6 +15,7 @@ import 'package:flutter_base/domain/core/use_case.dart';
 
 @injectable
 class LoginPageState extends ChangeNotifier {
+  final _getEvidenceTypesUseCase = GetIt.I.get<GetEvidenceTypesUseCase>();
   LoginUseCase loginUseCase;
   GetUserRememberedUseCase getUserRememberedUseCase;
 
@@ -56,9 +59,13 @@ class LoginPageState extends ChangeNotifier {
       final _authState = await GetIt.I.getAsync<AuthState>();
       _authState.loggedUser = user;
     });
-
+    await cacheEvidenceTypes();
     isLoading = false;
     notifyListeners();
     return _userOrFailure.isRight();
+  }
+
+  Future<void> cacheEvidenceTypes() async {
+    await _getEvidenceTypesUseCase.call(NoParams());
   }
 }
