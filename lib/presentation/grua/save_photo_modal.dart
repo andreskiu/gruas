@@ -131,7 +131,9 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                                   return Center(
                                       child: CircularProgressIndicator());
                                 }
-                                _selectedEvidenceType = snapshot.data!.first;
+                                if (snapshot.data!.isNotEmpty) {
+                                  _selectedEvidenceType = snapshot.data!.first;
+                                }
                                 return ResponsiveFormFieldButton<EvidenceType>(
                                   value: _selectedEvidenceType,
                                   onSaved: (type) {

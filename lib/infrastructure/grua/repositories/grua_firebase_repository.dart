@@ -4,7 +4,6 @@ import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/models/novedad_atv.dart';
 import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dart';
 import 'dart:async';
@@ -74,6 +73,8 @@ class GruaDemoRepositoryImpl implements IFirebaseService {
   }) async {
     try {
       const _androidAPIKEY = "AIzaSyCW4JEtCHKHgITyJ7WJfvvgMKxi4WqJPqc";
+      //TODO: borra todo esto y sacalo de aqui
+      // https://github.com/Dammyololade/flutter_polyline_points/blob/master/lib/src/network_util.dart
       PolylinePoints polylinePoints = PolylinePoints();
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         _androidAPIKEY,

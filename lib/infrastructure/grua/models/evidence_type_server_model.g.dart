@@ -9,7 +9,7 @@ part of 'evidence_type_server_model.dart';
 EvidenceTypeSWrapper _$EvidenceTypeSWrapperFromJson(
         Map<String, dynamic> json) =>
     EvidenceTypeSWrapper(
-      listObject: (json['listObject'] as List<dynamic>)
+      listObject: (json['data_list'] as List<dynamic>)
           .map((e) =>
               EvidenceTypeServerModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -18,21 +18,21 @@ EvidenceTypeSWrapper _$EvidenceTypeSWrapperFromJson(
 Map<String, dynamic> _$EvidenceTypeSWrapperToJson(
         EvidenceTypeSWrapper instance) =>
     <String, dynamic>{
-      'listObject': instance.listObject.map((e) => e.toJson()).toList(),
+      'data_list': instance.listObject.map((e) => e.toJson()).toList(),
     };
 
 EvidenceTypeServerModel _$EvidenceTypeServerModelFromJson(
         Map<String, dynamic> json) =>
     EvidenceTypeServerModel(
       id: json['id'] as int,
-      nombre: json['nombre'] as String?,
-      descripcion: json['descripcion'] as String?,
+      name: json['name'] as String?,
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$EvidenceTypeServerModelToJson(
         EvidenceTypeServerModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'nombre': instance.nombre,
-      'descripcion': instance.descripcion,
+      'name': instance.name,
+      'description': instance.description,
     };

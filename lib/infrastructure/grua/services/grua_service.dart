@@ -71,8 +71,7 @@ class GruaServiceImpl implements IGruaService {
     }
     final evidencesOrFailure = await server.getEvidenceTypes();
     if (evidencesOrFailure.isRight()) {
-      final _evidencesFromServer =
-          evidencesFromCacheOrFailure.getOrElse(() => []);
+      final _evidencesFromServer = evidencesOrFailure.getOrElse(() => []);
       await cache.saveEvidenceTypes(_evidencesFromServer);
     }
     return evidencesOrFailure;

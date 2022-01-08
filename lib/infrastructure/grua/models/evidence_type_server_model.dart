@@ -6,7 +6,7 @@ part 'evidence_type_server_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class EvidenceTypeSWrapper {
-  // @JsonKey()
+  @JsonKey(name: 'data_list')
   final List<EvidenceTypeServerModel> listObject;
   EvidenceTypeSWrapper({
     required this.listObject,
@@ -21,39 +21,39 @@ class EvidenceTypeSWrapper {
 @JsonSerializable()
 class EvidenceTypeServerModel {
   final int id;
-  final String? nombre;
-  final String? descripcion;
+  final String? name;
+  final String? description;
   EvidenceTypeServerModel({
     required this.id,
-    required this.nombre,
-    required this.descripcion,
+    required this.name,
+    required this.description,
   });
 
   EvidenceType toEntity() {
     return EvidenceType(
       id: id,
-      name: nombre ?? 'Opcion desconocida',
-      description: descripcion ?? "Opcion",
+      name: name ?? 'Opcion desconocida',
+      description: description ?? "Opcion",
     );
   }
 
   EvidenceTypeServerModel copyWith({
     int? id,
-    String? nombre,
-    String? descripcion,
+    String? name,
+    String? description,
   }) {
     return EvidenceTypeServerModel(
       id: id ?? this.id,
-      nombre: nombre ?? this.nombre,
-      descripcion: descripcion ?? this.descripcion,
+      name: name ?? this.name,
+      description: description ?? this.description,
     );
   }
 
   factory EvidenceTypeServerModel.fromEntity(EvidenceType evidence) {
     return EvidenceTypeServerModel(
       id: evidence.id,
-      nombre: evidence.name,
-      descripcion: evidence.description,
+      name: evidence.name,
+      description: evidence.description,
     );
   }
 
