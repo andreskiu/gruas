@@ -33,7 +33,7 @@ abstract class RegisterModule {
     final _dio = Dio(
       BaseOptions(
         baseUrl: GetIt.I.get<EnvironmentConfig>().baseUrl,
-        contentType: Headers.formUrlEncodedContentType,
+        contentType: Headers.jsonContentType,
         connectTimeout: 10000, //10 seconds
       ),
     );

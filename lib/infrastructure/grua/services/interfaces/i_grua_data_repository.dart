@@ -30,6 +30,11 @@ abstract class IServerService extends IGruaDataRepository {
     required Service service,
     required Evidence evidence,
   });
+
+  Future<Either<ErrorContent, Unit>> saveLocation({
+    required Service service,
+    required LatLng location,
+  });
 }
 
 abstract class ICacheService extends IGruaDataRepository {

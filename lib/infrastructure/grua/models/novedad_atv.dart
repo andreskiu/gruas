@@ -31,17 +31,17 @@ class NovedadAtv extends Equatable {
   @JsonKey(defaultValue: '')
   final String lngServicioAceptado;
   final String username;
+  @JsonKey(defaultValue: '')
   final String vehiculo;
 
-  //TODO: uncomment when changed on firebase
-  // final DateTime fechaSolicitud;
+  final DateTime? fechaSolicitud;
 
   final DateTime? fechaServicioAceptado;
   final DateTime? fechaVehiculoRecogido;
   final DateTime? fechaServicioFinalizado;
 
   NovedadAtv({
-    // required this.fechaSolicitud,
+    required this.fechaSolicitud,
     required this.idAtvEstado,
     required this.idAtvNovedad,
     required this.idAtvTipoServicio,
@@ -60,7 +60,7 @@ class NovedadAtv extends Equatable {
 
   @override
   List<Object?> get props => [
-        // fechaSolicitud,
+        fechaSolicitud,
         idAtvEstado,
         idAtvNovedad,
         idAtvTipoServicio,
@@ -103,13 +103,14 @@ class NovedadAtv extends Equatable {
 
     return Service(
       id: idAtvNovedad.toString(),
-      type: idAtvTipoServicio, status: idAtvEstado,
+      type: idAtvTipoServicio,
+      status: idAtvEstado,
       clientName: "",
       clientLocation: _clientLocation,
       detinationLocation: _destinationPlace,
       serviceAcceptedFromLocation: _serviceAcceptedFrom,
       carModel: vehiculo,
-      requestTime: DateTime.now(), // fechaSolicitud,
+      requestTime: fechaSolicitud ?? DateTime.now(),
       username: username,
       serviceAcceptedTime: fechaServicioAceptado,
       serviceFinishedTime: fechaServicioFinalizado,
@@ -119,7 +120,7 @@ class NovedadAtv extends Equatable {
 
   factory NovedadAtv.fromService(Service service) {
     return NovedadAtv(
-      // fechaSolicitud: service.requestTime,
+      fechaSolicitud: service.requestTime,
       idAtvEstado: service.status,
       idAtvNovedad: int.tryParse(service.id)!,
       idAtvTipoServicio: service.type,

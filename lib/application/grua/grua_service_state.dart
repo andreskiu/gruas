@@ -9,6 +9,7 @@ import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_evidence_types.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_services.dart';
 import 'package:flutter_base/domain/grua/use_cases/save_evidence.dart';
+import 'package:flutter_base/domain/grua/use_cases/save_location.dart';
 import 'package:flutter_base/domain/grua/use_cases/save_service.dart';
 import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:get_it/get_it.dart';
@@ -24,6 +25,7 @@ class GruaServiceState extends ChangeNotifier {
     required this.authState,
     required this.saveEvidenceUseCase,
     required this.getEvidenceTypesUseCase,
+    required this.saveLocationUseCase,
   });
 
   @factoryMethod
@@ -33,6 +35,7 @@ class GruaServiceState extends ChangeNotifier {
     final _saveServicesUseCase = GetIt.I.get<SaveServicesUseCase>();
     final _saveEvidenceUseCase = GetIt.I.get<SaveEvidenceUseCase>();
     final _getEvidenceTypesUseCase = GetIt.I.get<GetEvidenceTypesUseCase>();
+    final _saveLocationUseCase = GetIt.I.get<SaveLocationUseCase>();
 
     final _state = GruaServiceState._(
       getServicesUseCase: _getServicesUseCase,
@@ -40,6 +43,7 @@ class GruaServiceState extends ChangeNotifier {
       authState: _authState,
       saveEvidenceUseCase: _saveEvidenceUseCase,
       getEvidenceTypesUseCase: _getEvidenceTypesUseCase,
+      saveLocationUseCase: _saveLocationUseCase,
     );
     _state.updateRoutesStream = StreamController<bool>.broadcast();
 
@@ -51,6 +55,7 @@ class GruaServiceState extends ChangeNotifier {
   final SaveServicesUseCase saveServicesUseCase;
   final SaveEvidenceUseCase saveEvidenceUseCase;
   final GetEvidenceTypesUseCase getEvidenceTypesUseCase;
+  final SaveLocationUseCase saveLocationUseCase;
   final AuthState authState;
 
   ErrorContent? error;
@@ -148,5 +153,16 @@ class GruaServiceState extends ChangeNotifier {
     );
     notifyListeners();
     return _serviceOrFailure.isRight();
+  }
+
+  Future<void> saveLocation({
+    required LatLng location,
+  }) async {
+    final _params = SaveLocationUseCaseParams(
+      service: servicesSelected!,
+      location: location,
+    );
+    final _successOrFailure = await saveLocationUseCase.call(_params);
+    // nothing to display to the user
   }
 }

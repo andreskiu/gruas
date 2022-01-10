@@ -5,9 +5,11 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/infrastructure/grua/models/evidence_type_server_model.dart';
+import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dart';
 import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data_repository.dart';
 import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 
 @Environment(EnvironmentConfig.dev)
@@ -19,6 +21,7 @@ class GruaServerRepository extends IServerService {
 
   final _getEvidencesTypesPath = "attentionOnRoad/typeEvidence";
   final _saveEvidencePath = "attentionOnRoad/saveEvidence";
+  final _saveLocationPath = "attentionOnRoad/saveLocation";
 
   @override
   Future<Either<ErrorContent, List<EvidenceType>>> getEvidenceTypes() async {
@@ -43,11 +46,11 @@ class GruaServerRepository extends IServerService {
   }) async {
     try {
       FormData formData = new FormData.fromMap({
-        "dateTime": 1641339184169,
+        "dateTime": DateTime.now().millisecondsSinceEpoch,
         "username": service.username,
         "idNovedad": service.id,
         "idTypeEvidence": evidence.type.id,
-        "idTypeStates": service.status.index + 1,
+        "idTypeStates": TransformationsGrua.serviceStatusToInt(service.status),
         "description": "ENVIADO DESDE APP",
         "file": MultipartFile.fromBytes(evidence.photo.getBytes())
       });
@@ -60,6 +63,31 @@ class GruaServerRepository extends IServerService {
       return Right("Nothing");
     } on Exception catch (e) {
       return Left(ErrorContent.server("Error uploading evidence"));
+    }
+  }
+
+  @override
+  Future<Either<ErrorContent, Unit>> saveLocation({
+    required Service service,
+    required LatLng location,
+  }) async {
+    try {
+      final _serverResponse = await _dio.post(
+        _saveLocationPath,
+        data: {
+          "id_novedad": service.id,
+          "id_type_states":
+              TransformationsGrua.serviceStatusToInt(service.status),
+          "lat": location.latitude,
+          "lng": location.longitude,
+          "date_time": DateTime.now().millisecondsSinceEpoch,
+          "username": service.username,
+        },
+      );
+
+      return Right(unit);
+    } on Exception catch (e) {
+      return Left(ErrorContent.server("Error saving location"));
     }
   }
 }

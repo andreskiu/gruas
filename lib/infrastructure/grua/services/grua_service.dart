@@ -76,4 +76,15 @@ class GruaServiceImpl implements IGruaService {
     }
     return evidencesOrFailure;
   }
+
+  @override
+  Future<Either<ErrorContent, Unit>> saveLocation({
+    required Service service,
+    required LatLng location,
+  }) {
+    return server.saveLocation(
+      service: service,
+      location: location,
+    );
+  }
 }

@@ -81,6 +81,7 @@ class _ServiceMapState extends State<ServiceMap> {
           widget.service.serviceAcceptedFromLocation ?? _currentPosition);
     } else {
       await _drawCurrentPath(_currentPosition);
+      _state.saveLocation(location: _currentPosition);
     }
     if (mounted) {
       setState(() {});
@@ -283,6 +284,7 @@ class _ServiceMapState extends State<ServiceMap> {
               if (!_controller.isCompleted) {
                 _controller.complete(controller);
               }
+              // _setInitialCameraPosition();
               // esto llevaba el mapa a a ubicacion del usuario. quizas deberiamos en modo conduccion
               // initLocationService.then((value) {
               //   if (_locationData != null) {
@@ -332,5 +334,11 @@ class _ServiceMapState extends State<ServiceMap> {
     final GoogleMapController controller = await _controller.future;
     final _position = CameraPosition(target: location, zoom: 15);
     controller.animateCamera(CameraUpdate.newCameraPosition(_position));
+  }
+
+  Future<void> _setInitialCameraPosition(LatLng location) async {
+    final GoogleMapController controller = await _controller.future;
+    final _cameraPosition = CameraPosition(target: location);
+    controller.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
   }
 }

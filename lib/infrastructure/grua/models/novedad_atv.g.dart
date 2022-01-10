@@ -7,6 +7,9 @@ part of 'novedad_atv.dart';
 // **************************************************************************
 
 NovedadAtv _$NovedadAtvFromJson(Map<String, dynamic> json) => NovedadAtv(
+      fechaSolicitud: json['fechaSolicitud'] == null
+          ? null
+          : DateTime.parse(json['fechaSolicitud'] as String),
       idAtvEstado:
           TransformationsGrua.intToServiceStatus(json['idAtvEstado'] as int),
       idAtvNovedad: json['idAtvNovedad'] as int,
@@ -19,7 +22,7 @@ NovedadAtv _$NovedadAtvFromJson(Map<String, dynamic> json) => NovedadAtv(
       latServicioAceptado: json['latServicioAceptado'] as String? ?? '',
       lngServicioAceptado: json['lngServicioAceptado'] as String? ?? '',
       username: json['username'] as String,
-      vehiculo: json['vehiculo'] as String,
+      vehiculo: json['vehiculo'] as String? ?? '',
       fechaServicioAceptado: json['fechaServicioAceptado'] == null
           ? null
           : DateTime.parse(json['fechaServicioAceptado'] as String),
@@ -46,6 +49,7 @@ Map<String, dynamic> _$NovedadAtvToJson(NovedadAtv instance) =>
       'lngServicioAceptado': instance.lngServicioAceptado,
       'username': instance.username,
       'vehiculo': instance.vehiculo,
+      'fechaSolicitud': instance.fechaSolicitud?.toIso8601String(),
       'fechaServicioAceptado':
           instance.fechaServicioAceptado?.toIso8601String(),
       'fechaVehiculoRecogido':

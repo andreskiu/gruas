@@ -25,4 +25,9 @@ abstract class IGruaService {
     required LatLng origin,
     required LatLng destination,
   });
+
+  Future<Either<ErrorContent, Unit>> saveLocation({
+    required Service service,
+    required LatLng location,
+  });
 }

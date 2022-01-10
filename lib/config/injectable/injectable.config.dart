@@ -10,26 +10,27 @@ import 'package:injectable/injectable.dart' as _i2;
 import 'package:shared_preferences/shared_preferences.dart' as _i19;
 
 import '../../application/auth/auth_state.dart' as _i3;
-import '../../application/auth/login_page_state.dart' as _i36;
+import '../../application/auth/login_page_state.dart' as _i37;
 import '../../application/grua/grua_service_state.dart' as _i10;
-import '../../domain/auth/services/auth_service.dart' as _i27;
-import '../../domain/auth/use_cases/get_user_logged_in.dart' as _i32;
-import '../../domain/auth/use_cases/get_user_remembered.dart' as _i33;
-import '../../domain/auth/use_cases/login.dart' as _i34;
-import '../../domain/auth/use_cases/logout.dart' as _i35;
+import '../../domain/auth/services/auth_service.dart' as _i28;
+import '../../domain/auth/use_cases/get_user_logged_in.dart' as _i33;
+import '../../domain/auth/use_cases/get_user_remembered.dart' as _i34;
+import '../../domain/auth/use_cases/login.dart' as _i35;
+import '../../domain/auth/use_cases/logout.dart' as _i36;
 import '../../domain/grua/services/grua_service.dart' as _i22;
-import '../../domain/grua/use_cases/get_evidence_types.dart' as _i29;
-import '../../domain/grua/use_cases/get_service_routes.dart' as _i30;
-import '../../domain/grua/use_cases/get_services.dart' as _i31;
+import '../../domain/grua/use_cases/get_evidence_types.dart' as _i30;
+import '../../domain/grua/use_cases/get_service_routes.dart' as _i31;
+import '../../domain/grua/use_cases/get_services.dart' as _i32;
 import '../../domain/grua/use_cases/save_evidence.dart' as _i25;
-import '../../domain/grua/use_cases/save_service.dart' as _i26;
+import '../../domain/grua/use_cases/save_location.dart' as _i26;
+import '../../domain/grua/use_cases/save_service.dart' as _i27;
 import '../../infrastructure/auth/repositories/demo_auth_repository.dart'
     as _i12;
 import '../../infrastructure/auth/repositories/server_auth_repository.dart'
     as _i13;
 import '../../infrastructure/auth/repositories/shared_preferences_auth_repository.dart'
     as _i21;
-import '../../infrastructure/auth/services/auth_service.dart' as _i28;
+import '../../infrastructure/auth/services/auth_service.dart' as _i29;
 import '../../infrastructure/auth/services/i_auth_repository.dart' as _i11;
 import '../../infrastructure/auth/services/i_auth_storage_repository.dart'
     as _i20;
@@ -100,28 +101,30 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       registerFor: {_dev, _qa, _prod});
   gh.lazySingleton<_i25.SaveEvidenceUseCase>(
       () => _i25.SaveEvidenceUseCase(get<_i22.IGruaService>()));
-  gh.lazySingleton<_i26.SaveServicesUseCase>(
-      () => _i26.SaveServicesUseCase(get<_i22.IGruaService>()));
-  gh.lazySingleton<_i27.AuthService>(() => _i28.AuthServiceImpl(
+  gh.lazySingleton<_i26.SaveLocationUseCase>(
+      () => _i26.SaveLocationUseCase(get<_i22.IGruaService>()));
+  gh.lazySingleton<_i27.SaveServicesUseCase>(
+      () => _i27.SaveServicesUseCase(get<_i22.IGruaService>()));
+  gh.lazySingleton<_i28.AuthService>(() => _i29.AuthServiceImpl(
       repository: get<_i11.IAuthDataRepository>(),
       localStorage: get<_i20.IAuthStorageRepository>()));
-  gh.lazySingleton<_i29.GetEvidenceTypesUseCase>(
-      () => _i29.GetEvidenceTypesUseCase(get<_i22.IGruaService>()));
-  gh.lazySingleton<_i30.GetServiceRouteUseCase>(
-      () => _i30.GetServiceRouteUseCase(get<_i22.IGruaService>()));
-  gh.lazySingleton<_i31.GetServicesUseCase>(
-      () => _i31.GetServicesUseCase(get<_i22.IGruaService>()));
-  gh.lazySingleton<_i32.GetUserLoggedInUseCase>(
-      () => _i32.GetUserLoggedInUseCase(get<_i27.AuthService>()));
-  gh.lazySingleton<_i33.GetUserRememberedUseCase>(
-      () => _i33.GetUserRememberedUseCase(get<_i27.AuthService>()));
-  gh.lazySingleton<_i34.LoginUseCase>(
-      () => _i34.LoginUseCase(get<_i27.AuthService>()));
-  gh.lazySingleton<_i35.LogoutUseCase>(
-      () => _i35.LogoutUseCase(get<_i27.AuthService>()));
-  gh.factory<_i36.LoginPageState>(() => _i36.LoginPageState(
-      loginUseCase: get<_i34.LoginUseCase>(),
-      getUserRememberedUseCase: get<_i33.GetUserRememberedUseCase>()));
+  gh.lazySingleton<_i30.GetEvidenceTypesUseCase>(
+      () => _i30.GetEvidenceTypesUseCase(get<_i22.IGruaService>()));
+  gh.lazySingleton<_i31.GetServiceRouteUseCase>(
+      () => _i31.GetServiceRouteUseCase(get<_i22.IGruaService>()));
+  gh.lazySingleton<_i32.GetServicesUseCase>(
+      () => _i32.GetServicesUseCase(get<_i22.IGruaService>()));
+  gh.lazySingleton<_i33.GetUserLoggedInUseCase>(
+      () => _i33.GetUserLoggedInUseCase(get<_i28.AuthService>()));
+  gh.lazySingleton<_i34.GetUserRememberedUseCase>(
+      () => _i34.GetUserRememberedUseCase(get<_i28.AuthService>()));
+  gh.lazySingleton<_i35.LoginUseCase>(
+      () => _i35.LoginUseCase(get<_i28.AuthService>()));
+  gh.lazySingleton<_i36.LogoutUseCase>(
+      () => _i36.LogoutUseCase(get<_i28.AuthService>()));
+  gh.factory<_i37.LoginPageState>(() => _i37.LoginPageState(
+      loginUseCase: get<_i35.LoginUseCase>(),
+      getUserRememberedUseCase: get<_i34.GetUserRememberedUseCase>()));
   return get;
 }
 

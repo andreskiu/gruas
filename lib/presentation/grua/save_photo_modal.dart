@@ -204,6 +204,9 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                                   margin: EdgeInsets.only(
                                     bottom: Info.verticalUnit * 2,
                                   ),
+                                  padding: EdgeInsets.only(
+                                    bottom: Info.verticalUnit * 2,
+                                  ),
                                   child: ResponsiveText(
                                     state.error!.message,
                                     color: Theme.of(context).errorColor,
