@@ -50,7 +50,7 @@ class GruaServerRepository extends IServerService {
         "username": service.username,
         "idNovedad": service.id,
         "idTypeEvidence": evidence.type.id,
-        "idTypeStates": TransformationsGrua.serviceStatusToInt(service.status),
+        "idTypeStatus": TransformationsGrua.serviceStatusToInt(service.status),
         "description": "ENVIADO DESDE APP",
         "file": MultipartFile.fromBytes(evidence.photo.getBytes())
       });
