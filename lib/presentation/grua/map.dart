@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
 import 'package:flutter_base/config/maps/constants.dart';
+import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_service_routes.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -207,7 +208,7 @@ class _ServiceMapState extends State<ServiceMap> {
   Polyline? routeToDestination;
   Polyline? currentRoute;
 
-  Future<PolylineResult?> _getRoutesData(
+  Future<RouteDetails?> _getRoutesData(
     LatLng origin,
     LatLng destination,
   ) async {
@@ -235,7 +236,7 @@ class _ServiceMapState extends State<ServiceMap> {
     }
     final Polyline polyline = _createPolylineFromPoints(
       id: id,
-      points: linesResult.points,
+      points: linesResult.routeDetails.polylinesPoints.points,
       color: color,
     );
 
@@ -244,7 +245,7 @@ class _ServiceMapState extends State<ServiceMap> {
 
   Polyline _createPolylineFromPoints({
     required String id,
-    required List<PointLatLng> points,
+    required List<LatLng> points,
     Color color = Colors.black,
   }) {
     return Polyline(

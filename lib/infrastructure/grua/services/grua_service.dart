@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_base/infrastructure/grua/models/firebase_route_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 
@@ -52,7 +52,7 @@ class GruaServiceImpl implements IGruaService {
   }
 
   @override
-  Future<Either<ErrorContent, PolylineResult>> getServiceRoute({
+  Future<Either<ErrorContent, FirebaseRouteModel>> getServiceRoute({
     required LatLng origin,
     required LatLng destination,
   }) {
