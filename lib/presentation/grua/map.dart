@@ -6,7 +6,6 @@ import 'package:flutter_base/config/maps/constants.dart';
 import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_service_routes.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';

@@ -79,9 +79,6 @@ dependencies:
   # Google Maps
   google_maps_flutter: ^2.0.11
 
-  # To draw google routes
-  flutter_polyline_points: ^1.0.0
-
   # To draw date water mark
   image: ^3.1.0
 

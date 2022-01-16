@@ -11,7 +11,6 @@ import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dar
 import 'dart:async';
 
 import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data_repository.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 
@@ -83,11 +82,11 @@ class GruaDemoRepositoryImpl implements IFirebaseService {
       const _androidAPIKEY = "AIzaSyCW4JEtCHKHgITyJ7WJfvvgMKxi4WqJPqc";
       final routeOrFailure = await getRouteBetweenCoordinates(
         _androidAPIKEY,
-        PointLatLng(
+        LatLng(
           origin.latitude,
           origin.longitude,
         ),
-        PointLatLng(
+        LatLng(
           destination.latitude,
           destination.longitude,
         ),
@@ -102,35 +101,22 @@ class GruaDemoRepositoryImpl implements IFirebaseService {
 
   Future<Either<ErrorContent, FirebaseRouteModel>> getRouteBetweenCoordinates(
     String googleApiKey,
-    PointLatLng origin,
-    PointLatLng destination, {
-    TravelMode travelMode = TravelMode.driving,
-    List<PolylineWayPoint> wayPoints = const [],
+    LatLng origin,
+    LatLng destination, {
     bool avoidHighways = false,
     bool avoidTolls = false,
     bool avoidFerries = true,
     bool optimizeWaypoints = false,
   }) async {
-    String mode = travelMode.toString().replaceAll('TravelMode.', '');
-
     var params = {
       "origin": "${origin.latitude},${origin.longitude}",
       "destination": "${destination.latitude},${destination.longitude}",
-      "mode": mode,
+      "mode": 'driving',
       "avoidHighways": "$avoidHighways",
       "avoidFerries": "$avoidFerries",
       "avoidTolls": "$avoidTolls",
       "key": googleApiKey
     };
-    if (wayPoints.isNotEmpty) {
-      List wayPointsArray = [];
-      wayPoints.forEach((point) => wayPointsArray.add(point.location));
-      String wayPointsString = wayPointsArray.join('|');
-      if (optimizeWaypoints) {
-        wayPointsString = 'optimize:true|$wayPointsString';
-      }
-      params.addAll({"waypoints": wayPointsString});
-    }
 
     try {
       var response = await _dioForMaps.get(
