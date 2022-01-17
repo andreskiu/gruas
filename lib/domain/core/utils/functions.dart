@@ -12,7 +12,7 @@ abstract class Functions {
     return value;
   }
 
-  static ErrorContent getError(Either<ErrorContent, Type> valueOrFailure) {
+  static ErrorContent getError(Either<ErrorContent, dynamic> valueOrFailure) {
     late ErrorContent error;
     if (valueOrFailure.isRight()) {
       throw Exception("Left is expected, but got Right");

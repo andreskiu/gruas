@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/infrastructure/grua/models/firebase_route_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
@@ -85,6 +86,17 @@ class GruaServiceImpl implements IGruaService {
     return server.saveLocation(
       service: service,
       location: location,
+    );
+  }
+
+  @override
+  Future<Either<ErrorContent, Unit>> saveServiceSuggestedRoute({
+    required Service service,
+    required RouteDetails route,
+  }) {
+    return server.saveServiceSuggestedRoute(
+      service: service,
+      route: route,
     );
   }
 }

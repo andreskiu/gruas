@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/grua/models/evidence_types.dart';
+import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/models/firebase_route_model.dart';
@@ -24,6 +25,10 @@ abstract class IGruaService {
   Future<Either<ErrorContent, FirebaseRouteModel>> getServiceRoute({
     required LatLng origin,
     required LatLng destination,
+  });
+  Future<Either<ErrorContent, Unit>> saveServiceSuggestedRoute({
+    required Service service,
+    required RouteDetails route,
   });
 
   Future<Either<ErrorContent, Unit>> saveLocation({

@@ -15,6 +15,9 @@ enum ViewMode {
   drive,
 }
 
+const CURRENT_PATH_ID = 'current_path';
+const CLIENT_PATH_ID = 'client_path';
+
 class ServiceMap extends StatefulWidget {
   ServiceMap({
     Key? key,
@@ -42,6 +45,7 @@ class _ServiceMapState extends State<ServiceMap> {
   final Set<Polyline> _routes = <Polyline>{};
   late LocationData _currentLocation;
   late Stream<bool> _updatePathStream;
+
   @override
   void initState() {
     super.initState();
@@ -146,7 +150,6 @@ class _ServiceMapState extends State<ServiceMap> {
     }
 
     return locationService.onLocationChanged;
-    // return _locationData;
   }
 
   Future<bool> prepareMap() async {
@@ -157,7 +160,7 @@ class _ServiceMapState extends State<ServiceMap> {
 
   Future<void> _drawClientPath() async {
     final path = await _getDestinationRoute(
-      id: "client_path",
+      id: CLIENT_PATH_ID,
       origin: widget.service.clientLocation,
       destination: widget.service.detinationLocation,
       color: Colors.green,
@@ -196,7 +199,7 @@ class _ServiceMapState extends State<ServiceMap> {
     }
 
     final path = await _getDestinationRoute(
-      id: "current_path",
+      id: CURRENT_PATH_ID,
       origin: currentPosition,
       destination: _finalLocation,
       color: Colors.blue,
@@ -210,6 +213,7 @@ class _ServiceMapState extends State<ServiceMap> {
   Future<RouteDetails?> _getRoutesData(
     LatLng origin,
     LatLng destination,
+    String routeId,
   ) async {
     final _params = GetServiceRouteUseCaseParams(
       origin: origin,
@@ -217,7 +221,17 @@ class _ServiceMapState extends State<ServiceMap> {
     );
     final _linesOrFailure = await getRoutePoints.call(_params);
 
-    return _linesOrFailure.fold((l) => null, (result) => result);
+    return _linesOrFailure.fold(
+      (l) => null,
+      (result) {
+        if (routeId == CURRENT_PATH_ID) {
+          _state.routeToClient = result;
+        } else {
+          _state.routeFromClientToDestination = result;
+        }
+        return result;
+      },
+    );
   }
 
   Future<Polyline?> _getDestinationRoute({
@@ -229,6 +243,7 @@ class _ServiceMapState extends State<ServiceMap> {
     final linesResult = await _getRoutesData(
       origin,
       destination,
+      id,
     );
     if (linesResult == null) {
       return null;

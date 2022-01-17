@@ -3,6 +3,7 @@ import 'package:flutter_base/config/environments/environment_config.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_base/domain/grua/models/evidence_types.dart';
+import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/infrastructure/grua/models/evidence_type_server_model.dart';
 import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dart';
@@ -22,6 +23,8 @@ class GruaServerRepository extends IServerService {
   final _getEvidencesTypesPath = "attentionOnRoad/typeEvidence";
   final _saveEvidencePath = "attentionOnRoad/saveEvidence";
   final _saveLocationPath = "attentionOnRoad/saveLocation";
+  final _saveSuggestedRoutePath =
+      "attentionOnRoad//attentionOnRoad/saveSuggestedRoute";
 
   @override
   Future<Either<ErrorContent, List<EvidenceType>>> getEvidenceTypes() async {
@@ -82,6 +85,33 @@ class GruaServerRepository extends IServerService {
           "lng": location.longitude,
           "date_time": DateTime.now().millisecondsSinceEpoch,
           "username": service.username,
+        },
+      );
+
+      return Right(unit);
+    } on Exception catch (e) {
+      return Left(ErrorContent.server("Error saving location"));
+    }
+  }
+
+  @override
+  Future<Either<ErrorContent, Unit>> saveServiceSuggestedRoute({
+    required Service service,
+    required RouteDetails route,
+  }) async {
+    try {
+      final _serverResponse = await _dio.post(
+        _saveSuggestedRoutePath,
+        data: {
+          "id_novedad": service.id,
+          "distance": route.totalDistance,
+          "duration": route.totalTime,
+          // "id_type_states":
+          //     TransformationsGrua.serviceStatusToInt(service.status),
+          // "lat": location.latitude,
+          // "lng": location.longitude,
+          // "date_time": DateTime.now().millisecondsSinceEpoch,
+          // "username": service.username,
         },
       );
 

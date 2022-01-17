@@ -5,6 +5,7 @@ import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/core/use_case.dart';
 import 'package:flutter_base/domain/grua/models/evidence_types.dart';
+import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_evidence_types.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_services.dart';
@@ -68,6 +69,9 @@ class GruaServiceState extends ChangeNotifier {
   LocationData? lastLocation;
   late StreamController<bool> updateRoutesStream;
 
+  RouteDetails? routeToClient;
+  RouteDetails? routeFromClientToDestination;
+
   Future<void> getServices() async {
     final _params = GetServicesUseCaseParams(user: authState.loggedUser);
     final _streamOrFailure = await getServicesUseCase.call(_params);
@@ -98,10 +102,19 @@ class GruaServiceState extends ChangeNotifier {
 
   Future<bool> updateServiceStatus(ServiceStatus serviceStatus) async {
     LatLng? _currentLocation;
+    final _routes = <RouteDetails>[];
     if (serviceStatus == ServiceStatus.accepted) {
       if (lastLocation != null) {
-        _currentLocation =
-            LatLng(lastLocation!.latitude!, lastLocation!.longitude!);
+        _currentLocation = LatLng(
+          lastLocation!.latitude!,
+          lastLocation!.longitude!,
+        );
+      }
+      if (routeToClient != null) {
+        _routes.add(routeToClient!);
+      }
+      if (routeFromClientToDestination != null) {
+        _routes.add(routeFromClientToDestination!);
       }
     }
 
@@ -114,7 +127,11 @@ class GruaServiceState extends ChangeNotifier {
       error = ErrorContent.useCase("No service selected");
       return false;
     }
-    final _params = SaveServicesUseCaseParams(service: _serviceCopy);
+
+    final _params = SaveServicesUseCaseParams(
+      service: _serviceCopy,
+      routes: _routes,
+    );
     final _serviceOrFailure = await saveServicesUseCase.call(_params);
 
     _serviceOrFailure.fold(
