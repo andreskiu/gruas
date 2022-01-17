@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_base/presentation/core/responsivity/responsive_calculati
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import 'map.dart';
 
@@ -113,24 +113,36 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                     //     }
                     //   });
                     // }
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: Info.horizontalUnit * 2,
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: Info.horizontalUnit * 2,
+                        ),
+                        ResponsiveText(
+                          "Servicio disponible",
+                          fontSize: 35,
+                        ),
+                        SizedBox(
+                          height: Info.verticalUnit * 2,
+                        ),
+                        Card(
+                          child: Container(
+                            height: Info.verticalUnit * 45,
+                            child: Center(
+                              child: ServiceMap(
+                                service: _service,
+                                shouldUpdateUserPosition: true,
+                              ),
+                            ),
                           ),
-                          ResponsiveText(
-                            "Servicio disponible",
-                            fontSize: 35,
-                          ),
-                          SizedBox(
-                            height: Info.verticalUnit * 2,
-                          ),
-                          _ServiceDetail(
-                            service: _service,
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height: Info.verticalUnit * 4,
+                        ),
+                        _ServiceDetail(
+                          service: _service,
+                        ),
+                      ],
                     );
                   });
             }),
@@ -147,10 +159,13 @@ class _ServiceDetail extends StatelessWidget {
 
   final Service service;
 
-  Future<void> _acceptService() async {
+  Future<void> _acceptService(BuildContext context) async {
     final _success = await GetIt.I.get<GruaServiceState>().updateServiceStatus(
           ServiceStatus.accepted,
         );
+    if (_success) {
+      _viewCurrentService(context);
+    }
   }
 
   Future<void> _viewCurrentService(BuildContext context) async {
@@ -166,68 +181,86 @@ class _ServiceDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Card(
-        child: Container(
-          height: Info.verticalUnit * 45,
-          child: Center(
-            child: ServiceMap(
-              service: service,
-              shouldUpdateUserPosition: true,
-            ),
-          ),
-        ),
-      ),
-      SizedBox(
-        height: Info.verticalUnit * 4,
-      ),
-      InfoLine(
-        title: "Estado del Servicio",
-        value: tr(service.status.toString()),
-      ),
-      SizedBox(
-        height: Info.verticalUnit * 2,
-      ),
-      InfoLine(
-        title: "Tipo de Servicio",
-        value: tr("grua.enums." + service.type.toString()),
-      ),
-      SizedBox(
-        height: Info.verticalUnit * 2,
-      ),
-      InfoLine(
-        title: "Nombre conductor",
-        value: service.clientName.isEmpty ? "Desconocido" : service.clientName,
-      ),
-      SizedBox(
-        height: Info.verticalUnit * 2,
-      ),
-      InfoLine(
-        title: "Fecha Solicitud",
-        value: FormatHelper.userDateFormat().format(service.requestTime),
-      ),
-      SizedBox(
-        height: Info.verticalUnit * 2,
-      ),
-      InfoLine(
-        title: "Carro",
-        value: service.carModel,
-      ),
-      SizedBox(
-        height: Info.verticalUnit * 5,
-      ),
-      ElevatedButton(
-        onPressed: service.status != ServiceStatus.pending
-            ? () => _viewCurrentService(context)
-            : _acceptService,
-        child: ResponsiveText(
-          service.status != ServiceStatus.pending
-              ? "Retomar Servicio"
-              : "Aceptar Servicio",
-          textType: TextType.Headline5,
-        ),
-      ),
-    ]);
+    return ChangeNotifierProvider.value(
+      value: GetIt.I.get<GruaServiceState>(),
+      builder: (context, snapshot) {
+        return Consumer<GruaServiceState>(
+          builder: (context, state, child) {
+            double _totalDistance = 0;
+            double _totalTime = 0;
+            if (state.routeToClient != null) {
+              _totalDistance = state.routeToClient!.totalDistance +
+                  state.routeFromClientToDestination!.totalDistance;
+
+              _totalTime = state.routeToClient!.totalTime +
+                  state.routeFromClientToDestination!.totalTime;
+            }
+            final _distanceLabel = _totalDistance == 0
+                ? "Calculando..."
+                : '${_totalDistance / 1000} KM';
+
+            final _timeLabel = _totalTime == 0
+                ? "Calculando..."
+                : '${(_totalTime / 60).toStringAsFixed(2)} Min';
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  InfoLine(
+                    title: "Distancia Total",
+                    value: _distanceLabel,
+                  ),
+                  SizedBox(
+                    height: Info.verticalUnit * 2,
+                  ),
+                  InfoLine(
+                    title: "Tiempo del Recorrido",
+                    value: _timeLabel,
+                  ),
+                  // SizedBox(
+                  //   height: Info.verticalUnit * 2,
+                  // ),
+                  // InfoLine(
+                  //   title: "Nombre conductor",
+                  //   value: service.clientName.isEmpty
+                  //       ? "Desconocido"
+                  //       : service.clientName,
+                  // ),
+                  SizedBox(
+                    height: Info.verticalUnit * 2,
+                  ),
+                  InfoLine(
+                    title: "Fecha Solicitud",
+                    value: FormatHelper.userDateFormat()
+                        .format(service.requestTime),
+                  ),
+                  SizedBox(
+                    height: Info.verticalUnit * 2,
+                  ),
+                  InfoLine(
+                    title: "Carro",
+                    value: service.carModel,
+                  ),
+                  SizedBox(
+                    height: Info.verticalUnit * 5,
+                  ),
+                  ElevatedButton(
+                    onPressed: service.status != ServiceStatus.pending
+                        ? () => _viewCurrentService(context)
+                        : () => _acceptService(context),
+                    child: ResponsiveText(
+                      service.status != ServiceStatus.pending
+                          ? "Retomar Servicio"
+                          : "Aceptar Servicio",
+                      textType: TextType.Headline5,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
 

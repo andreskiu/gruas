@@ -11,6 +11,6 @@ abstract class FormatHelper {
   }
 
   static DateFormat userDateFormat() {
-    return DateFormat.MMMEd().add_Hm();
+    return DateFormat.MMMEd('ES').add_Hm();
   }
 }

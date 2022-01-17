@@ -223,13 +223,9 @@ class _ServiceMapState extends State<ServiceMap> {
 
     return _linesOrFailure.fold(
       (l) => null,
-      (result) {
-        if (routeId == CURRENT_PATH_ID) {
-          _state.routeToClient = result;
-        } else {
-          _state.routeFromClientToDestination = result;
-        }
-        return result;
+      (route) {
+        _state.setRoute(routeId, route);
+        return route;
       },
     );
   }

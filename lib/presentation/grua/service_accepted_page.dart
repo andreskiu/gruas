@@ -4,7 +4,6 @@ import 'package:flutter_base/application/grua/grua_service_state.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
-import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
 import 'package:flutter_base/presentation/grua/dialogs.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -120,22 +119,20 @@ class _ButtonBarState extends State<ButtonBar> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        ElevatedButton(
-          onPressed: () async {
-            final String? code =
-                await AutoRouter.of(context).push<String?>(ScanQRPageRoute());
-            if (code != null && code.isNotEmpty) {
-              print("code read = " + code);
-            }
-          },
-          child: ResponsiveText(
-            "Escanear QR",
-            textType: TextType.Headline5,
-          ),
-        ),
+        // TODO: CHEKQUEAR SI ESTO VA A IR.... NO ESTA IMPLEMENTADO.
+        // ElevatedButton(
+        //   onPressed: () async {
+        //     final String? code =
+        //         await AutoRouter.of(context).push<String?>(ScanQRPageRoute());
+        //     if (code != null && code.isNotEmpty) {
+        //       print("code read = " + code);
+        //     }
+        //   },
+        //   child: ResponsiveText(
+        //     "Escanear QR",
+        //     textType: TextType.Headline5,
+        //   ),
+        // ),
         ElevatedButton(
           onPressed: _takePhotActive
               ? () async {

@@ -72,6 +72,18 @@ class GruaServiceState extends ChangeNotifier {
   RouteDetails? routeToClient;
   RouteDetails? routeFromClientToDestination;
 
+  setRoute(
+    String routeId,
+    RouteDetails route,
+  ) {
+    if (routeId == 'current_path') {
+      routeToClient = route;
+    } else {
+      routeFromClientToDestination = route;
+    }
+    notifyListeners();
+  }
+
   Future<void> getServices() async {
     final _params = GetServicesUseCaseParams(user: authState.loggedUser);
     final _streamOrFailure = await getServicesUseCase.call(_params);
