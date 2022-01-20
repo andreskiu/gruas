@@ -53,7 +53,7 @@ class GruaServerRepository extends IServerService {
         {
           "dateTime": DateTime.now().millisecondsSinceEpoch,
           "username": service.username,
-          "idNovedad": service.id,
+          "idNovedad": int.tryParse(service.id),
           "idTypeEvidence": evidence.type.id,
           "idTypeStatus":
               TransformationsGrua.serviceStatusToInt(service.status),
@@ -70,7 +70,7 @@ class GruaServerRepository extends IServerService {
         queryParameters: {
           "dateTime": DateTime.now().millisecondsSinceEpoch,
           "username": service.username,
-          "idNovedad": service.id,
+          "idNovedad": int.tryParse(service.id),
           "idTypeEvidence": evidence.type.id,
           "idTypeStatus":
               TransformationsGrua.serviceStatusToInt(service.status),
