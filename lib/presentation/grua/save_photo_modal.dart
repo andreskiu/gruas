@@ -9,6 +9,7 @@ import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:get_it/get_it.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:image/image.dart' as im;
 
@@ -40,8 +41,8 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
 
     _state.evidenceUploaded = false;
     _evidenceTypeQuery = _state.getEvidenceTypes();
-    _prepareImage().then(
-      (photo) => _imageEncode = _encodeImage(photo),
+    _imageEncode = _prepareImage().then(
+      (photo) => _encodeImage(photo),
     );
   }
 
@@ -49,8 +50,28 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
     if (widget.photo == null) {
       return null;
     }
-    _photo = await ImageHelper.putLocationWatermark(widget.photo!);
+    _photo = widget.photo;
+    final _location = await _getLocation();
+    // TAMBIEN TENES QUE PONERLE LA FECHA!
+    if (_location != null) {
+      _photo = await ImageHelper.putLocationWatermark(
+          widget.photo!, _state.lastLocation!);
+      // return _photo;
+    }
+    _photo = await ImageHelper.putTimeWaterMark(_photo!);
     return _photo;
+  }
+
+  Future<LocationData?> _getLocation() {
+    List<Future<LocationData?>> _getLocationFuture = [];
+    if (_state.locationService != null) {
+      _getLocationFuture.add(_state.locationService!.getLocation());
+      final _lastLocationKnown = Future.delayed(Duration(seconds: 5))
+          .then((value) => _state.lastLocation);
+      _getLocationFuture.add(_lastLocationKnown);
+    }
+
+    return Future.any(_getLocationFuture);
   }
 
   Future<Uint8List?> _encodeImage(im.Image? image) async {
@@ -105,6 +126,9 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                                         children: [
                                           Center(
                                             child: CircularProgressIndicator(),
+                                          ),
+                                          SizedBox(
+                                            height: Info.verticalUnit,
                                           ),
                                           Text("Preparando imagen"),
                                         ],

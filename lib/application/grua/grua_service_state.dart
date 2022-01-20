@@ -66,6 +66,7 @@ class GruaServiceState extends ChangeNotifier {
   bool evidenceUploaded = false;
   List<EvidenceType> evidenceTypes = [];
 
+  Location? locationService;
   LocationData? lastLocation;
   late StreamController<bool> updateRoutesStream;
 
@@ -191,7 +192,8 @@ class GruaServiceState extends ChangeNotifier {
       service: servicesSelected!,
       location: location,
     );
-    final _successOrFailure = await saveLocationUseCase.call(_params);
+
+    await saveLocationUseCase.call(_params);
     // nothing to display to the user
   }
 }

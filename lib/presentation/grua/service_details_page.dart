@@ -188,7 +188,8 @@ class _ServiceDetail extends StatelessWidget {
           builder: (context, state, child) {
             double _totalDistance = 0;
             double _totalTime = 0;
-            if (state.routeToClient != null) {
+            if (state.routeToClient != null &&
+                state.routeFromClientToDestination != null) {
               _totalDistance = state.routeToClient!.totalDistance +
                   state.routeFromClientToDestination!.totalDistance;
 

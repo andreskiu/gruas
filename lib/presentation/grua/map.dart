@@ -120,7 +120,7 @@ class _ServiceMapState extends State<ServiceMap> {
 
   Future<Stream<LocationData>?> _startLocation() async {
     Location locationService = new Location();
-
+    _state.locationService = locationService;
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
     print("Starting location");

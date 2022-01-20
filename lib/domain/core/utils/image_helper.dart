@@ -6,7 +6,9 @@ import 'package:image/image.dart' as ExtImage;
 import 'package:location/location.dart';
 
 List<int> _encodeJpgComputation(ExtImage.Image image) {
-  return ExtImage.encodeJpg(image);
+  return ExtImage.encodeJpg(
+    image,
+  );
 }
 
 ExtImage.Image? _decodeImageComputation(Uint8List bytes) {
@@ -22,7 +24,7 @@ class ImageHelper {
     return await compute(_decodeImageComputation, bytes);
   }
 
-  static Future<ExtImage.Image?> drawWaterMarks(
+  static Future<ExtImage.Image?> putTimeWaterMark(
       ExtImage.Image originalPhoto) async {
     ExtImage.Image waterMark = ExtImage.Image(500, 50);
     final _today = DateTime.now();
@@ -35,40 +37,45 @@ class ImageHelper {
       0,
       _todayString,
     );
-    var _photoWithWaterMark = ExtImage.copyInto(originalPhoto, waterMark);
-    _photoWithWaterMark = await putLocationWatermark(_photoWithWaterMark);
-
-    return _photoWithWaterMark;
+    final _finalPhoto = ExtImage.copyInto(
+      originalPhoto,
+      waterMark,
+      dstY: 20,
+      dstX: 5,
+    );
+    return _finalPhoto;
   }
 
   static Future<ExtImage.Image> putLocationWatermark(
-      ExtImage.Image origin) async {
+    ExtImage.Image origin,
+    LocationData location,
+  ) async {
     try {
-      Location locationService = Location();
-      final _currentLocation = await locationService.getLocation();
       final latitudeWaterMark = ExtImage.drawString(
         ExtImage.Image(350, 50),
         ExtImage.arial_48,
         0,
         0,
-        'lat ' + _currentLocation.latitude.toString(),
+        'lat ' + location.latitude.toString(),
       );
       final longitudeWaterMark = ExtImage.drawString(
         ExtImage.Image(350, 50),
         ExtImage.arial_48,
         0,
         0,
-        'lng ' + _currentLocation.longitude.toString(),
+        'lng ' + location.longitude.toString(),
       );
       var _finalPhoto = ExtImage.copyInto(
         origin,
         latitudeWaterMark,
         dstY: origin.height - 100,
+        dstX: 5,
       );
       _finalPhoto = ExtImage.copyInto(
         _finalPhoto,
         longitudeWaterMark,
         dstY: origin.height - 40,
+        dstX: 5,
       );
       return _finalPhoto;
     } on Exception catch (e) {

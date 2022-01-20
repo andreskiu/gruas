@@ -11,6 +11,7 @@ import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data
 import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
 
 @Environment(EnvironmentConfig.dev)
@@ -48,18 +49,33 @@ class GruaServerRepository extends IServerService {
     required Evidence evidence,
   }) async {
     try {
-      FormData formData = new FormData.fromMap({
-        "dateTime": DateTime.now().millisecondsSinceEpoch,
-        "username": service.username,
-        "idNovedad": service.id,
-        "idTypeEvidence": evidence.type.id,
-        "idTypeStatus": TransformationsGrua.serviceStatusToInt(service.status),
-        "description": "ENVIADO DESDE APP",
-        "file": MultipartFile.fromBytes(evidence.photo.getBytes())
-      });
+      FormData formData = new FormData.fromMap(
+        {
+          "dateTime": DateTime.now().millisecondsSinceEpoch,
+          "username": service.username,
+          "idNovedad": service.id,
+          "idTypeEvidence": evidence.type.id,
+          "idTypeStatus":
+              TransformationsGrua.serviceStatusToInt(service.status),
+          "description": "PRUEBA",
+          "file": MultipartFile.fromBytes(
+            evidence.photo.getBytes(),
+            contentType: MediaType('image', 'jpeg'),
+          )
+        },
+      );
 
       final _serverResponse = await _dio.post(
         _saveEvidencePath,
+        queryParameters: {
+          "dateTime": DateTime.now().millisecondsSinceEpoch,
+          "username": service.username,
+          "idNovedad": service.id,
+          "idTypeEvidence": evidence.type.id,
+          "idTypeStatus":
+              TransformationsGrua.serviceStatusToInt(service.status),
+          "description": "PRUEBA",
+        },
         data: formData,
       );
 

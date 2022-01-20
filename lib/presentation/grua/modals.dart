@@ -8,7 +8,12 @@ class Modals {
   static Future<im.Image?> takeFoto(BuildContext context) async {
     final ImagePicker _picker = ImagePicker();
 
-    final _photo = await _picker.pickImage(source: ImageSource.camera);
+    final _photo = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+      maxHeight: 1024,
+      maxWidth: 1024,
+    );
     if (_photo == null) {
       return null;
     }
