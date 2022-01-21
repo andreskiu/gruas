@@ -15,8 +15,8 @@ enum ViewMode {
   drive,
 }
 
-const CURRENT_PATH_ID = 'current_path';
-const CLIENT_PATH_ID = 'client_path';
+const CURRENT_PATH_ID = 0; //'current_path';
+const CLIENT_PATH_ID = 1; //'client_path';
 
 class ServiceMap extends StatefulWidget {
   ServiceMap({
@@ -213,11 +213,12 @@ class _ServiceMapState extends State<ServiceMap> {
   Future<RouteDetails?> _getRoutesData(
     LatLng origin,
     LatLng destination,
-    String routeId,
+    int routeId,
   ) async {
     final _params = GetServiceRouteUseCaseParams(
       origin: origin,
       destination: destination,
+      type: routeId,
     );
     final _linesOrFailure = await getRoutePoints.call(_params);
 
@@ -231,7 +232,7 @@ class _ServiceMapState extends State<ServiceMap> {
   }
 
   Future<Polyline?> _getDestinationRoute({
-    required String id,
+    required int id,
     Color color = Colors.black,
     required LatLng origin,
     required LatLng destination,
@@ -245,7 +246,7 @@ class _ServiceMapState extends State<ServiceMap> {
       return null;
     }
     final Polyline polyline = _createPolylineFromPoints(
-      id: id,
+      id: id.toString(),
       points: linesResult.routeDetails.polylinesPoints.points,
       color: color,
     );

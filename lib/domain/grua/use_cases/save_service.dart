@@ -6,8 +6,6 @@ import 'package:flutter_base/domain/core/utils/functions.dart';
 import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/services/grua_service.dart';
-import 'package:flutter_base/infrastructure/grua/models/firebase_route_model.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 
 @lazySingleton
@@ -41,12 +39,12 @@ class SaveServicesUseCase extends UseCase<Service, SaveServicesUseCaseParams> {
       _serviceToSave = _serviceToSave.copyWith(
         serviceAcceptedTime: DateTime.now(),
       );
+    }
 
+    if (_service.status == ServiceStatus.accepted) {
       final _successOrFailure = await service.saveServiceSuggestedRoute(
         service: params.service,
-        route: _mergeRoutes(
-          routes: params.routes!,
-        ),
+        routes: params.routes!,
       );
       if (_successOrFailure.isLeft()) {
         return Left(Functions.getError(_successOrFailure));
@@ -70,32 +68,6 @@ class SaveServicesUseCase extends UseCase<Service, SaveServicesUseCaseParams> {
     );
 
     return _servicesOrFailure;
-  }
-
-  RouteDetails _mergeRoutes({
-    required List<RouteDetails> routes,
-  }) {
-    List<LatLng> points = [];
-    List<Leg> legs = [];
-    double _totalDistance = 0;
-    double _totalTime = 0;
-    routes.forEach((route) {
-      _totalDistance += route.totalDistance;
-      _totalTime += route.totalTime;
-      points.addAll(route.routeDetails.polylinesPoints.points);
-      legs.addAll(route.routeDetails.legs);
-    });
-
-    return RouteDetails(
-      routeDetails: FirebaseRouteModel(
-        legs: legs,
-        polylinesPoints: OverviewPolylines(
-          points: points,
-        ),
-      ),
-      totalDistance: _totalDistance,
-      totalTime: _totalTime,
-    );
   }
 }
 

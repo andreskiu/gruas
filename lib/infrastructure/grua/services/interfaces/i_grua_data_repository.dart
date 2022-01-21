@@ -38,7 +38,7 @@ abstract class IServerService extends IGruaDataRepository {
   });
   Future<Either<ErrorContent, Unit>> saveServiceSuggestedRoute({
     required Service service,
-    required RouteDetails route,
+    required List<RouteDetails> routes,
   });
 }
 

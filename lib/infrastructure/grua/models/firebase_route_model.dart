@@ -81,12 +81,19 @@ class Leg extends Equatable {
   final Location endLocation;
   final List<Step> steps;
 
+  @JsonKey(name: 'start_address', defaultValue: '')
+  final String startAddress;
+  @JsonKey(name: 'end_address', defaultValue: '')
+  final String endAddress;
+
   Leg({
     required this.distance,
     required this.duration,
     required this.startLocation,
     required this.endLocation,
     required this.steps,
+    required this.startAddress,
+    required this.endAddress,
   });
 
   factory Leg.fromJson(Map<String, dynamic> json) => _$LegFromJson(json);
@@ -99,6 +106,8 @@ class Leg extends Equatable {
         startLocation,
         endLocation,
         steps,
+        startAddress,
+        endAddress,
       ];
 }
 

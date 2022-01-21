@@ -41,6 +41,8 @@ Leg _$LegFromJson(Map<String, dynamic> json) => Leg(
       steps: (json['steps'] as List<dynamic>)
           .map((e) => Step.fromJson(e as Map<String, dynamic>))
           .toList(),
+      startAddress: json['start_address'] as String? ?? '',
+      endAddress: json['end_address'] as String? ?? '',
     );
 
 Map<String, dynamic> _$LegToJson(Leg instance) => <String, dynamic>{
@@ -49,6 +51,8 @@ Map<String, dynamic> _$LegToJson(Leg instance) => <String, dynamic>{
       'start_location': instance.startLocation.toJson(),
       'end_location': instance.endLocation.toJson(),
       'steps': instance.steps.map((e) => e.toJson()).toList(),
+      'start_address': instance.startAddress,
+      'end_address': instance.endAddress,
     };
 
 Distance _$DistanceFromJson(Map<String, dynamic> json) => Distance(

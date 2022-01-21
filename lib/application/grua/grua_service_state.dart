@@ -74,10 +74,10 @@ class GruaServiceState extends ChangeNotifier {
   RouteDetails? routeFromClientToDestination;
 
   setRoute(
-    String routeId,
+    int routeId,
     RouteDetails route,
   ) {
-    if (routeId == 'current_path') {
+    if (routeId == 0) {
       routeToClient = route;
     } else {
       routeFromClientToDestination = route;

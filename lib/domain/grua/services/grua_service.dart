@@ -28,7 +28,7 @@ abstract class IGruaService {
   });
   Future<Either<ErrorContent, Unit>> saveServiceSuggestedRoute({
     required Service service,
-    required RouteDetails route,
+    required List<RouteDetails> routes,
   });
 
   Future<Either<ErrorContent, Unit>> saveLocation({

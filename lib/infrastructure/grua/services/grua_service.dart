@@ -92,11 +92,11 @@ class GruaServiceImpl implements IGruaService {
   @override
   Future<Either<ErrorContent, Unit>> saveServiceSuggestedRoute({
     required Service service,
-    required RouteDetails route,
+    required List<RouteDetails> routes,
   }) {
     return server.saveServiceSuggestedRoute(
       service: service,
-      route: route,
+      routes: routes,
     );
   }
 }

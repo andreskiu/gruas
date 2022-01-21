@@ -24,8 +24,7 @@ class GruaServerRepository extends IServerService {
   final _getEvidencesTypesPath = "attentionOnRoad/typeEvidence";
   final _saveEvidencePath = "attentionOnRoad/saveEvidence";
   final _saveLocationPath = "attentionOnRoad/saveLocation";
-  final _saveSuggestedRoutePath =
-      "attentionOnRoad//attentionOnRoad/saveSuggestedRoute";
+  final _saveSuggestedRoutePath = "attentionOnRoad/saveSuggestedRoute";
 
   @override
   Future<Either<ErrorContent, List<EvidenceType>>> getEvidenceTypes() async {
@@ -67,15 +66,15 @@ class GruaServerRepository extends IServerService {
 
       final _serverResponse = await _dio.post(
         _saveEvidencePath,
-        queryParameters: {
-          "dateTime": DateTime.now().millisecondsSinceEpoch,
-          "username": service.username,
-          "idNovedad": int.tryParse(service.id),
-          "idTypeEvidence": evidence.type.id,
-          "idTypeStatus":
-              TransformationsGrua.serviceStatusToInt(service.status),
-          "description": "PRUEBA",
-        },
+        // queryParameters: {
+        //   "dateTime": DateTime.now().millisecondsSinceEpoch,
+        //   "username": service.username,
+        //   "idNovedad": int.tryParse(service.id),
+        //   "idTypeEvidence": evidence.type.id,
+        //   "idTypeStatus":
+        //       TransformationsGrua.serviceStatusToInt(service.status),
+        //   "description": "PRUEBA",
+        // },
         data: formData,
       );
 
@@ -113,23 +112,23 @@ class GruaServerRepository extends IServerService {
   @override
   Future<Either<ErrorContent, Unit>> saveServiceSuggestedRoute({
     required Service service,
-    required RouteDetails route,
+    required List<RouteDetails> routes,
   }) async {
     try {
+      final _suggestedRoutes =
+          routes.map((route) => route.toServerMap()).toList();
       final _serverResponse = await _dio.post(
         _saveSuggestedRoutePath,
         data: {
-          "id_novedad": service.id,
-          "distance": route.totalDistance,
-          "duration": route.totalTime,
-          // "id_type_states":
-          //     TransformationsGrua.serviceStatusToInt(service.status),
-          // "lat": location.latitude,
-          // "lng": location.longitude,
-          // "date_time": DateTime.now().millisecondsSinceEpoch,
-          // "username": service.username,
+          "id_novedad": int.tryParse(service.id),
+          "username": service.username,
+          "suggested_route": _suggestedRoutes,
         },
       );
+
+      if (_serverResponse.data['states_code'] != 200) {
+        return Left(ErrorContent.server(_serverResponse.data.message));
+      }
 
       return Right(unit);
     } on Exception catch (e) {

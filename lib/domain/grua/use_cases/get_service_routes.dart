@@ -41,6 +41,7 @@ class GetServiceRouteUseCase
           routeDetails: firebaseRoute,
           totalDistance: totalDistance,
           totalTime: totalTime,
+          type: params.type,
         );
 
         return Right(_route);
@@ -52,13 +53,18 @@ class GetServiceRouteUseCase
 class GetServiceRouteUseCaseParams extends Equatable {
   final LatLng origin;
   final LatLng destination;
+  final int type;
 
   GetServiceRouteUseCaseParams({
     required this.origin,
     required this.destination,
+    required this.type,
   });
 
   ErrorContent? areValid() {
+    if (type != 0 && type != 1) {
+      return ErrorContent.useCase("Wrong route type");
+    }
     return null;
   }
 
