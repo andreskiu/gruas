@@ -64,6 +64,7 @@ class GruaServiceState extends ChangeNotifier {
   Service? servicesSelected;
   bool serviceUpdatedSuccesfully = false;
   bool evidenceUploaded = false;
+  bool loading = false;
   List<EvidenceType> evidenceTypes = [];
 
   Location? locationService;
@@ -116,6 +117,8 @@ class GruaServiceState extends ChangeNotifier {
   Future<bool> updateServiceStatus(ServiceStatus serviceStatus) async {
     LatLng? _currentLocation;
     final _routes = <RouteDetails>[];
+    loading = true;
+    notifyListeners();
     if (serviceStatus == ServiceStatus.accepted) {
       if (lastLocation != null) {
         _currentLocation = LatLng(
@@ -138,6 +141,8 @@ class GruaServiceState extends ChangeNotifier {
     );
     if (_serviceCopy == null) {
       error = ErrorContent.useCase("No service selected");
+      loading = false;
+      notifyListeners();
       return false;
     }
 
@@ -160,6 +165,7 @@ class GruaServiceState extends ChangeNotifier {
         }
       },
     );
+    loading = false;
     notifyListeners();
     return _serviceOrFailure.isRight();
   }

@@ -152,7 +152,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
 }
 
 class _ServiceDetail extends StatelessWidget {
-  const _ServiceDetail({
+  _ServiceDetail({
     Key? key,
     required this.service,
   }) : super(key: key);
@@ -244,17 +244,26 @@ class _ServiceDetail extends StatelessWidget {
                   SizedBox(
                     height: Info.verticalUnit * 5,
                   ),
-                  ElevatedButton(
-                    onPressed: service.status != ServiceStatus.pending
-                        ? () => _viewCurrentService(context)
-                        : () => _acceptService(context),
-                    child: ResponsiveText(
-                      service.status != ServiceStatus.pending
-                          ? "Retomar Servicio"
-                          : "Aceptar Servicio",
-                      textType: TextType.Headline5,
-                    ),
-                  ),
+                  Consumer<GruaServiceState>(builder: (context, state, child) {
+                    if (state.loading) {
+                      return Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+                    return ElevatedButton(
+                      onPressed: state.loading
+                          ? null
+                          : service.status != ServiceStatus.pending
+                              ? () => _viewCurrentService(context)
+                              : () => _acceptService(context),
+                      child: ResponsiveText(
+                        service.status != ServiceStatus.pending
+                            ? "Retomar Servicio"
+                            : "Aceptar Servicio",
+                        textType: TextType.Headline5,
+                      ),
+                    );
+                  }),
                 ],
               ),
             );
