@@ -37,9 +37,6 @@ dependencies:
   # To make HTTP querys
   dio: ^4.0.4
 
-  # HTTP PARSER
-  http_parser: ^4.0.0
-
   # Functional programming and error handling - No more exceptions!
   dartz: ^0.10.0
 
