@@ -55,9 +55,6 @@ dependencies:
   # Local data storage
   shared_preferences: ^2.0.5
 
-  # Internationalization
-  easy_localization: ^3.0.0
-
   # Date Formatting and others
   intl: ^0.17.0
 

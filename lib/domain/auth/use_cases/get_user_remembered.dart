@@ -15,7 +15,6 @@ class GetUserRememberedUseCase extends UseCase<String, NoParams> {
   Future<Either<ErrorContent, String>> call(
     NoParams params,
   ) async {
-      const _useCaseBase = "auth.";
     final result = await service.getUsernameRemembered();
 
     return result.fold(
@@ -23,8 +22,7 @@ class GetUserRememberedUseCase extends UseCase<String, NoParams> {
       (username) {
         if (username.isEmpty) {
           return Left(
-            ErrorContent.useCase(
-                _useCaseBase + "get_user_logged_in.errors.not_found"),
+            ErrorContent.useCase('Ningún usuario esta logueado'),
           );
         }
         return Right(username);

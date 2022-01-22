@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as ExtImage;
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 List<int> _encodeJpgComputation(ExtImage.Image image) {

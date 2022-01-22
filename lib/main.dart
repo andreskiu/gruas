@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/presentation/core/styles/light_theme.dart';
 import 'package:get_it/get_it.dart';
@@ -13,21 +12,8 @@ import 'presentation/core/routes/app_router.gr.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Future.wait([
-    EasyLocalization.ensureInitialized(),
-    initConfig(),
-  ]);
-  runApp(
-    EasyLocalization(
-      // For translation to work on iOS you need to add supported locales
-      // to ios/Runner/Info.plist. Look for easy_localization documentation
-      supportedLocales: [Locale('en'), Locale('es')],
-      path: 'assets/i18n',
-      fallbackLocale: Locale('en'),
-      useOnlyLangCode: true,
-      child: MyApp(),
-    ),
-  );
+  await initConfig();
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -63,9 +49,6 @@ class _MyAppState extends State<MyApp> {
       routeInformationParser: _appRouter.defaultRouteParser(),
       routerDelegate: _appRouter.delegate(),
       title: 'Flutter Demo',
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
       theme: getThemeData(ColorPaletteLight()),
       themeMode: ThemeMode.light, //Dark Mode disabled
       builder: (context, router) {

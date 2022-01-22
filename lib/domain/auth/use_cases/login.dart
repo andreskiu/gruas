@@ -4,7 +4,6 @@ import 'package:flutter_base/domain/auth/fields/password_field.dart';
 import 'package:flutter_base/domain/auth/fields/username_field.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/auth/services/auth_service.dart';
-import 'package:flutter_base/domain/core/core_fields/email_field.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/core/use_case.dart';
 import 'package:injectable/injectable.dart';
@@ -19,7 +18,6 @@ class LoginUseCase extends UseCase<User, LoginParams> {
   Future<Either<ErrorContent, User>> call(
     LoginParams params,
   ) async {
-    const _useCaseBase = "auth.";
     final _paramsError = params.areValid();
     if (_paramsError != null) {
       return Left(_paramsError);
@@ -33,8 +31,7 @@ class LoginUseCase extends UseCase<User, LoginParams> {
 
     return result.fold(
       (fail) {
-        return Left(ErrorContent.useCase(
-            _useCaseBase + "login.errors.invalid_credentials"));
+        return Left(ErrorContent.useCase("Credenciales no válidas"));
       },
       (user) {
         return Right(user);

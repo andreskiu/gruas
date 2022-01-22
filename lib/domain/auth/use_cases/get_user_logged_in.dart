@@ -15,16 +15,14 @@ class GetUserLoggedInUseCase extends UseCase<User, NoParams> {
   Future<Either<ErrorContent, User>> call(
     NoParams params,
   ) async {
-    const _useCaseBase = "auth.";
     final result = await service.getUserLoggedIn();
 
     return result.fold(
-      (fail) => Left(fail), 
+      (fail) => Left(fail),
       (user) {
         if (user == null) {
           return Left(
-            ErrorContent.useCase(
-                _useCaseBase + "get_user_logged_in.errors.not_found"),
+            ErrorContent.useCase('Ningún usuario esta logueado'),
           );
         }
         return Right(user);

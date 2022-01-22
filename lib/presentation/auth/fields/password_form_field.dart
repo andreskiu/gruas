@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/domain/auth/fields/password_field.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
@@ -30,12 +29,8 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
       controller: widget.textController,
       enabled: widget.enabled,
       obscureText: obscureText,
-      hintText: tr(
-        'auth.fields.password.label',
-      ),
-      labelText: tr(
-        'auth.fields.password.label',
-      ),
+      hintText: 'Contraseña',
+      labelText: 'Contraseña',
       suffixIconData: obscureText ? Icons.visibility : Icons.visibility_off,
       onIconPressed: () {
         setState(() {
@@ -51,7 +46,7 @@ class _PasswordFormFieldState extends State<PasswordFormField> {
         if (_error == null) {
           return null;
         }
-        return tr(_error.message);
+        return _error.message;
       },
       onChanged: widget.onChange,
       onSaved: widget.onSaved,

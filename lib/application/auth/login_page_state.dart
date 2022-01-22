@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_base/domain/auth/fields/username_field.dart';
-import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_evidence_types.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/domain/auth/fields/password_field.dart';
 import 'package:flutter_base/domain/auth/use_cases/get_user_remembered.dart';
 import 'package:flutter_base/domain/auth/use_cases/login.dart';
-import 'package:flutter_base/domain/core/core_fields/email_field.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/core/use_case.dart';
 

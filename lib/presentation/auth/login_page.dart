@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/auth/login_page_state.dart';
 import 'package:flutter_base/domain/auth/fields/password_field.dart';
@@ -84,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                               height: Info.verticalUnit * 5,
                             ),
                             ResponsiveText(
-                              tr("auth.login.labels.welcome"),
+                              "Bienvenido",
                               textType: TextType.Headline2,
                               fontSize: 40,
                             ),
@@ -125,9 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                                   );
                                 }),
                                 ResponsiveText(
-                                  tr(
-                                    'auth.login.labels.remember_me',
-                                  ),
+                                  'Recuérdame',
                                   textType: TextType.Body1,
                                   fontSize: 20,
                                 ),
@@ -186,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
         });
       } else {
         if (_state.error != null) {
-          Utils.showSnackBar(context, msg: tr(_state.error!.message));
+          Utils.showSnackBar(context, msg: _state.error!.message);
         }
       }
     }

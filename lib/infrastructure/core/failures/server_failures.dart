@@ -16,22 +16,24 @@ class ServiceFailure with EquatableMixin {
   ErrorContent getError() {
     String _msg = "";
 
-    const _basePath = "infrastructure.errors.";
     switch (type) {
       case ServiceFailureType.ConnectionError:
-        _msg = _basePath + "connection";
+        _msg =
+            "El servidor no ha respondido a tiempo. Por favor, compruebe su conexión a Internet";
         break;
       case ServiceFailureType.BadRequest:
-        _msg = _basePath + "bad_request";
+        _msg = "La información enviada es errónea. Por favor actualice la App.";
         break;
       case ServiceFailureType.UnauthorizedUser:
-        _msg = _basePath + "unauthorized";
+        _msg = "No tienes permiso para realizar esta acción";
         break;
       case ServiceFailureType.NotFound:
-        _msg = _basePath + "notFound";
+        _msg =
+            "El servidor está fuera de línea o su aplicación está desactualizada. Por favor, actualice la App.";
         break;
       case ServiceFailureType.CacheError:
-        _msg = _basePath + "cache";
+        _msg =
+            "Hay un problema con su teléfono. Por favor, comprueba que tienes suficiente espacio de almacenamiento e intentelo nuevamente.";
         break;
       case ServiceFailureType.FeatureFailure:
         return ErrorContent(
@@ -39,7 +41,7 @@ class ServiceFailure with EquatableMixin {
           errorCode: errorCode,
         );
       default:
-        _msg = _basePath + "general";
+        _msg = "Se ha producido un error. Por favor, inténtelo más tarde.";
         break;
     }
 
