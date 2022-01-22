@@ -52,11 +52,10 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
     }
     _photo = widget.photo;
     final _location = await _getLocation();
-    // TAMBIEN TENES QUE PONERLE LA FECHA!
+
     if (_location != null) {
       _photo = await ImageHelper.putLocationWatermark(
           widget.photo!, _state.lastLocation!);
-      // return _photo;
     }
     _photo = await ImageHelper.putTimeWaterMark(_photo!);
     return _photo;
@@ -89,14 +88,14 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
         return Form(
           key: _formKey,
           child: Container(
-            height: Info.verticalUnit * 50,
+            height: Info.verticalUnit * 60,
             padding: EdgeInsets.symmetric(horizontal: Info.horizontalUnit * 10),
             child: Consumer<GruaServiceState>(
               builder: (context, state, child) {
                 return state.evidenceUploaded
                     ? Column(
                         children: [
-                          ResponsiveText("Foto Subida con exito,"),
+                          ResponsiveText("Evidencia guardada con exito."),
                           SizedBox(
                             height: Info.verticalUnit * 2,
                           ),
@@ -111,7 +110,7 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                     : ListView(
                         physics: NeverScrollableScrollPhysics(),
                         children: [
-                          Center(child: ResponsiveText("Subir Foto")),
+                          Center(child: ResponsiveText("Guardar Evidencia")),
                           SizedBox(
                             height: Info.verticalUnit * 2,
                           ),
@@ -182,44 +181,51 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                               ? Center(
                                   child: CircularProgressIndicator.adaptive(),
                                 )
-                              : ElevatedButton(
-                                  onPressed: _isLoading
-                                      ? null
-                                      : () async {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            _formKey.currentState!.save();
-                                            if (_photo == null) {
-                                              return;
-                                            }
-                                            setState(() {
-                                              _isLoading = true;
-                                            });
-                                            final _evidence = Evidence(
-                                              photo: _photo!,
-                                              type: _selectedEvidenceType,
-                                            );
-                                            final _successOrFailure =
-                                                await _state.uploadEvidence(
-                                              _evidence,
-                                            );
-                                            setState(() {
-                                              _isLoading = false;
-                                            });
-                                            // if (_successOrFailure) {
-                                            //   print(
-                                            //       "Make the use case to save the foto");
-                                            //   AutoRouter.of(context).pop(true);
-                                            // } else {
-                                            //   // TODO: SHOW SOME ERROR
-                                            // }
-                                          }
-                                        },
-                                  child: ResponsiveText(
-                                    "Subir foto",
-                                    textType: TextType.Headline5,
-                                  ),
-                                ),
+                              : FutureBuilder<Uint8List?>(
+                                  future: _imageEncode,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.data == null) {
+                                      return SizedBox.shrink();
+                                    }
+                                    return ElevatedButton(
+                                      onPressed: _isLoading
+                                          ? null
+                                          : () async {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                _formKey.currentState!.save();
+                                                if (_photo == null) {
+                                                  return;
+                                                }
+                                                setState(() {
+                                                  _isLoading = true;
+                                                });
+                                                final _evidence = Evidence(
+                                                  photo: _photo!,
+                                                  type: _selectedEvidenceType,
+                                                );
+                                                final _successOrFailure =
+                                                    await _state.uploadEvidence(
+                                                  _evidence,
+                                                );
+                                                setState(() {
+                                                  _isLoading = false;
+                                                });
+                                                // if (_successOrFailure) {
+                                                //   print(
+                                                //       "Make the use case to save the foto");
+                                                //   AutoRouter.of(context).pop(true);
+                                                // } else {
+                                                //   // TODO: SHOW SOME ERROR
+                                                // }
+                                              }
+                                            },
+                                      child: ResponsiveText(
+                                        "Cargar Evidencia",
+                                        textType: TextType.Headline5,
+                                      ),
+                                    );
+                                  }),
                           SizedBox(
                             height: Info.verticalUnit * 2,
                           ),
@@ -231,9 +237,12 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
                                   padding: EdgeInsets.only(
                                     bottom: Info.verticalUnit * 2,
                                   ),
-                                  child: ResponsiveText(
-                                    state.error!.message,
-                                    color: Theme.of(context).errorColor,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: ResponsiveText(
+                                      state.error!.message,
+                                      color: Theme.of(context).errorColor,
+                                    ),
                                   ),
                                 )
                               : SizedBox.shrink(),

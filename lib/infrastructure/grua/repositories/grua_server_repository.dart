@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_base/config/environments/environment_config.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter_base/domain/core/utils/image_helper.dart';
 import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
@@ -11,7 +14,6 @@ import 'package:flutter_base/infrastructure/grua/services/interfaces/i_grua_data
 import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
 
 @Environment(EnvironmentConfig.dev)
@@ -48,6 +50,7 @@ class GruaServerRepository extends IServerService {
     required Evidence evidence,
   }) async {
     try {
+      final _imageJPG = await ImageHelper.encodeJpg(evidence.photo);
       FormData formData = new FormData.fromMap(
         {
           "dateTime": DateTime.now().millisecondsSinceEpoch,
@@ -58,27 +61,19 @@ class GruaServerRepository extends IServerService {
               TransformationsGrua.serviceStatusToInt(service.status),
           "description": "PRUEBA",
           "file": MultipartFile.fromBytes(
-            evidence.photo.getBytes(),
-            // contentType: MediaType('image', 'jpeg'),
+            _imageJPG,
             filename: 'photo',
-            // headers:
           )
         },
       );
 
       final _serverResponse = await _dio.post(
         _saveEvidencePath,
-        // queryParameters: {
-        //   "dateTime": DateTime.now().millisecondsSinceEpoch,
-        //   "username": service.username,
-        //   "idNovedad": int.tryParse(service.id),
-        //   "idTypeEvidence": evidence.type.id,
-        //   "idTypeStatus":
-        //       TransformationsGrua.serviceStatusToInt(service.status),
-        //   "description": "PRUEBA",
-        // },
         data: formData,
       );
+      if (_serverResponse.data['states_code'] != 200) {
+        return Left(ErrorContent.server(_serverResponse.data['message'] ?? ''));
+      }
 
       return Right("Nothing");
     } on Exception catch (e) {
