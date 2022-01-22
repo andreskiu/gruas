@@ -59,7 +59,9 @@ class GruaServerRepository extends IServerService {
           "description": "PRUEBA",
           "file": MultipartFile.fromBytes(
             evidence.photo.getBytes(),
-            contentType: MediaType('image', 'jpeg'),
+            // contentType: MediaType('image', 'jpeg'),
+            filename: 'photo',
+            // headers:
           )
         },
       );
@@ -136,7 +138,6 @@ class GruaServerRepository extends IServerService {
     }
   }
 }
-
 
 // var headers = {
 //   'Authorization': 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXR2aWQiXSwidXNlcl9uYW1lIjoiamppbWVuZXoiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNjQwNzM4Nzc1LCJhdXRob3JpdGllcyI6WyJVU0VSIl0sImp0aSI6ImNjMTkwNzczLTdjY2UtNGVlNS05NzA1LTBiMjc0Zjg3N2U0MiIsImNsaWVudF9pZCI6ImF0dldTIn0.Hj9zBIQjeqbGCScAwxWFTrFdttp5n6HEQBXnTVnXIcM'

@@ -2,7 +2,7 @@ import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 
 class TransformationsGrua {
-  static ServiceType intToServiceType(int number) {
+  static ServiceType intToServiceType(int? number) {
     switch (number) {
       case 1:
         return ServiceType.grua;

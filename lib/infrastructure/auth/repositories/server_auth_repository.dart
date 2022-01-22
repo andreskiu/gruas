@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_base/config/environments/environment_config.dart';
 import 'package:flutter_base/domain/auth/models/session_information.dart';
@@ -41,9 +39,16 @@ class DemoRepository extends IAuthDataRepository {
           'grant_type': "password"
         },
       );
+
+      if (_serverResponse.statusCode != 200) {
+        return Left(ErrorContent.server(
+          _serverResponse.statusMessage!,
+        ));
+      }
       final _expireSession = DateTime.now().add(
         Duration(seconds: _serverResponse.data['expires_in'] ?? 900),
       );
+
       final _user = User(
         id: "22",
         username: username,
@@ -61,9 +66,8 @@ class DemoRepository extends IAuthDataRepository {
   }
 
   @override
-  Future<Either<ErrorContent, Unit>> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<Either<ErrorContent, Unit>> logout() async {
+    return Right(unit);
   }
 }
 
