@@ -136,16 +136,24 @@ class _LoginPageState extends State<LoginPage> {
                             SizedBox(
                               height: Info.verticalUnit * 5,
                             ),
-                            Container(
-                              width: Info.horizontalUnit * 80,
-                              child: ElevatedButton(
-                                onPressed: () => _submitForm(context),
-                                child: ResponsiveText(
-                                  "Login",
-                                  textType: TextType.Headline5,
-                                ),
-                              ),
-                            ),
+                            Consumer<LoginPageState>(
+                              builder: (context, state, child) {
+                                return state.isLoading
+                                    ? Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : Container(
+                                        width: Info.horizontalUnit * 80,
+                                        child: ElevatedButton(
+                                          onPressed: () => _submitForm(context),
+                                          child: ResponsiveText(
+                                            "Login",
+                                            textType: TextType.Headline5,
+                                          ),
+                                        ),
+                                      );
+                              },
+                            )
                           ],
                         ),
                       ),
