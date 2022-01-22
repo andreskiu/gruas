@@ -14,7 +14,7 @@ NovedadAtv _$NovedadAtvFromJson(Map<String, dynamic> json) => NovedadAtv(
           TransformationsGrua.intToServiceStatus(json['idAtvEstado'] as int),
       idAtvNovedad: json['idAtvNovedad'] as int,
       idAtvTipoServicio: TransformationsGrua.intToServiceType(
-          json['idAtvTipoServicio'] as int),
+          json['idAtvTipoServicio'] as int?),
       latInicio: json['latInicio'] as String,
       lngInicio: json['lngInicio'] as String,
       latFin: json['latFin'] as String,
