@@ -87,7 +87,9 @@ class GruaServiceState extends ChangeNotifier {
   }
 
   Future<void> getServices() async {
+    loading = true;
     final _params = GetServicesUseCaseParams(user: authState.loggedUser);
+
     final _streamOrFailure = await getServicesUseCase.call(_params);
 
     _streamOrFailure.fold(
@@ -95,9 +97,12 @@ class GruaServiceState extends ChangeNotifier {
         error = fail;
       },
       (services) {
+        error = null;
         servicesStream = services;
       },
     );
+    loading = false;
+    notifyListeners();
   }
 
   Future<List<EvidenceType>> getEvidenceTypes() async {

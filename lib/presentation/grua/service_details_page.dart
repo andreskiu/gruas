@@ -4,6 +4,7 @@ import 'package:flutter_base/application/auth/auth_state.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/presentation/core/helpers/format_helper.dart';
+import 'package:flutter_base/presentation/core/helpers/utils.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
 import 'package:flutter_base/presentation/core/routes/app_router.gr.dart';
@@ -76,7 +77,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                 );
               }
               final _state = snapshot.data;
-              if (_state == null || _state.error != null) {
+              if (_state == null) {
                 return Center(
                   child: ResponsiveText(
                     _state?.error?.message ??
@@ -84,12 +85,38 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                   ),
                 );
               }
+              if (_state.servicesStream == null) {
+                return Center(
+                  child: _state.loading
+                      ? CircularProgressIndicator.adaptive()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ResponsiveText(
+                              _state.error?.message ??
+                                  "Ocurrio un error, por favor vuelva a intentarlo",
+                            ),
+                            SizedBox(
+                              height: Info.verticalUnit * 2,
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                setState(() {});
+                                await _state.getServices();
+                                setState(() {});
+                              },
+                              child: ResponsiveText('Reintentar'),
+                            ),
+                          ],
+                        ),
+                );
+              }
               return StreamBuilder<List<Service>>(
                   stream: _state.servicesStream,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(
-                        child: ResponsiveText("No se encontró ningun servicio"),
+                        child: ResponsiveText("No hay servicios disponibles."),
                       );
                     }
                     final _service = snapshot.data!.first;
@@ -160,11 +187,18 @@ class _ServiceDetail extends StatelessWidget {
   final Service service;
 
   Future<void> _acceptService(BuildContext context) async {
-    final _success = await GetIt.I.get<GruaServiceState>().updateServiceStatus(
-          ServiceStatus.accepted,
-        );
+    final _state = GetIt.I.get<GruaServiceState>();
+    final _success = await _state.updateServiceStatus(
+      ServiceStatus.accepted,
+    );
     if (_success) {
       _viewCurrentService(context);
+    } else {
+      Utils.showSnackBar(
+        context,
+        msg: _state.error?.message ??
+            'Ocurrio un error. Por favor vuelva a intentarlo',
+      );
     }
   }
 

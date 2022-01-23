@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/core/use_case.dart';
 import 'package:flutter_base/domain/core/utils/functions.dart';
@@ -94,8 +95,17 @@ class SaveServicesUseCaseParams extends Equatable {
     }
 
     if (service.status == ServiceStatus.accepted) {
-      if (routes == null || routes!.isEmpty || routes!.length < 2) {
+      if (routes == null || routes!.isEmpty) {
         return ErrorContent.useCase("Recommended route is missing");
+      }
+      if (service.type == ServiceType.grua) {
+        if (routes!.length < 2) {
+          return ErrorContent.useCase("Recommended route is missing");
+        }
+      } else {
+        if (routes!.length < 1) {
+          return ErrorContent.useCase("Recommended route is missing");
+        }
       }
     }
     return null;

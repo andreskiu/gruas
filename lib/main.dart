@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/routes/guards/auth_guards.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'application/auth/auth_state.dart';
 import 'config/injectable/injectable.dart';
@@ -11,7 +12,7 @@ import 'presentation/core/routes/app_router.gr.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await initializeDateFormatting('ES');
   await initConfig();
   runApp(MyApp());
 }

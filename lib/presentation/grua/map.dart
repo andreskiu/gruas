@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
 import 'package:flutter_base/config/maps/constants.dart';
+import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/use_cases/get_service_routes.dart';
@@ -78,7 +79,8 @@ class _ServiceMapState extends State<ServiceMap> {
       return _refreshRoutes(true);
     }
 
-    if (widget.viewMode == ViewMode.preview) {
+    if (widget.viewMode == ViewMode.preview &&
+        widget.service.type == ServiceType.grua) {
       await _drawClientPath();
 
       await _drawCurrentPath(
@@ -144,6 +146,7 @@ class _ServiceMapState extends State<ServiceMap> {
       distanceFilter: MapConstants.LocationDistanceUpdate,
     );
     try {
+      // quizas un set state aqui, para la primera vez
       _currentLocation = await locationService.getLocation();
     } on Exception catch (e) {
       // TODO
@@ -183,19 +186,23 @@ class _ServiceMapState extends State<ServiceMap> {
 
   Future<void> _drawCurrentPath(LatLng currentPosition) async {
     late final _finalLocation;
-    switch (widget.service.status) {
-      case ServiceStatus.pending:
-        _finalLocation = widget.service.clientLocation;
-        break;
-      case ServiceStatus.accepted:
-        _finalLocation = widget.service.clientLocation;
-        break;
-      case ServiceStatus.carPicked:
-        _finalLocation = widget.service.detinationLocation;
-        break;
-      case ServiceStatus.finished:
-        _finalLocation = widget.service.detinationLocation;
-        break;
+    if (widget.service.type == ServiceType.grua) {
+      switch (widget.service.status) {
+        case ServiceStatus.pending:
+          _finalLocation = widget.service.clientLocation;
+          break;
+        case ServiceStatus.accepted:
+          _finalLocation = widget.service.clientLocation;
+          break;
+        case ServiceStatus.carPicked:
+          _finalLocation = widget.service.detinationLocation;
+          break;
+        case ServiceStatus.finished:
+          _finalLocation = widget.service.detinationLocation;
+          break;
+      }
+    } else {
+      _finalLocation = widget.service.clientLocation;
     }
 
     final path = await _getDestinationRoute(
@@ -324,18 +331,20 @@ class _ServiceMapState extends State<ServiceMap> {
                   snippet: widget.service.carModel,
                 ),
               ),
-              Marker(
-                markerId: MarkerId(
-                  "destination",
+              if (widget.service.type == ServiceType.grua) ...[
+                Marker(
+                  markerId: MarkerId(
+                    "destination",
+                  ),
+                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                    BitmapDescriptor.hueGreen,
+                  ),
+                  position: widget.service.detinationLocation,
+                  infoWindow: InfoWindow(
+                    title: "Destino",
+                  ),
                 ),
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueGreen,
-                ),
-                position: widget.service.detinationLocation,
-                infoWindow: InfoWindow(
-                  title: "Destino",
-                ),
-              ),
+              ]
             },
           );
           // });

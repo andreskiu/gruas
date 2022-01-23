@@ -124,7 +124,7 @@ class GruaServerRepository extends IServerService {
       );
 
       if (_serverResponse.data['states_code'] != 200) {
-        return Left(ErrorContent.server(_serverResponse.data.message));
+        return Left(ErrorContent.server(_serverResponse.data['message']));
       }
 
       return Right(unit);
