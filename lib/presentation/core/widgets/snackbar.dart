@@ -8,16 +8,29 @@ class SnackBarContent extends StatelessWidget {
   const SnackBarContent({
     Key key = const Key("snackBarContent"),
     required this.msg,
-    this.isError = false,
+    this.isError = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Icon(Icons.ac_unit),
-        SizedBox(width: Info.horizontalUnit * 2),
-        ResponsiveText(msg),
+        Icon(
+          Icons.warning_amber_rounded,
+          color: Colors.white,
+        ),
+        SizedBox(width: Info.horizontalUnit * 4),
+        Expanded(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: ResponsiveText(
+              msg,
+              color: Theme.of(context).snackBarTheme.contentTextStyle!.color,
+            ),
+          ),
+        ),
       ],
     );
   }

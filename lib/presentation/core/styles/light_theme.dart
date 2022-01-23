@@ -109,6 +109,9 @@ ThemeData getThemeData(ColorPalette palette) {
     appBarTheme: AppBarTheme(
       color: palette.primaryColor,
     ),
+    snackBarTheme: SnackBarThemeData(
+        backgroundColor: palette.errorColor,
+        contentTextStyle: TextStyle(color: palette.textOnPrimaryColor)),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: palette.primaryColor,
     ),
