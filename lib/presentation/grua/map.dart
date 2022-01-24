@@ -38,7 +38,7 @@ class _ServiceMapState extends State<ServiceMap> {
   final getRoutePoints = GetIt.I.get<GetServiceRouteUseCase>();
   Completer<GoogleMapController> _controller = Completer();
 
-  late Future<Stream<LocationData>?> initLocationService;
+  // late Future<Stream<LocationData>?> initLocationService;
   late GruaServiceState _state;
   Stream<LocationData>? locationStream;
   StreamSubscription<LocationData>? _locationSubscription;
@@ -50,9 +50,7 @@ class _ServiceMapState extends State<ServiceMap> {
   @override
   void initState() {
     super.initState();
-    _mapsReady = prepareMap();
-
-    GetIt.I.getAsync<GruaServiceState>().then((state) async {
+    _mapsReady = GetIt.I.getAsync<GruaServiceState>().then((state) async {
       _state = state;
       locationStream = await _startLocation();
       _updatePathStream = state.updateRoutesStream.stream;
@@ -62,6 +60,7 @@ class _ServiceMapState extends State<ServiceMap> {
       if (widget.viewMode == ViewMode.drive) {
         _locationSubscription = locationStream?.listen(_onNewLocationDetected);
       }
+      return true;
     });
   }
 
@@ -303,20 +302,29 @@ class _ServiceMapState extends State<ServiceMap> {
               if (!_controller.isCompleted) {
                 _controller.complete(controller);
               }
-              // _setInitialCameraPosition();
-              // esto llevaba el mapa a a ubicacion del usuario. quizas deberiamos en modo conduccion
-              // initLocationService.then((value) {
-              //   if (_locationData != null) {
-              //     if (_locationData!.latitude != null &&
-              //         _locationData!.longitude != null) {
-              //       final _position = LatLng(_locationData!.latitude!,
-              //           _locationData!.longitude!);
-              //       _goToLocation(_position);
-              //     }
-              //   }
+
+              if (_currentLocation.latitude != null &&
+                  _currentLocation.longitude != null) {
+                final _position = LatLng(
+                    _currentLocation.latitude!, _currentLocation.longitude!);
+                _goToLocation(_position);
+              }
               // });
             },
             polylines: _routes,
+            // parece que los limites no funcionan de lo mejor
+            // cameraTargetBounds: _state.routeToClient == null
+            //     ? CameraTargetBounds.unbounded
+            //     : CameraTargetBounds(
+            //         LatLngBounds(
+            //           southwest: _state
+            //               .routeToClient!.routeDetails.bounds.southwest
+            //               .toLatLng(),
+            //           northeast: _state
+            //               .routeToClient!.routeDetails.bounds.northeast
+            //               .toLatLng(),
+            //         ),
+            //       ),
             markers: {
               Marker(
                 markerId: MarkerId(
@@ -353,13 +361,16 @@ class _ServiceMapState extends State<ServiceMap> {
 
   Future<void> _goToLocation(LatLng location) async {
     final GoogleMapController controller = await _controller.future;
-    final _position = CameraPosition(target: location, zoom: 15);
+    final _position = CameraPosition(
+      target: location,
+      zoom: widget.viewMode == ViewMode.preview ? 12 : 15,
+    );
     controller.animateCamera(CameraUpdate.newCameraPosition(_position));
   }
 
-  Future<void> _setInitialCameraPosition(LatLng location) async {
-    final GoogleMapController controller = await _controller.future;
-    final _cameraPosition = CameraPosition(target: location);
-    controller.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
-  }
+  // Future<void> _setInitialCameraPosition(LatLng location) async {
+  //   final GoogleMapController controller = await _controller.future;
+  //   final _cameraPosition = CameraPosition(target: location);
+  //   controller.animateCamera(CameraUpdate.newCameraPosition(_cameraPosition));
+  // }
 }

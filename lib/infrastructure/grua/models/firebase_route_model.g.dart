@@ -13,12 +13,24 @@ FirebaseRouteModel _$FirebaseRouteModelFromJson(Map<String, dynamic> json) =>
           .toList(),
       polylinesPoints: OverviewPolylines.fromJson(
           json['overview_polyline'] as Map<String, dynamic>),
+      bounds: Bounds.fromJson(json['bounds'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$FirebaseRouteModelToJson(FirebaseRouteModel instance) =>
     <String, dynamic>{
       'overview_polyline': instance.polylinesPoints.toJson(),
       'legs': instance.legs.map((e) => e.toJson()).toList(),
+      'bounds': instance.bounds.toJson(),
+    };
+
+Bounds _$BoundsFromJson(Map<String, dynamic> json) => Bounds(
+      southwest: Location.fromJson(json['southwest'] as Map<String, dynamic>),
+      northeast: Location.fromJson(json['northeast'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$BoundsToJson(Bounds instance) => <String, dynamic>{
+      'southwest': instance.southwest.toJson(),
+      'northeast': instance.northeast.toJson(),
     };
 
 OverviewPolylines _$OverviewPolylinesFromJson(Map<String, dynamic> json) =>

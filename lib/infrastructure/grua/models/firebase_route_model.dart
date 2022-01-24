@@ -9,10 +9,12 @@ class FirebaseRouteModel extends Equatable {
   @JsonKey(name: 'overview_polyline')
   final OverviewPolylines polylinesPoints;
   final List<Leg> legs;
+  final Bounds bounds;
 
   FirebaseRouteModel({
     required this.legs,
     required this.polylinesPoints,
+    required this.bounds,
   });
 
   factory FirebaseRouteModel.fromJson(Map<String, dynamic> json) =>
@@ -24,6 +26,21 @@ class FirebaseRouteModel extends Equatable {
         polylinesPoints,
         legs,
       ];
+}
+
+@JsonSerializable(explicitToJson: true)
+class Bounds {
+  // @JsonKey(fromJson: _decodeEncodedPolyline)
+  final Location southwest;
+  // @JsonKey(fromJson: _decodeEncodedPolyline)
+  final Location northeast;
+  Bounds({
+    required this.southwest,
+    required this.northeast,
+  });
+  factory Bounds.fromJson(Map<String, dynamic> json) => _$BoundsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BoundsToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -155,6 +172,10 @@ class Location extends Equatable {
     required this.lat,
     required this.lng,
   });
+
+  LatLng toLatLng() {
+    return LatLng(lat, lng);
+  }
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
