@@ -87,168 +87,175 @@ class _SaveFotoModalState extends State<SaveFotoModal> {
       builder: (context, snapshot) {
         return Form(
           key: _formKey,
-          child: Container(
-            height: Info.verticalUnit * 60,
-            padding: EdgeInsets.symmetric(horizontal: Info.horizontalUnit * 10),
-            child: Consumer<GruaServiceState>(
-              builder: (context, state, child) {
-                return state.evidenceUploaded
-                    ? Column(
-                        children: [
-                          ResponsiveText("Evidencia guardada con exito."),
-                          SizedBox(
-                            height: Info.verticalUnit * 2,
-                          ),
-                          ElevatedButton(
-                            child: Text("Aceptar"),
-                            onPressed: () {
-                              AutoRouter.of(context).pop(true);
-                            },
-                          )
-                        ],
-                      )
-                    : ListView(
-                        physics: NeverScrollableScrollPhysics(),
-                        children: [
-                          Center(child: ResponsiveText("Guardar Evidencia")),
-                          SizedBox(
-                            height: Info.verticalUnit * 2,
-                          ),
-                          widget.photo == null
-                              ? Text("No se tomo ninguna foto")
-                              : FutureBuilder<Uint8List?>(
-                                  future: _imageEncode,
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData ||
-                                        snapshot.data == null) {
-                                      return Column(
-                                        children: [
-                                          Center(
-                                            child: CircularProgressIndicator(),
+          child: SingleChildScrollView(
+            child: Container(
+              height: Info.verticalUnit * 60,
+              padding:
+                  EdgeInsets.symmetric(horizontal: Info.horizontalUnit * 10),
+              child: Consumer<GruaServiceState>(
+                builder: (context, state, child) {
+                  return state.evidenceUploaded
+                      ? Column(
+                          children: [
+                            ResponsiveText("Evidencia guardada con exito."),
+                            SizedBox(
+                              height: Info.verticalUnit * 2,
+                            ),
+                            ElevatedButton(
+                              child: Text("Aceptar"),
+                              onPressed: () {
+                                AutoRouter.of(context).pop(true);
+                              },
+                            )
+                          ],
+                        )
+                      : ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            Center(child: ResponsiveText("Guardar Evidencia")),
+                            SizedBox(
+                              height: Info.verticalUnit * 2,
+                            ),
+                            widget.photo == null
+                                ? Text("No se tomo ninguna foto")
+                                : FutureBuilder<Uint8List?>(
+                                    future: _imageEncode,
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData ||
+                                          snapshot.data == null) {
+                                        return Column(
+                                          children: [
+                                            Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                            SizedBox(
+                                              height: Info.verticalUnit,
+                                            ),
+                                            Text("Preparando imagen"),
+                                          ],
+                                        );
+                                      }
+                                      return Container(
+                                        height: Info.verticalUnit * 25,
+                                        width: Info.verticalUnit * 15,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: Image.memory(snapshot.data!)
+                                                .image,
                                           ),
-                                          SizedBox(
-                                            height: Info.verticalUnit,
-                                          ),
-                                          Text("Preparando imagen"),
-                                        ],
+                                        ),
                                       );
-                                    }
-                                    return Container(
-                                      height: Info.verticalUnit * 25,
-                                      width: Info.verticalUnit * 15,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: Image.memory(snapshot.data!)
-                                              .image,
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                          SizedBox(
-                            height: Info.verticalUnit * 2,
-                          ),
-                          FutureBuilder<List<EvidenceType>>(
-                              future: _evidenceTypeQuery,
-                              builder: (context, snapshot) {
-                                if (snapshot.data == null) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }
-                                if (snapshot.data!.isNotEmpty) {
-                                  _selectedEvidenceType = snapshot.data!.first;
-                                }
-                                return ResponsiveFormFieldButton<EvidenceType>(
-                                  value: _selectedEvidenceType,
-                                  onSaved: (type) {
-                                    if (type != null) {
-                                      _selectedEvidenceType = type;
-                                    }
-                                  },
-                                  items: snapshot.data!
-                                      .map(
-                                        (ev) => DropdownMenuItem(
-                                          value: ev,
-                                          child: ResponsiveText(ev.name),
-                                        ),
-                                      )
-                                      .toList(),
-                                );
-                              }),
-                          SizedBox(
-                            height: Info.verticalUnit * 2,
-                          ),
-                          _isLoading
-                              ? Center(
-                                  child: CircularProgressIndicator.adaptive(),
-                                )
-                              : FutureBuilder<Uint8List?>(
-                                  future: _imageEncode,
-                                  builder: (context, snapshot) {
-                                    if (snapshot.data == null) {
-                                      return SizedBox.shrink();
-                                    }
-                                    return ElevatedButton(
-                                      onPressed: _isLoading
-                                          ? null
-                                          : () async {
-                                              if (_formKey.currentState!
-                                                  .validate()) {
-                                                _formKey.currentState!.save();
-                                                if (_photo == null) {
-                                                  return;
+                                    }),
+                            SizedBox(
+                              height: Info.verticalUnit * 2,
+                            ),
+                            FutureBuilder<List<EvidenceType>>(
+                                future: _evidenceTypeQuery,
+                                builder: (context, snapshot) {
+                                  if (snapshot.data == null) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.data!.isNotEmpty) {
+                                    _selectedEvidenceType =
+                                        snapshot.data!.first;
+                                  }
+                                  return ResponsiveFormFieldButton<
+                                      EvidenceType>(
+                                    value: _selectedEvidenceType,
+                                    onSaved: (type) {
+                                      if (type != null) {
+                                        _selectedEvidenceType = type;
+                                      }
+                                    },
+                                    items: snapshot.data!
+                                        .map(
+                                          (ev) => DropdownMenuItem(
+                                            value: ev,
+                                            child: ResponsiveText(ev.name),
+                                          ),
+                                        )
+                                        .toList(),
+                                  );
+                                }),
+                            SizedBox(
+                              height: Info.verticalUnit * 2,
+                            ),
+                            _isLoading
+                                ? Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  )
+                                : FutureBuilder<Uint8List?>(
+                                    future: _imageEncode,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.data == null) {
+                                        return SizedBox.shrink();
+                                      }
+                                      return ElevatedButton(
+                                        onPressed: _isLoading
+                                            ? null
+                                            : () async {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  _formKey.currentState!.save();
+                                                  if (_photo == null) {
+                                                    return;
+                                                  }
+                                                  setState(() {
+                                                    _isLoading = true;
+                                                  });
+                                                  final _evidence = Evidence(
+                                                    photo: _photo!,
+                                                    type: _selectedEvidenceType,
+                                                  );
+                                                  final _successOrFailure =
+                                                      await _state
+                                                          .uploadEvidence(
+                                                    _evidence,
+                                                  );
+                                                  setState(() {
+                                                    _isLoading = false;
+                                                  });
+                                                  // if (_successOrFailure) {
+                                                  //   print(
+                                                  //       "Make the use case to save the foto");
+                                                  //   AutoRouter.of(context).pop(true);
+                                                  // } else {
+                                                  //   // TODO: SHOW SOME ERROR
+                                                  // }
                                                 }
-                                                setState(() {
-                                                  _isLoading = true;
-                                                });
-                                                final _evidence = Evidence(
-                                                  photo: _photo!,
-                                                  type: _selectedEvidenceType,
-                                                );
-                                                final _successOrFailure =
-                                                    await _state.uploadEvidence(
-                                                  _evidence,
-                                                );
-                                                setState(() {
-                                                  _isLoading = false;
-                                                });
-                                                // if (_successOrFailure) {
-                                                //   print(
-                                                //       "Make the use case to save the foto");
-                                                //   AutoRouter.of(context).pop(true);
-                                                // } else {
-                                                //   // TODO: SHOW SOME ERROR
-                                                // }
-                                              }
-                                            },
-                                      child: ResponsiveText(
-                                        "Cargar Evidencia",
-                                        textType: TextType.Headline5,
-                                      ),
-                                    );
-                                  }),
-                          SizedBox(
-                            height: Info.verticalUnit * 2,
-                          ),
-                          state.error != null
-                              ? Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: Info.verticalUnit * 2,
-                                  ),
-                                  padding: EdgeInsets.only(
-                                    bottom: Info.verticalUnit * 2,
-                                  ),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: ResponsiveText(
-                                      state.error!.message,
-                                      color: Theme.of(context).errorColor,
+                                              },
+                                        child: ResponsiveText(
+                                          "Cargar Evidencia",
+                                          textType: TextType.Headline5,
+                                        ),
+                                      );
+                                    }),
+                            SizedBox(
+                              height: Info.verticalUnit * 2,
+                            ),
+                            state.error != null
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                      bottom: Info.verticalUnit * 2,
                                     ),
-                                  ),
-                                )
-                              : SizedBox.shrink(),
-                        ],
-                      );
-              },
+                                    padding: EdgeInsets.only(
+                                      bottom: Info.verticalUnit * 2,
+                                    ),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: ResponsiveText(
+                                        state.error!.message,
+                                        color: Theme.of(context).errorColor,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
+                          ],
+                        );
+                },
+              ),
             ),
           ),
         );

@@ -8,8 +8,6 @@
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@string/iconCircular"
-        android:background="@color/backgroundColor"
-        android:colorBackground="@color/backgroundColor"
         >
         
         <activity

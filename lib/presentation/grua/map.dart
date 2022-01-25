@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
 import 'package:flutter_base/config/maps/constants.dart';
@@ -312,6 +314,11 @@ class _ServiceMapState extends State<ServiceMap> {
               // });
             },
             polylines: _routes,
+            gestureRecognizers: {
+              Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
+              Factory<VerticalDragGestureRecognizer>(
+                  () => VerticalDragGestureRecognizer()),
+            },
             // parece que los limites no funcionan de lo mejor
             // cameraTargetBounds: _state.routeToClient == null
             //     ? CameraTargetBounds.unbounded
@@ -363,8 +370,13 @@ class _ServiceMapState extends State<ServiceMap> {
     final GoogleMapController controller = await _controller.future;
     final _position = CameraPosition(
       target: location,
-      zoom: widget.viewMode == ViewMode.preview ? 12 : 15,
+      zoom: widget.viewMode == ViewMode.preview ? 12 : 18,
+      // bearing: widget.viewMode == ViewMode.preview
+      //     ? 0.0
+      //     : _currentLocation.heading ?? 0.0,
+      // tilt: widget.viewMode == ViewMode.preview ? 0.0 : 750,
     );
+
     controller.animateCamera(CameraUpdate.newCameraPosition(_position));
   }
 

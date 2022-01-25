@@ -64,115 +64,118 @@ class _ServiceDetailsState extends State<ServiceDetails> {
           )
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: Info.horizontalUnit * 5,
-        ),
-        child: FutureBuilder<GruaServiceState>(
-            future: GetIt.I.getAsync<GruaServiceState>(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: ResponsiveText("Buscando servicio"),
-                );
-              }
-              final _state = snapshot.data;
-              if (_state == null) {
-                return Center(
-                  child: ResponsiveText(
-                    _state?.error?.message ??
-                        "Ocurrio un error, por favor vuelva a intentarlo",
-                  ),
-                );
-              }
-              if (_state.servicesStream == null) {
-                return Center(
-                  child: _state.loading
-                      ? CircularProgressIndicator.adaptive()
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ResponsiveText(
-                              _state.error?.message ??
-                                  "Ocurrio un error, por favor vuelva a intentarlo",
-                            ),
-                            SizedBox(
-                              height: Info.verticalUnit * 2,
-                            ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                setState(() {});
-                                await _state.getServices();
-                                setState(() {});
-                              },
-                              child: ResponsiveText('Reintentar'),
-                            ),
-                          ],
-                        ),
-                );
-              }
-              return StreamBuilder<List<Service>>(
-                  stream: _state.servicesStream,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(
-                        child: ResponsiveText("No hay servicios disponibles."),
-                      );
-                    }
-                    final _service = snapshot.data!.first;
-                    _state.servicesSelected = _service;
-                    // TODO: uncomment to auto-navigate.
-                    // final _loggedUser = GetIt.I.get<AuthState>().loggedUser;
-                    // if (_service.username == _loggedUser.username &&
-                    //     _service.status != ServiceStatus.pending &&
-                    //     _service.status != ServiceStatus.finished) {
-                    //   WidgetsBinding.instance!
-                    //       .addPostFrameCallback((timeStamp) {
-                    //     print("evaluando navegacion");
-                    //     if (AutoRouter.of(context).current.name !=
-                    //         ServiceAcceptedPageRoute.name) {
-                    //       print("NAVEGANDO A LA PAGINA DE SERVICIO ACEPTADO");
-                    //       AutoRouter.of(context).popAndPush(
-                    //         ServiceAcceptedPageRoute(
-                    //           service: _service,
-                    //         ),
-                    //       );
-                    //     }
-                    //   });
-                    // }
-                    return Column(
-                      children: [
-                        SizedBox(
-                          height: Info.horizontalUnit * 2,
-                        ),
-                        ResponsiveText(
-                          "Servicio disponible",
-                          fontSize: 35,
-                        ),
-                        SizedBox(
-                          height: Info.verticalUnit * 2,
-                        ),
-                        Card(
-                          child: Container(
-                            height: Info.verticalUnit * 45,
-                            child: Center(
-                              child: ServiceMap(
-                                service: _service,
-                                shouldUpdateUserPosition: true,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: Info.horizontalUnit * 5,
+          ),
+          child: FutureBuilder<GruaServiceState>(
+              future: GetIt.I.getAsync<GruaServiceState>(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: ResponsiveText("Buscando servicio"),
+                  );
+                }
+                final _state = snapshot.data;
+                if (_state == null) {
+                  return Center(
+                    child: ResponsiveText(
+                      _state?.error?.message ??
+                          "Ocurrio un error, por favor vuelva a intentarlo",
+                    ),
+                  );
+                }
+                if (_state.servicesStream == null) {
+                  return Center(
+                    child: _state.loading
+                        ? CircularProgressIndicator.adaptive()
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ResponsiveText(
+                                _state.error?.message ??
+                                    "Ocurrio un error, por favor vuelva a intentarlo",
+                              ),
+                              SizedBox(
+                                height: Info.verticalUnit * 2,
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  setState(() {});
+                                  await _state.getServices();
+                                  setState(() {});
+                                },
+                                child: ResponsiveText('Reintentar'),
+                              ),
+                            ],
+                          ),
+                  );
+                }
+                return StreamBuilder<List<Service>>(
+                    stream: _state.servicesStream,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(
+                          child:
+                              ResponsiveText("No hay servicios disponibles."),
+                        );
+                      }
+                      final _service = snapshot.data!.first;
+                      _state.servicesSelected = _service;
+                      // TODO: uncomment to auto-navigate.
+                      // final _loggedUser = GetIt.I.get<AuthState>().loggedUser;
+                      // if (_service.username == _loggedUser.username &&
+                      //     _service.status != ServiceStatus.pending &&
+                      //     _service.status != ServiceStatus.finished) {
+                      //   WidgetsBinding.instance!
+                      //       .addPostFrameCallback((timeStamp) {
+                      //     print("evaluando navegacion");
+                      //     if (AutoRouter.of(context).current.name !=
+                      //         ServiceAcceptedPageRoute.name) {
+                      //       print("NAVEGANDO A LA PAGINA DE SERVICIO ACEPTADO");
+                      //       AutoRouter.of(context).popAndPush(
+                      //         ServiceAcceptedPageRoute(
+                      //           service: _service,
+                      //         ),
+                      //       );
+                      //     }
+                      //   });
+                      // }
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: Info.horizontalUnit * 2,
+                          ),
+                          ResponsiveText(
+                            "Servicio disponible",
+                            fontSize: 35,
+                          ),
+                          SizedBox(
+                            height: Info.verticalUnit * 2,
+                          ),
+                          Card(
+                            child: Container(
+                              height: Info.verticalUnit * 45,
+                              child: Center(
+                                child: ServiceMap(
+                                  service: _service,
+                                  shouldUpdateUserPosition: true,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: Info.verticalUnit * 4,
-                        ),
-                        _ServiceDetail(
-                          service: _service,
-                        ),
-                      ],
-                    );
-                  });
-            }),
+                          SizedBox(
+                            height: Info.verticalUnit * 4,
+                          ),
+                          _ServiceDetail(
+                            service: _service,
+                          ),
+                        ],
+                      );
+                    });
+              }),
+        ),
       ),
     );
   }

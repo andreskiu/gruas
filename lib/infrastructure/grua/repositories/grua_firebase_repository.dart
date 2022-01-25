@@ -124,13 +124,13 @@ class GruaDemoRepositoryImpl implements IFirebaseService {
         queryParameters: params,
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && response.data['status'] == 'OK') {
         final result = FirebaseRouteModel.fromJson(response.data["routes"][0]);
         return Right(result);
       } else {
         return Left(ErrorContent.server('Fail to calculate route'));
       }
-    } on Exception catch (e) {
+    } catch (e) {
       return Left(ErrorContent.server('Fail to calculate route'));
     }
   }
