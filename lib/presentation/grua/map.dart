@@ -113,11 +113,11 @@ class _ServiceMapState extends State<ServiceMap> {
       _currentLocation = location;
       _refreshRoutes(true);
 
-      // TODO: move the map when driving
       // move the map
-      // if (widget.viewMode == ViewMode.drive) {
-      //   _goToLocation(_currentPosition);
-      // }
+      if (widget.viewMode == ViewMode.drive) {
+        final _currentPoint = LatLng(location.latitude!, location.longitude!);
+        _goToLocation(_currentPoint);
+      }
     }
   }
 
@@ -156,7 +156,7 @@ class _ServiceMapState extends State<ServiceMap> {
     return locationService.onLocationChanged;
   }
 
-  Future<bool> prepareMap() async {
+  Future<bool> _prepareMap() async {
     return true;
   }
 
@@ -374,7 +374,7 @@ class _ServiceMapState extends State<ServiceMap> {
       // bearing: widget.viewMode == ViewMode.preview
       //     ? 0.0
       //     : _currentLocation.heading ?? 0.0,
-      // tilt: widget.viewMode == ViewMode.preview ? 0.0 : 750,
+      // tilt: widget.viewMode == ViewMode.preview ? 0.0 : 75,
     );
 
     controller.animateCamera(CameraUpdate.newCameraPosition(_position));

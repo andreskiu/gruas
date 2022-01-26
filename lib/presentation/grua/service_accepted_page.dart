@@ -36,62 +36,6 @@ class ServiceAcceptedPage extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: Info.safeAreaPadding.top,
-                left: Info.horizontalUnit * 5,
-                right: Info.horizontalUnit * 5,
-                child: Consumer<GruaServiceState>(
-                    builder: (context, state, child) {
-                  String _text = "Vehiculo recogido";
-                  if (state.servicesSelected!.status ==
-                          ServiceStatus.carPicked ||
-                      state.servicesSelected!.status ==
-                          ServiceStatus.finished) {
-                    _text = "Finalizar Servicio";
-                  }
-                  return ElevatedButton(
-                    onPressed: () async {
-                      ServiceStatus _newStatus = ServiceStatus.carPicked;
-                      if (state.servicesSelected!.status ==
-                          ServiceStatus.carPicked) {
-                        _newStatus = ServiceStatus.finished;
-                      }
-                      await showDialog<bool>(
-                          context: context,
-                          builder: (context) {
-                            return ServiceStatusChangeDialog(
-                              serviceStatus: _newStatus,
-                              onAceptedButtonPressed: () async {
-                                await state.updateServiceStatus(_newStatus);
-
-                                AutoRouter.of(context).pop();
-                              },
-                            );
-                          });
-
-                      if (state.serviceUpdatedSuccesfully) {
-                        await showDialog(
-                            context: context,
-                            builder: (context) {
-                              return ServiceStatusConfirmationDialog(
-                                serviceStatus: _newStatus,
-                              );
-                            });
-                        if (_newStatus == ServiceStatus.finished) {
-                          // go back to home if service is finished
-
-                          // AutoRouter.of(context).replace(ServiceDetailsRoute());
-                          AutoRouter.of(context).pop();
-                        }
-                      }
-                    },
-                    child: ResponsiveText(
-                      _text,
-                      textType: TextType.Headline5,
-                    ),
-                  );
-                }),
-              ),
-              Positioned(
                 bottom: Info.safeAreaPadding.bottom,
                 left: Info.horizontalUnit * 5,
                 // right: Info.horizontalUnit * 5,
@@ -118,6 +62,7 @@ class _ButtonBarState extends State<ButtonBar> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // TODO: CHEKQUEAR SI ESTO VA A IR.... NO ESTA IMPLEMENTADO.
         // ElevatedButton(
@@ -157,6 +102,53 @@ class _ButtonBarState extends State<ButtonBar> {
             textType: TextType.Headline5,
           ),
         ),
+        Consumer<GruaServiceState>(builder: (context, state, child) {
+          String _text = "Vehiculo recogido";
+          if (state.servicesSelected!.status == ServiceStatus.carPicked ||
+              state.servicesSelected!.status == ServiceStatus.finished) {
+            _text = "Finalizar Servicio";
+          }
+          return ElevatedButton(
+            onPressed: () async {
+              ServiceStatus _newStatus = ServiceStatus.carPicked;
+              if (state.servicesSelected!.status == ServiceStatus.carPicked) {
+                _newStatus = ServiceStatus.finished;
+              }
+              await showDialog<bool>(
+                  context: context,
+                  builder: (context) {
+                    return ServiceStatusChangeDialog(
+                      serviceStatus: _newStatus,
+                      onAceptedButtonPressed: () async {
+                        await state.updateServiceStatus(_newStatus);
+
+                        AutoRouter.of(context).pop();
+                      },
+                    );
+                  });
+
+              if (state.serviceUpdatedSuccesfully) {
+                await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return ServiceStatusConfirmationDialog(
+                        serviceStatus: _newStatus,
+                      );
+                    });
+                if (_newStatus == ServiceStatus.finished) {
+                  // go back to home if service is finished
+
+                  // AutoRouter.of(context).replace(ServiceDetailsRoute());
+                  AutoRouter.of(context).pop();
+                }
+              }
+            },
+            child: ResponsiveText(
+              _text,
+              textType: TextType.Headline5,
+            ),
+          );
+        }),
         //   ],
         // ),
       ],
