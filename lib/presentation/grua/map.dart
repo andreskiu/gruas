@@ -12,6 +12,7 @@ import 'package:flutter_base/domain/grua/use_cases/get_service_routes.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:wakelock/wakelock.dart';
 
 enum ViewMode {
   preview,
@@ -61,6 +62,9 @@ class _ServiceMapState extends State<ServiceMap> {
       _state.updateRoutesStream.sink.add(true);
       if (widget.viewMode == ViewMode.drive) {
         _locationSubscription = locationStream?.listen(_onNewLocationDetected);
+        // TODO: HACER QUE LA PANTALLA NO SE BLOQUEE SI ESTAMOS EN DRIVE MODE
+        // https://flutteragency.com/how-to-keep-application-awake-in-flutter/
+        Wakelock.enable();
       }
       return true;
     });
@@ -99,6 +103,9 @@ class _ServiceMapState extends State<ServiceMap> {
   void dispose() {
     super.dispose();
 
+    if (widget.viewMode == ViewMode.drive) {
+      Wakelock.disable();
+    }
     _locationSubscription?.cancel();
     _updateRoutesSubscription.cancel();
   }
