@@ -156,6 +156,7 @@ class _ServiceMapState extends State<ServiceMap> {
     try {
       // quizas un set state aqui, para la primera vez
       _currentLocation = await locationService.getLocation();
+      _state.lastLocation = _currentLocation;
     } on Exception catch (e) {
       // TODO
     }
