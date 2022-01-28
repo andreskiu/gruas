@@ -128,4 +128,10 @@ class DemoRepository extends IAuthDataRepository {
   Future<Either<ErrorContent, Unit>> logout() async {
     return Right(unit);
   }
+
+  @override
+  Future<Either<ErrorContent, ServiceType>> getUserServiceType(
+      {required String username}) async {
+    return Right(ServiceType.grua);
+  }
 }

@@ -14,4 +14,8 @@ abstract class AuthService {
   Future<Either<ErrorContent, User?>> getUserLoggedIn();
 
   Future<Either<ErrorContent, String>> getUsernameRemembered();
+
+  Future<Either<ErrorContent, ServiceType>> getUserServiceType({
+    required String username,
+  });
 }

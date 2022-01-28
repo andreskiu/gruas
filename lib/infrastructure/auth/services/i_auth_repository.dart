@@ -13,4 +13,8 @@ abstract class IAuthDataRepository {
   Future<Either<ErrorContent, User?>> getUserLoggedIn({
     required String sessionId,
   });
+
+  Future<Either<ErrorContent, ServiceType>> getUserServiceType({
+    required String username,
+  });
 }

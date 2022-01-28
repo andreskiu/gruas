@@ -75,4 +75,10 @@ class AuthServiceImpl extends AuthService {
   Future<Either<ErrorContent, String>> getUsernameRemembered() async {
     return localStorage.getUsername();
   }
+
+  @override
+  Future<Either<ErrorContent, ServiceType>> getUserServiceType(
+      {required String username}) {
+    return repository.getUserServiceType(username: username);
+  }
 }

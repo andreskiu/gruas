@@ -73,16 +73,22 @@ class _ServiceDetailsState extends State<ServiceDetails> {
               future: GetIt.I.getAsync<GruaServiceState>(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
-                    child: ResponsiveText("Buscando servicio"),
+                  return Container(
+                    height: Info.screenHeight,
+                    child: Center(
+                      child: ResponsiveText("Buscando servicio"),
+                    ),
                   );
                 }
                 final _state = snapshot.data;
                 if (_state == null) {
-                  return Center(
-                    child: ResponsiveText(
-                      _state?.error?.message ??
-                          "Ocurrio un error, por favor vuelva a intentarlo",
+                  return Container(
+                    height: Info.screenHeight,
+                    child: Center(
+                      child: ResponsiveText(
+                        _state?.error?.message ??
+                            "Ocurrio un error, por favor vuelva a intentarlo",
+                      ),
                     ),
                   );
                 }

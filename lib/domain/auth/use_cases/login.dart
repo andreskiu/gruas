@@ -23,18 +23,25 @@ class LoginUseCase extends UseCase<User, LoginParams> {
       return Left(_paramsError);
     }
 
-    final result = await service.login(
+    final _userOrfailure = await service.login(
       username: params.username,
       password: params.password,
       rememberUsername: params.rememberUsername,
     );
 
-    return result.fold(
+    if (_userOrfailure.isLeft()) {
+      return Left(ErrorContent.useCase("Credenciales no válidas"));
+    }
+    final _user = _userOrfailure.getOrElse(() => User.empty());
+    final _serviceTypeOrFailure = await service.getUserServiceType(
+      username: params.username,
+    );
+    return _serviceTypeOrFailure.fold(
       (fail) {
         return Left(ErrorContent.useCase("Credenciales no válidas"));
       },
-      (user) {
-        return Right(user);
+      (type) {
+        return Right(_user.copyWith(serviceOffered: type));
       },
     );
   }
