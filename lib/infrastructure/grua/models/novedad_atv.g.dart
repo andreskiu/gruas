@@ -7,9 +7,7 @@ part of 'novedad_atv.dart';
 // **************************************************************************
 
 NovedadAtv _$NovedadAtvFromJson(Map<String, dynamic> json) => NovedadAtv(
-      fechaSolicitud: json['fechaSolicitud'] == null
-          ? null
-          : DateTime.parse(json['fechaSolicitud'] as String),
+      fechaSolicitud: CoreTransformations.dynamicToDate(json['fechaSolicitud']),
       idAtvEstado:
           TransformationsGrua.intToServiceStatus(json['idAtvEstado'] as int),
       idAtvNovedad: json['idAtvNovedad'] as int,
@@ -23,15 +21,12 @@ NovedadAtv _$NovedadAtvFromJson(Map<String, dynamic> json) => NovedadAtv(
       lngServicioAceptado: json['lngServicioAceptado'] as String? ?? '',
       username: json['username'] as String,
       vehiculo: json['vehiculo'] as String? ?? '',
-      fechaServicioAceptado: json['fechaServicioAceptado'] == null
-          ? null
-          : DateTime.parse(json['fechaServicioAceptado'] as String),
-      fechaVehiculoRecogido: json['fechaVehiculoRecogido'] == null
-          ? null
-          : DateTime.parse(json['fechaVehiculoRecogido'] as String),
-      fechaServicioFinalizado: json['fechaServicioFinalizado'] == null
-          ? null
-          : DateTime.parse(json['fechaServicioFinalizado'] as String),
+      fechaServicioAceptado:
+          CoreTransformations.dynamicToDate(json['fechaServicioAceptado']),
+      fechaVehiculoRecogido:
+          CoreTransformations.dynamicToDate(json['fechaVehiculoRecogido']),
+      fechaServicioFinalizado:
+          CoreTransformations.dynamicToDate(json['fechaServicioFinalizado']),
     );
 
 Map<String, dynamic> _$NovedadAtvToJson(NovedadAtv instance) =>
@@ -49,11 +44,11 @@ Map<String, dynamic> _$NovedadAtvToJson(NovedadAtv instance) =>
       'lngServicioAceptado': instance.lngServicioAceptado,
       'username': instance.username,
       'vehiculo': instance.vehiculo,
-      'fechaSolicitud': instance.fechaSolicitud?.toIso8601String(),
+      'fechaSolicitud': CoreTransformations.dateToInt(instance.fechaSolicitud),
       'fechaServicioAceptado':
-          instance.fechaServicioAceptado?.toIso8601String(),
+          CoreTransformations.dateToInt(instance.fechaServicioAceptado),
       'fechaVehiculoRecogido':
-          instance.fechaVehiculoRecogido?.toIso8601String(),
+          CoreTransformations.dateToInt(instance.fechaVehiculoRecogido),
       'fechaServicioFinalizado':
-          instance.fechaServicioFinalizado?.toIso8601String(),
+          CoreTransformations.dateToInt(instance.fechaServicioFinalizado),
     };

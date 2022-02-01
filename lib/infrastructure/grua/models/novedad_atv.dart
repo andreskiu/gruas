@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
+import 'package:flutter_base/infrastructure/core/core_transformations.dart';
 import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -34,10 +35,28 @@ class NovedadAtv extends Equatable {
   @JsonKey(defaultValue: '')
   final String vehiculo;
 
+  @JsonKey(
+    fromJson: CoreTransformations.dynamicToDate,
+    toJson: CoreTransformations.dateToInt,
+  )
   final DateTime? fechaSolicitud;
 
+  @JsonKey(
+    fromJson: CoreTransformations.dynamicToDate,
+    toJson: CoreTransformations.dateToInt,
+  )
   final DateTime? fechaServicioAceptado;
+
+  @JsonKey(
+    fromJson: CoreTransformations.dynamicToDate,
+    toJson: CoreTransformations.dateToInt,
+  )
   final DateTime? fechaVehiculoRecogido;
+
+  @JsonKey(
+    fromJson: CoreTransformations.dynamicToDate,
+    toJson: CoreTransformations.dateToInt,
+  )
   final DateTime? fechaServicioFinalizado;
 
   NovedadAtv({

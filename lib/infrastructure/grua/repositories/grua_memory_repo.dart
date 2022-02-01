@@ -17,35 +17,39 @@ import 'package:shared_preferences/shared_preferences.dart';
 class GruaMemoryRepository extends ICacheService {
   final _pref = GetIt.I.get<SharedPreferences>();
   final evidenceTypesKey = 'evidences';
+  List<EvidenceType> _evidences = [];
   @override
   Future<Either<ErrorContent, List<EvidenceType>>> getEvidenceTypes() async {
-    try {
-      final _evidenceListString = _pref.getStringList(evidenceTypesKey);
-      if (_evidenceListString == null) {
-        return Right([]);
-      }
-      final _evidencesServerModel = _evidenceListString
-          .map((str) =>
-              EvidenceTypeServerModel.fromJson(json.decode(str)).toEntity())
-          .toList();
-      return Right(_evidencesServerModel);
-    } on Exception catch (e) {
-      return Left(ErrorContent.server('Fail to get evicende types'));
-    }
+    return Right(_evidences);
+    // try {
+    //   final _evidenceListString = _pref.getStringList(evidenceTypesKey);
+    //   if (_evidenceListString == null) {
+    //     return Right([]);
+    //   }
+    //   final _evidencesServerModel = _evidenceListString
+    //       .map((str) =>
+    //           EvidenceTypeServerModel.fromJson(json.decode(str)).toEntity())
+    //       .toList();
+    //   return Right(_evidencesServerModel);
+    // } on Exception catch (e) {
+    //   return Left(ErrorContent.server('Fail to get evicende types'));
+    // }
   }
 
   @override
   Future<Either<ErrorContent, Unit>> saveEvidenceTypes(
       List<EvidenceType> evidences) async {
-    try {
-      final _list =
-          evidences.map((ev) => EvidenceTypeServerModel.fromEntity(ev));
-      final _listString = _list.map((e) => json.encode(e.toJson())).toList();
+    _evidences = evidences;
+    return Right(unit);
+    // try {
+    //   final _list =
+    //       evidences.map((ev) => EvidenceTypeServerModel.fromEntity(ev));
+    //   final _listString = _list.map((e) => json.encode(e.toJson())).toList();
 
-      await _pref.setStringList(evidenceTypesKey, _listString);
-      return Right(unit);
-    } on Exception catch (e) {
-      return Left(ErrorContent.server('Fail to store evicende types'));
-    }
+    //   await _pref.setStringList(evidenceTypesKey, _listString);
+    //   return Right(unit);
+    // } on Exception catch (e) {
+    //   return Left(ErrorContent.server('Fail to store evicende types'));
+    // }
   }
 }

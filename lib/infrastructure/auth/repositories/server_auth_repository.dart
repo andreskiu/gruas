@@ -83,7 +83,7 @@ class DemoRepository extends IAuthDataRepository {
         ));
       }
 
-      if (_getTyperResponse.data['states_codes'] != 200) {
+      if (_getTyperResponse.data['states_code'] != 200) {
         return Left(ErrorContent.server(
           _getTyperResponse.data['message']!,
         ));
@@ -102,39 +102,3 @@ class DemoRepository extends IAuthDataRepository {
     return Right(unit);
   }
 }
-
-// @LazySingleton(as: IDataRepository, env: [
-//   EnvironmentConfig.dev,
-//   EnvironmentConfig.test,
-//   EnvironmentConfig.prod,
-// ])
-// class ReportRestRepository
-//     with DioErrorManagerMixin
-//     implements IDataRepository {
-//   ReportRestRepository(this._api);
-//   final Api _api;
-
-//   @override
-//   Future<Either<ServerFailure, List<DailyTXbyUserModel>>> getDailyTXbyUser(
-//       {@required GetDailyTXbyUserDataModel dataModel}) async {
-//     try {
-//       final resp = await _api.client.get(
-//         '/transactionsbyuser',
-//         queryParameters:
-//             GetDailyTXbyUserReqModel.fromDataModel(dataModel).toMap(),
-//       );
-//       List<dynamic> _listadoDatos = resp.data;
-
-//       final respModel = _listadoDatos
-//           .map((t) =>
-//               GetDailyTXbyUserRespModel.fromMap(t).toDailyTXbyUserModel())
-//           .toList();
-//       return Right(respModel);
-//     } on DioError catch (e) {
-//       return Left(manageDioError(e));
-//     } on FormatException {
-//       return Left(ServerFailure.formatFailure());
-//     } catch (e) {
-//       return Left(ServerFailure.generalError());
-//     }
-//   }
