@@ -67,6 +67,9 @@ dependencies:
   # Firestore database
   cloud_firestore: ^2.5.4
 
+  # Push notifications
+  firebase_messaging: ^11.2.6
+
   # Scan QR Codes
   qr_code_scanner: ^0.5.2
 

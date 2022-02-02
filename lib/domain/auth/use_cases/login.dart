@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_base/domain/auth/fields/password_field.dart';
 import 'package:flutter_base/domain/auth/fields/username_field.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
@@ -40,7 +41,17 @@ class LoginUseCase extends UseCase<User, LoginParams> {
       (fail) {
         return Left(ErrorContent.useCase("Credenciales no válidas"));
       },
-      (type) {
+      (type) async {
+        if (type == ServiceType.grua) {
+          await FirebaseMessaging.instance.subscribeToTopic('grua');
+        }
+        if (type == ServiceType.carroTaller) {
+          await FirebaseMessaging.instance.subscribeToTopic('carroTaller');
+        }
+        if (type == ServiceType.motoTaller) {
+          await FirebaseMessaging.instance.subscribeToTopic('motoTaller');
+        }
+
         return Right(_user.copyWith(serviceOffered: type));
       },
     );
