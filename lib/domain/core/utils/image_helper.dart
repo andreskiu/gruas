@@ -28,7 +28,7 @@ class ImageHelper {
       ExtImage.Image originalPhoto) async {
     ExtImage.Image waterMark = ExtImage.Image(500, 50);
     final _today = DateTime.now();
-    final _todayString = DateFormat.yMd().add_Hm().format(_today);
+    final _todayString = DateFormat('y-MM-dd').add_Hms().format(_today);
 
     waterMark = ExtImage.drawString(
       waterMark,

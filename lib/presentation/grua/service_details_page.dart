@@ -49,6 +49,8 @@ class _ServiceDetailsState extends State<ServiceDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final _maxBodyHeight =
+        Info.screenHeight - Info.safeAreaPadding.top - kToolbarHeight;
     return Scaffold(
       appBar: AppBar(
         title: Text("ATV"),
@@ -74,7 +76,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Container(
-                    height: Info.screenHeight,
+                    height: _maxBodyHeight,
                     child: Center(
                       child: ResponsiveText("Buscando servicio"),
                     ),
@@ -83,7 +85,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                 final _state = snapshot.data;
                 if (_state == null) {
                   return Container(
-                    height: Info.screenHeight,
+                    height: _maxBodyHeight,
                     child: Center(
                       child: ResponsiveText(
                         _state?.error?.message ??
@@ -122,9 +124,11 @@ class _ServiceDetailsState extends State<ServiceDetails> {
                     stream: _state.servicesStream,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(
-                          child:
-                              ResponsiveText("No hay servicios disponibles."),
+                        return Container(
+                          height: _maxBodyHeight,
+                          child: Center(
+                              child: ResponsiveText(
+                                  "No hay servicios disponibles.")),
                         );
                       }
                       final _service = snapshot.data!.first;
