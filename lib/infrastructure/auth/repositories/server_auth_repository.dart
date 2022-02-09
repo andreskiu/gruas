@@ -90,7 +90,7 @@ class DemoRepository extends IAuthDataRepository {
       }
 
       return Right(TransformationsGrua.intToServiceType(
-        _getTyperResponse.data['id'],
+        _getTyperResponse.data['data']['id'],
       ));
     } catch (e) {
       return Left(ErrorContent.server("Login error"));
