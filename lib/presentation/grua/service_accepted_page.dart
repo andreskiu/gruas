@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base/application/grua/grua_service_state.dart';
+import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_calculations.dart';
 import 'package:flutter_base/presentation/core/responsivity/responsive_text.dart';
@@ -104,6 +105,9 @@ class _ButtonBarState extends State<ButtonBar> {
         ),
         Consumer<GruaServiceState>(builder: (context, state, child) {
           String _text = "Vehiculo recogido";
+          if (state.servicesSelected!.type == ServiceType.carroTaller) {
+            _text = 'Vehiculo en reparación';
+          }
           if (state.servicesSelected!.status == ServiceStatus.carPicked ||
               state.servicesSelected!.status == ServiceStatus.finished) {
             _text = "Finalizar Servicio";
@@ -119,6 +123,7 @@ class _ButtonBarState extends State<ButtonBar> {
                   builder: (context) {
                     return ServiceStatusChangeDialog(
                       serviceStatus: _newStatus,
+                      serviceType: state.servicesSelected!.type,
                       onAceptedButtonPressed: () async {
                         await state.updateServiceStatus(_newStatus);
 
@@ -133,6 +138,7 @@ class _ButtonBarState extends State<ButtonBar> {
                     builder: (context) {
                       return ServiceStatusConfirmationDialog(
                         serviceStatus: _newStatus,
+                        serviceType: state.servicesSelected!.type,
                       );
                     });
                 if (_newStatus == ServiceStatus.finished) {
