@@ -37,7 +37,7 @@ class ServiceMap extends StatefulWidget {
   _ServiceMapState createState() => _ServiceMapState();
 }
 
-class _ServiceMapState extends State<ServiceMap> {
+class _ServiceMapState extends State<ServiceMap> with WidgetsBindingObserver {
   final getRoutePoints = GetIt.I.get<GetServiceRouteUseCase>();
   Completer<GoogleMapController> _controller = Completer();
 
@@ -53,6 +53,7 @@ class _ServiceMapState extends State<ServiceMap> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
     _mapsReady = GetIt.I.getAsync<GruaServiceState>().then((state) async {
       _state = state;
       locationStream = await _startLocation();
@@ -68,6 +69,42 @@ class _ServiceMapState extends State<ServiceMap> {
       }
       return true;
     });
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print('appLifeCycleState inactive');
+        break;
+      case AppLifecycleState.resumed:
+        final GoogleMapController controller = await _controller.future;
+        onMapCreated(controller);
+        print('appLifeCycleState resumed');
+        break;
+      case AppLifecycleState.paused:
+        print('appLifeCycleState paused');
+        break;
+      case AppLifecycleState.detached:
+        print('appLifeCycleState detached');
+        break;
+    }
+  }
+
+  //onMapCreated method
+  void onMapCreated(GoogleMapController controller) {
+    controller.setMapStyle('[]');
+    if (!_controller.isCompleted) {
+      _controller.complete(controller);
+    }
+
+    if (_currentLocation.latitude != null &&
+        _currentLocation.longitude != null) {
+      final _position =
+          LatLng(_currentLocation.latitude!, _currentLocation.longitude!);
+      _goToLocation(_position);
+    }
   }
 
   Future<void> _refreshRoutes(bool nothing) async {
@@ -308,19 +345,7 @@ class _ServiceMapState extends State<ServiceMap> {
             initialCameraPosition: _bogota,
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
-            onMapCreated: (GoogleMapController controller) async {
-              if (!_controller.isCompleted) {
-                _controller.complete(controller);
-              }
-
-              if (_currentLocation.latitude != null &&
-                  _currentLocation.longitude != null) {
-                final _position = LatLng(
-                    _currentLocation.latitude!, _currentLocation.longitude!);
-                _goToLocation(_position);
-              }
-              // });
-            },
+            onMapCreated: onMapCreated,
             polylines: _routes,
             gestureRecognizers: {
               Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
