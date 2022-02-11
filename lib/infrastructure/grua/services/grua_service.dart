@@ -12,6 +12,7 @@ import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:flutter_base/domain/grua/models/evidence_types.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/services/grua_service.dart';
+import 'package:location/location.dart';
 
 import 'interfaces/i_grua_data_repository.dart';
 
@@ -37,7 +38,16 @@ class GruaServiceImpl implements IGruaService {
   @override
   Future<Either<ErrorContent, Service>> saveService({
     required Service service,
-  }) {
+    required LocationData? location,
+  }) async {
+    final _serviceOrfailure = await server.saveStatus(
+      service: service,
+      location: location,
+    );
+    if (_serviceOrfailure.isLeft()) {
+      return _serviceOrfailure;
+    }
+
     return firebase.saveService(service: service);
   }
 

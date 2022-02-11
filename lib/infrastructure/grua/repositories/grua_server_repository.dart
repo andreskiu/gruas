@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_base/config/environments/environment_config.dart';
 import 'package:flutter_base/domain/core/error_content.dart';
@@ -15,6 +13,7 @@ import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
+import 'package:location/location.dart';
 
 @Environment(EnvironmentConfig.dev)
 @Environment(EnvironmentConfig.qa)
@@ -26,6 +25,7 @@ class GruaServerRepository extends IServerService {
   final _getEvidencesTypesPath = "attentionOnRoad/typeEvidence";
   final _saveEvidencePath = "attentionOnRoad/saveEvidence";
   final _saveLocationPath = "attentionOnRoad/saveLocation";
+  final _saveStatusPath = "/attentionOnRoad/saveStatus";
   final _saveSuggestedRoutePath = "attentionOnRoad/saveSuggestedRoute";
 
   @override
@@ -39,7 +39,7 @@ class GruaServerRepository extends IServerService {
       final List<EvidenceType> _types =
           _typesWrapper.listObject.map((model) => model.toEntity()).toList();
       return Right(_types);
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       return Left(ErrorContent.server("Error getting evidences types"));
     }
   }
@@ -76,7 +76,7 @@ class GruaServerRepository extends IServerService {
       }
 
       return Right("Nothing");
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       return Left(ErrorContent.server("Error uploading evidence"));
     }
   }
@@ -101,8 +101,35 @@ class GruaServerRepository extends IServerService {
       );
 
       return Right(unit);
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       return Left(ErrorContent.server("Error saving location"));
+    }
+  }
+
+  @override
+  Future<Either<ErrorContent, Service>> saveStatus({
+    required Service service,
+    required LocationData? location,
+  }) async {
+    try {
+      final _serverResponse = await _dio.post(
+        _saveStatusPath,
+        data: {
+          "id_novedad": service.id,
+          "status": TransformationsGrua.serviceStatusToInt(service.status),
+          "lat": location?.latitude,
+          "lng": location?.longitude,
+          "username": service.username,
+        },
+      );
+
+      if (_serverResponse.data['states_code'] != 200) {
+        return Left(ErrorContent.server(_serverResponse.data['message'] ?? ''));
+      }
+
+      return Right(service);
+    } on Exception catch (e) {
+      return Left(ErrorContent.server("Error saving status"));
     }
   }
 

@@ -154,6 +154,7 @@ class GruaServiceState extends ChangeNotifier {
     final _params = SaveServicesUseCaseParams(
       service: _serviceCopy,
       routes: _routes,
+      location: lastLocation,
     );
     final _serviceOrFailure = await saveServicesUseCase.call(_params);
 

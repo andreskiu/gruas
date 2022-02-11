@@ -8,6 +8,7 @@ import 'package:flutter_base/domain/grua/models/route_details.dart';
 import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/services/grua_service.dart';
 import 'package:injectable/injectable.dart';
+import 'package:location/location.dart';
 
 @lazySingleton
 class SaveServicesUseCase extends UseCase<Service, SaveServicesUseCaseParams> {
@@ -66,6 +67,7 @@ class SaveServicesUseCase extends UseCase<Service, SaveServicesUseCaseParams> {
 
     final _servicesOrFailure = await service.saveService(
       service: _serviceToSave,
+      location: params.location,
     );
 
     return _servicesOrFailure;
@@ -75,9 +77,11 @@ class SaveServicesUseCase extends UseCase<Service, SaveServicesUseCaseParams> {
 class SaveServicesUseCaseParams extends Equatable {
   final Service service;
   final List<RouteDetails>? routes;
+  final LocationData? location;
 
   SaveServicesUseCaseParams({
     required this.service,
+    this.location,
     this.routes,
   });
 

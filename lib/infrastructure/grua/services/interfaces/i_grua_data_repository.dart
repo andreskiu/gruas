@@ -7,6 +7,7 @@ import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/models/firebase_route_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 abstract class IGruaDataRepository {}
 
@@ -39,6 +40,11 @@ abstract class IServerService extends IGruaDataRepository {
   Future<Either<ErrorContent, Unit>> saveServiceSuggestedRoute({
     required Service service,
     required List<RouteDetails> routes,
+  });
+
+  Future<Either<ErrorContent, Service>> saveStatus({
+    required Service service,
+    required LocationData? location,
   });
 }
 

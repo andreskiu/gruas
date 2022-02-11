@@ -7,6 +7,7 @@ import 'package:flutter_base/domain/grua/models/service.dart';
 import 'package:flutter_base/domain/grua/models/evidence.dart';
 import 'package:flutter_base/infrastructure/grua/models/firebase_route_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 abstract class IGruaService {
   Future<Either<ErrorContent, Stream<List<Service>>>> getServices({
@@ -14,6 +15,7 @@ abstract class IGruaService {
   });
   Future<Either<ErrorContent, Service>> saveService({
     required Service service,
+    required LocationData? location,
   });
 
   Future<Either<ErrorContent, String>> uploadPhoto({
