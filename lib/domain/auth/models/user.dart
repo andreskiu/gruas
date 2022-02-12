@@ -34,7 +34,7 @@ class User extends Equatable {
 
   factory User.empty() {
     return User(
-      id: "0",
+      id: "",
       username: "",
       name: "",
       serviceOffered: ServiceType.grua,

@@ -27,4 +27,8 @@ class SessionInformation extends Equatable {
       expireSession: DateTime.now(),
     );
   }
+
+  bool sessionExpired() {
+    return expireSession.isBefore(DateTime.now());
+  }
 }

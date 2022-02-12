@@ -5,9 +5,11 @@ import 'package:flutter_base/domain/core/error_content.dart';
 import 'package:flutter_base/domain/auth/models/user.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_base/infrastructure/auth/services/i_auth_repository.dart';
+import 'package:flutter_base/infrastructure/auth/services/i_auth_storage_repository.dart';
 import 'package:flutter_base/infrastructure/grua/models/transformations_grua.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 @Environment(EnvironmentConfig.dev)
 @Environment(EnvironmentConfig.qa)
@@ -15,6 +17,7 @@ import 'package:injectable/injectable.dart';
 @LazySingleton(as: IAuthDataRepository)
 class DemoRepository extends IAuthDataRepository {
   final Dio _dio = GetIt.I.get<Dio>();
+  final _pref = GetIt.I.get<IAuthStorageRepository>();
 
   final _loginPath = "oauth/token";
   final _getServiceTypePath = "atvUser/typeServiceVehicle";
@@ -22,8 +25,41 @@ class DemoRepository extends IAuthDataRepository {
   Future<Either<ErrorContent, User?>> getUserLoggedIn({
     required String sessionId,
   }) async {
-    // TODO: implement getUserLoggedIn
-    return Right(null);
+    final _sessionOrFailure = await _pref.getSessionInformation();
+
+    final _session = _sessionOrFailure.getOrElse(
+      () => SessionInformation.empty(),
+    );
+
+    final _expiryTokenDate = Jwt.getExpiryDate(_session.sessionId);
+
+    if (_expiryTokenDate == null || _expiryTokenDate.isBefore(DateTime.now())) {
+      return Left(ErrorContent.server("Session Expired"));
+    }
+
+    Map<String, dynamic> _payload = Jwt.parseJwt(_session.sessionId);
+
+    final _username = _payload['user_name'];
+
+    final _usernameTypeOrFailure = await getUserServiceType(
+      username: _username,
+    );
+
+    if (_usernameTypeOrFailure.isLeft()) {
+      return Left(ErrorContent.server("Session expirada"));
+    }
+
+    final _user = User(
+      id: _payload['client_id'],
+      username: _username,
+      session: SessionInformation(
+        sessionId: _session.sessionId,
+        expireSession: _expiryTokenDate,
+      ),
+      name: "name",
+      serviceOffered: _usernameTypeOrFailure.getOrElse(() => ServiceType.grua),
+    );
+    return Right(_user);
   }
 
   @override
@@ -49,12 +85,15 @@ class DemoRepository extends IAuthDataRepository {
       final _expireSession = DateTime.now().add(
         Duration(seconds: _serverResponse.data['expires_in'] ?? 900),
       );
+      final _token = _serverResponse.data['access_token'];
+
+      Map<String, dynamic> _payload = Jwt.parseJwt(_token);
 
       final _user = User(
-        id: "22",
+        id: _payload['client_id'],
         username: username,
         session: SessionInformation(
-          sessionId: _serverResponse.data['access_token'],
+          sessionId: _token,
           expireSession: _expireSession,
         ),
         name: "name",

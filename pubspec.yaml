@@ -88,6 +88,9 @@ dependencies:
   # Prevent screen saver
   wakelock: ^0.6.1+1
 
+  # JWT decode
+  jwt_decode: ^0.3.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

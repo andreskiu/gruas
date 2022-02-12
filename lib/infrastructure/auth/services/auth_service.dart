@@ -56,7 +56,7 @@ class AuthServiceImpl extends AuthService {
         return Left(fail);
       },
       (session) {
-        if (session.expireSession.isAfter(DateTime.now())) {
+        if (session.sessionExpired()) {
           return Left(ErrorContent.server("Session Expired"));
         }
 
