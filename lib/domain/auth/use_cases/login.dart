@@ -42,6 +42,7 @@ class LoginUseCase extends UseCase<User, LoginParams> {
         return Left(ErrorContent.useCase("Credenciales no válidas"));
       },
       (type) async {
+        await _unsuscribeFromAllTopics();
         if (type == ServiceType.grua) {
           await FirebaseMessaging.instance.subscribeToTopic('grua');
         }
@@ -55,6 +56,14 @@ class LoginUseCase extends UseCase<User, LoginParams> {
         return Right(_user.copyWith(serviceOffered: type));
       },
     );
+  }
+
+  Future<void> _unsuscribeFromAllTopics() async {
+    await Future.wait([
+      FirebaseMessaging.instance.unsubscribeFromTopic('grua'),
+      FirebaseMessaging.instance.unsubscribeFromTopic('carroTaller'),
+      FirebaseMessaging.instance.unsubscribeFromTopic('motoTaller'),
+    ]);
   }
 }
 
