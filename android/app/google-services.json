@@ -43,6 +43,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:620680418856:android:1b2d98dbc40068b0bc471d",
+        "android_client_info": {
+          "package_name": "com.atv.gruas.prod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620680418856-jcqhukck1ufopvql4pippdaqk513vnu0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCW4JEtCHKHgITyJ7WJfvvgMKxi4WqJPqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620680418856-jcqhukck1ufopvql4pippdaqk513vnu0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "620680418856-qag3io3bauf4fi85irs5s65poeivmfel.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.atv.gruas"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:620680418856:android:a6b27537f4d029f7bc471d",
         "android_client_info": {
           "package_name": "com.atv.gruasdemo.demo"
