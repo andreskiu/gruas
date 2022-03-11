@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp.router(
       routeInformationParser: _appRouter.defaultRouteParser(),
       routerDelegate: _appRouter.delegate(),
-      title: 'Flutter Demo',
+      title: 'Green Móvil',
       theme: getThemeData(ColorPaletteLight()),
       themeMode: ThemeMode.light, //Dark Mode disabled
       builder: (context, router) {
